@@ -1,0 +1,23 @@
+select
+  appearance: none
+  background-image: url('/images/chevron-down-icon.svg')
+  background-position: right $spacing-small center
+  background-repeat: no-repeat
+  background-size: 12px
+  display: inline-block
+  font-size: 1rem
+  padding: $spacing-small $spacing-medium $spacing-small $spacing-small
+
+  &.select-error
+    border-color: $error-red
+
+.dropdown-group
+  display: flex
+  width: 100%
+
+  select
+    margin-right: $spacing-micro
+    width: auto
+
+    &:last-child
+      margin-right: 0

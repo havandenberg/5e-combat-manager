@@ -1,0 +1,42 @@
+.btn
+  border-radius: 6px
+  color: $white
+  display: inline-block
+  font-family: inherit
+  font-size: 1.125rem
+  height: 3rem
+  padding: 0 32px 0 32px
+  transition: all 0.3s ease
+
+  +breakpoint(mobile)
+    width: 100%
+
+  &-nav
+    background-color: $black
+    border: $border
+    border-color: $white
+
+    &:hover
+      background-color: lighten($black, 10%)
+
+    &:active
+      background-color: lighten($black, 10%)
+
+  &-action
+    background-color: $black
+    border: none
+
+    &:hover
+      background-color: lighten($black, 10%)
+
+    &:active
+      background-color: lighten($black, 10%)
+
+  &-disabled
+    background-color: $gray
+
+    &:hover
+      background-color: lighten($gray, 10%)
+
+    &:active
+      background-color: lighten($gray, 10%)

@@ -1,0 +1,22 @@
+placeholder()
+  &::-webkit-input-placeholder
+    {block}
+  &:-moz-placeholder
+    {block}
+  &::-moz-placeholder
+    {block}
+  &:-ms-input-placeholder
+    {block}
+
+// @stylint off
+breakpoint($point)
+  if $point == desktop
+    @media (min-width: $large-screen)
+      {block}
+  else if $point == tablet
+    @media (min-width: $medium-screen)
+      {block}
+  else if $point == mobile
+    @media (max-width: $small-screen)
+      {block}
+// @stylint on

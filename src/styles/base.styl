@@ -1,0 +1,58 @@
+html
+  box-sizing: border-box
+  color: $black
+  font-size: 16px
+  line-height: 1.5
+
+  +breakpoint(mobile)
+    font-size: 14px
+
+body
+  -moz-osx-font-smoothing: grayscale
+  -webkit-font-smoothing: antialiased
+  text-rendering: optimizeLegibility
+  margin: 0
+
+ul
+  padding: 0
+  li
+    list-style-type: none
+
+img
+  max-width: 100%
+
+button, input[type='submit']
+  background: transparent
+  border: 0
+  cursor: pointer
+  font-family: inherit
+  font-size: inherit
+  outline: none
+
+em
+  font-style: italic
+
+strong
+  font-weight: 600
+
+small
+  font-size: 75%
+
+.hide
+  display: none
+
+.left-align
+  text-align: left
+
+.right-align
+  text-align: right
+
+.center, .center-align
+  text-align: center
+
+.pull-left
+  float: left
+
+
+.circle
+  border-radius: 50%

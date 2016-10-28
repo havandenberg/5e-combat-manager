@@ -1,0 +1,48 @@
+input:not([type]),
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=time],
+input[type=date],
+input[type=datetime],
+input[type=datetime-local],
+input[type=tel],
+input[type=number],
+input[type=search]
+  border: 1px solid $light-gray
+  border-radius: 4px
+  box-sizing: border-box
+  font-size: 1rem
+  height: 3rem
+  outline: none
+  padding: $spacing-small
+  transition: all 0.3s ease
+  width: 100%
+
+  +placeholder()
+    color: $light-gray
+    transition: all 0.3s ease
+
+  &:focus
+    border: 1px solid $dark-gray
+
+  &.input-error
+    border: 1px solid $error-red
+
+.form-field
+  padding-bottom: $spacing-small
+
+.form-label
+  font-size: 1.125rem
+
+  &__error
+    color: $error-red
+
+.field-container
+  align-items: left
+  display: flex
+  flex-direction: column
+
+  +breakpoint(mobile)
+    display: block

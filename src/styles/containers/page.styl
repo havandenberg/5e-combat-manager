@@ -1,0 +1,35 @@
+.page
+  margin: 0 auto
+  padding-bottom: $spacing-medium
+  width: 90%
+
+  +breakpoint(mobile)
+    width: 100%
+
+  &-header
+    border-bottom: $border
+
+    h1
+      margin-bottom: $spacing-micro
+
+  &-inner
+    display: flex
+    padding-top: $spacing-medium
+
+    +breakpoint(mobile)
+      display: block
+      width: 100%
+
+  &-section
+    border-right: $border
+    padding: 0 $spacing-small $spacing-small $spacing-small
+    width: 100%
+
+    &:last-child
+      border-right: none
+
+    +breakpoint(mobile)
+      border-bottom: $border
+      border-right: none
+      padding: $spacing-micro 0
+      width: auto

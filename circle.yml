@@ -1,0 +1,19 @@
+machine:
+  timezone:
+    America/New_York
+  node:
+    version: stable
+  pre:
+    - mkdir ~/.yarn-cache
+
+dependencies:
+  pre:
+    - curl -o- -L https://yarnpkg.com/install.sh | sh
+  cache_directories:
+    - ~/.yarn-cache
+  override:
+    - yarn install --ignore-engines
+
+test:
+  override:
+    - yarn test
