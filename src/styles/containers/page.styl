@@ -1,35 +1,30 @@
 .page
-  margin: 0 auto
-  padding-bottom: $spacing-medium
+  margin: $spacing-large auto
   width: 90%
 
   +breakpoint(mobile)
     width: 100%
 
   &-header
-    border-bottom: $border
-
-    h1
-      margin-bottom: $spacing-micro
-
-  &-inner
-    display: flex
-    padding-top: $spacing-medium
+    height: 50px
+    margin-bottom: $spacing-large
+    padding: 0 $spacing-medium
 
     +breakpoint(mobile)
-      display: block
-      width: 100%
+      height: 42px
 
-  &-section
-    border-right: $border
-    padding: 0 $spacing-small $spacing-small $spacing-small
-    width: 100%
+  &-title
+    font-size: 2rem
+    margin 0 auto
+    width: 60%
 
-    &:last-child
-      border-right: none
+  &-subtitle
+    font-size: 1.25rem
+    padding: $spacing-small 0
+
+  &-content
+    margin: 0 auto
+    width: 70%
 
     +breakpoint(mobile)
-      border-bottom: $border
-      border-right: none
-      padding: $spacing-micro 0
-      width: auto
+      width: 90%

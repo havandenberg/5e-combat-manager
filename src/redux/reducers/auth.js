@@ -1,46 +1,65 @@
 import Immutable from 'immutable';
 import {routerActions} from 'react-router-redux';
+import firebase from 'utils/firebase';
 
-const initialState = Immutable.fromJS({
-  username: '',
-  password: '',
-  rememberMe: false
-});
+const initialState = Immutable.fromJS({});
 
-export const CHECK_USERNAME = 'CHECK_USERNAME';
 export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 
 export default function reducer(auth = initialState, action = {}) {
   switch (action.type) {
-  case CHECK_USERNAME:
-    return auth
-      .set('username', action.username)
-      .set('rememberMe', action.rememberMe);
   case LOGIN:
     return auth
-      .set('password', action.password);
+      .set('uid', action.uid);
+  case LOGOUT:
+    return auth
+      .delete('uid');
   default:
     return auth;
   }
 }
 
-export function checkUsername(username = '', rememberMe = false) {
-  return (dispatch) => {
-    dispatch({
-      type: CHECK_USERNAME,
-      username,
-      rememberMe
-    });
-    dispatch(routerActions.push('/login/verify'));
+export function login(uid) {
+  return {
+    type: LOGIN,
+    uid
   };
 }
 
-export function login(password = '') {
+export function logout() {
+  return {
+    type: LOGOUT
+  };
+}
+
+export function startCreateAccount(email, password) {
   return (dispatch) => {
-    dispatch({
-      type: LOGIN,
-      password
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(() => {
+
+    }).then(() => {
+      dispatch(login(email));
+      dispatch(routerActions.push('/'));
     });
-    dispatch(routerActions.push('/'));
+  };
+}
+
+export function startPlayerLogin(email, password) {
+  return (dispatch) => {
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(() => {
+
+    }).then(() => {
+      dispatch(login(email));
+      dispatch(routerActions.push('/'));
+    });
+  };
+}
+
+export function startLogout() {
+  return (dispatch) => {
+    firebase.auth().signOut().then(() => {
+      dispatch(logout());
+      dispatch(routerActions.push('/'));
+    });
   };
 }

@@ -5,7 +5,7 @@
   font-family: inherit
   font-size: 1.125rem
   height: 3rem
-  padding: 0 32px 0 32px
+  padding: 0 32px
   transition: all 0.3s ease
 
   +breakpoint(mobile)
@@ -15,6 +15,9 @@
     background-color: $black
     border: $border
     border-color: $white
+
+    +breakpoint(mobile)
+      width: auto
 
     &:hover
       background-color: lighten($black, 10%)
@@ -40,3 +43,10 @@
 
     &:active
       background-color: lighten($gray, 10%)
+
+  &-back
+    height: 100%
+    padding: 0 $spacing-micro
+
+    img
+      height: 100%

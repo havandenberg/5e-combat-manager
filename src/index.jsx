@@ -5,9 +5,12 @@ import {browserHistory, Router} from 'react-router';
 import {routerMiddleware, syncHistoryWithStore} from 'react-router-redux';
 import {compose, createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
+import firebase from 'utils/firebase';
 
 import routes from './routes';
 import reducers from 'reducers/reducer';
+import * as authActions from 'reducers/auth';
+import * as characterActions from 'reducers/character';
 
 import 'styles/main.styl';
 
@@ -19,6 +22,17 @@ const store = compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )(createStore)(reducers);
 const history = syncHistoryWithStore(browserHistory, store);
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch(authActions.login(user.uid));
+    store.dispatch(characterActions.startAddCharacters());
+    history.push('/dashboard');
+  } else {
+    store.dispatch(authActions.logout());
+    history.push('/');
+  }
+});
 
 render(
   <Provider store={store}>

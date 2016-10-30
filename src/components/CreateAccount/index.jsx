@@ -8,10 +8,10 @@ import * as authActions from 'reducers/auth';
 
 import backImg from 'images/back.svg';
 
-class PlayerLogin extends React.Component {
+class CreateAccount extends React.Component {
   static propTypes = {
     auth: React.PropTypes.object.isRequired,
-    playerLogin: React.PropTypes.func.isRequired
+    createAccount: React.PropTypes.func.isRequired
   }
 
   constructor() {
@@ -26,6 +26,7 @@ class PlayerLogin extends React.Component {
     const errors = [];
     const email = this.refs.email.value;
     const password = this.refs.password.value;
+    const confirmPassword = this.refs.confirmPassword.value;
 
     if (_.isEmpty(email)) {
       errors.push('emailEmpty');
@@ -35,16 +36,24 @@ class PlayerLogin extends React.Component {
       errors.push('passwordEmpty');
     }
 
+    if (_.isEmpty(confirmPassword)) {
+      errors.push('confirmPasswordEmpty');
+    }
+
+    if (password !== confirmPassword) {
+      errors.push('passwordMatch');
+    }
+
     this.setState({errors});
     return (!errors.length);
   }
 
-  handlePlayerLogin = () => {
+  handleCreateAccount = () => {
     const email = this.refs.email.value;
     const password = this.refs.password.value;
 
     if (this.validate()) {
-      this.props.playerLogin(email, password);
+      this.props.createAccount(email, password);
     }
   }
 
@@ -54,31 +63,37 @@ class PlayerLogin extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <Link to="/"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
-          <div className="page-title vcenter center">Player Login</div>
+          <Link to="/player-login"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
+          <div className="page-title vcenter center">Create Account</div>
         </div>
         <div className="page-content">
           {hasError(errors, ['emailEmpty']) && <div className="alert alert-error">Enter email</div>}
           <div className="form-field">
             <input
-              className={classNames({'input-error': hasError(errors, ['email'])})}
+              className={classNames({'input-error': hasError(errors, ['emailEmpty'])})}
               placeholder="email"
-              type="text"
+              type="email"
               ref="email" />
           </div>
           {hasError(errors, ['passwordEmpty']) && <div className="alert alert-error">Enter password</div>}
+          {hasError(errors, ['passwordMatch']) && <div className="alert alert-error">Passwords do not match</div>}
           <div className="form-field">
             <input
-              className={classNames({'input-error': hasError(errors, ['password'])})}
+              className={classNames({'input-error': hasError(errors, ['passwordEmpty', 'passwordMatch'])})}
               placeholder="password"
               type="password"
               ref="password" />
           </div>
-          <div className="form-field center">
-            <button className="btn btn-action full-width" onClick={this.handlePlayerLogin}>Login</button>
+          {hasError(errors, ['confirmPasswordEmpty']) && <div className="alert alert-error">Enter password confirmation</div>}
+          <div className="form-field">
+            <input
+              className={classNames({'input-error': hasError(errors, ['confirmPasswordEmpty', 'passwordMatch'])})}
+              placeholder="confirm password"
+              type="password"
+              ref="confirmPassword" />
           </div>
           <div className="form-field center">
-            <Link to="/create-account"><button className="btn btn-action full-width">Create account</button></Link>
+            <button className="btn btn-action full-width" onClick={this.handleCreateAccount}>Create account</button>
           </div>
         </div>
       </div>
@@ -91,5 +106,5 @@ export default connect((state) => {
     auth: state.auth
   };
 }, {
-  playerLogin: authActions.startPlayerLogin
-})(PlayerLogin);
+  createAccount: authActions.startCreateAccount
+})(CreateAccount);
