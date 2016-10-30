@@ -1,0 +1,52 @@
+.character
+
+  &-container
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
+  &-card
+    background-image: url('/images/forward.svg')
+    background-position: right $spacing-small center
+    background-repeat: no-repeat
+    background-size: 16px
+    border: $border
+    border-radius: $border-radius
+    cursor: pointer
+    display: flex
+    flex-direction: row
+    margin:0 auto $spacing-small auto
+    padding: $spacing-small $spacing-medium $spacing-small $spacing-small
+    transition: all 0.1s ease
+    width: 250px
+
+    &:hover
+      background-color: lighten($gray, 70%)
+
+    +breakpoint(mobile)
+      width: 100%
+
+    &--avatar
+      flex-basis: 30%
+
+    &--text
+      display: flex
+      flex-direction: column
+      flex-basis: 70%
+
+    &--name
+      font-size: 1.125rem
+
+    &--field
+      font-size: 1rem
+
+  &-stats
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+
+    input
+      margin-right: $spacing-small
+
+      &:last-child
+        margin: 0

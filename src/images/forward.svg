@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="32px" viewBox="0 0 18 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>Rectangle 23</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Player-dashboard-(no-combat-sessions-active)" sketch:type="MSArtboardGroup" transform="translate(-274.000000, -321.000000)" fill="#363636">
+            <g id="Character-card-Copy-2" sketch:type="MSLayerGroup" transform="translate(18.000000, 277.000000)">
+                <path d="M265,63.3124811 L253.377786,51.6902671 C252.50252,50.8150015 251.093,50.8170889 250.222347,51.6877418 C249.345624,52.5644648 249.352825,53.9711327 250.224873,54.8431803 L262.538369,67.1566769 C262.619302,67.5790214 262.823888,67.9830098 263.153136,68.3122582 C263.657471,68.8165929 264.342618,69.029487 265,68.9492323 C265.657382,69.029487 266.342529,68.8165929 266.846864,68.3122582 C267.176112,67.9830098 267.380698,67.5790214 267.461631,67.1566769 L279.775127,54.8431803 C280.647175,53.9711327 280.654376,52.5644648 279.777653,51.6877418 C278.907,50.8170889 277.49748,50.8150015 276.622214,51.6902671 L265,63.3124811 Z" id="Rectangle-23" sketch:type="MSShapeGroup" transform="translate(265.000000, 60.000000) rotate(-90.000000) translate(-265.000000, -60.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
