@@ -6,15 +6,8 @@ import Home from 'components/Home';
 import DMLogin from 'components/DMLogin';
 import PlayerLogin from 'components/PlayerLogin';
 import CreateAccount from 'components/CreateAccount';
+import CreateCharacter from 'components/CreateCharacter';
 import ViewCharacter from 'components/ViewCharacter';
-
-class CreateCharacter extends React.Component {
-  render() {
-    return (
-        <ViewCharacter isNew={true} />
-    );
-  }
-}
 
 const routes = (
   <Route>
@@ -25,6 +18,7 @@ const routes = (
       <Route path="create-account" component={CreateAccount} />
       <Route path="dashboard" component={PlayerDashboard} />
       <Route path="create-character" component={CreateCharacter} />
+      <Route path="edit-character/:characterIndex" component={ViewCharacter} />
     </Route>
   </Route>
 );

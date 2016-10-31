@@ -1,21 +1,45 @@
 import Immutable from 'immutable';
 import {routerActions} from 'react-router-redux';
-import {firebaseRef} from 'utils/firebase';
+import firebase, {firebaseRef} from 'utils/firebase';
 
 const initialState = Immutable.List();
 
 export const ADD_CHARACTER = 'ADD_CHARACTER';
 export const UPDATE_CHARACTER = 'UPDATE_CHARACTER';
+export const DELETE_CHARACTER = 'DELETE_CHARACTER';
 export const ADD_CHARACTERS = 'ADD_CHARACTERS';
+export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 
 export default function reducer(characters = initialState, action = {}) {
   switch (action.type) {
   case ADD_CHARACTER:
     return characters.push(action.character);
   case UPDATE_CHARACTER:
-    return characters.push(action.character);
+    return characters.map((character) => {
+      if (character.id === action.id) {
+        return {
+          ...character,
+          ...action.updates
+        };
+      }
+      return character;
+    });
+  case DELETE_CHARACTER:
+    return characters.filterNot((character) => {
+      return character.id === action.id;
+    });
   case ADD_CHARACTERS:
     return characters.push(...action.characters);
+  case UPLOAD_IMAGE:
+    return characters.map((character) => {
+      if (character.id === action.id) {
+        return {
+          ...character,
+          imageURL: action.imageURL
+        };
+      }
+      return character;
+    });
   default:
     return characters;
   }
@@ -28,10 +52,18 @@ export function addCharacter(character) {
   };
 }
 
-export function updateCharacter(character) {
+export function updateCharacter(id, updates) {
   return {
     type: UPDATE_CHARACTER,
-    character
+    id,
+    updates
+  };
+}
+
+export function deleteCharacter(id) {
+  return {
+    type: DELETE_CHARACTER,
+    id
   };
 }
 
@@ -39,6 +71,14 @@ export function addCharacters(characters) {
   return {
     type: ADD_CHARACTERS,
     characters
+  };
+}
+
+export function uploadImage(id, imageURL) {
+  return {
+    type: UPLOAD_IMAGE,
+    id,
+    imageURL
   };
 }
 
@@ -57,13 +97,35 @@ export function startAddCharacter(character) {
   };
 }
 
-export function startUpdateCharacter(character) {
+export function startUpdateCharacter(id, character) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
-    const characterRef = firebaseRef.child(`users/${uid}/characters`).push(character);
+    const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
 
-    return characterRef.then(() => {
-      dispatch(updateCharacter(character));
+    const updates = {
+      name: character.name,
+      race: character.race,
+      klass: character.klass,
+      hp: character.hp,
+      ac: character.ac
+    };
+
+    return characterRef.update(updates).then(() => {
+      dispatch(updateCharacter(id, updates));
+      dispatch(routerActions.push('/dashboard'));
+    });
+  };
+}
+
+export function startDeleteCharacter(id) {
+  return (dispatch, getState) => {
+    const uid = getState().auth.get('uid');
+    const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
+    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+
+    return characterRef.remove().then(() => {
+      if (imageRef) {imageRef.delete();}
+      dispatch(deleteCharacter(id));
       dispatch(routerActions.push('/dashboard'));
     });
   };
@@ -86,6 +148,21 @@ export function startAddCharacters() {
       });
 
       dispatch(addCharacters(parsedCharacters));
+    });
+  };
+}
+
+export function startUploadImage(id, image) {
+  return (dispatch, getState) => {
+    const uid = getState().auth.get('uid');
+    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+    const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
+
+    return imageRef.put(image).then(() => {
+      imageRef.getDownloadURL().then((url) => {
+        characterRef.update({imageURL: url});
+        dispatch(uploadImage(id, url));
+      });
     });
   };
 }

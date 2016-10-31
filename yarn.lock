@@ -203,6 +203,10 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
+attr-accept@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.0.3.tgz#c132575a360013e21c4bc964510b87bf78255261"
+
 autoprefixer-loader@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/autoprefixer-loader/-/autoprefixer-loader-3.2.0.tgz#39a7b6646a8269865073d958c97f486152c2c84a"
@@ -4914,6 +4918,12 @@ react-deep-force-update@^2.0.1:
 react-dom@^15.3.1:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.3.2.tgz#c46b0aa5380d7b838e7a59c4a7beff2ed315531f"
+
+react-dropzone:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.7.0.tgz#a8ff301f77062b960e2b29c0af0f9ef7b623c5c4"
+  dependencies:
+    attr-accept "^1.0.3"
 
 react-hot-loader@^3.0.0-beta.3:
   version "3.0.0-beta.6"
