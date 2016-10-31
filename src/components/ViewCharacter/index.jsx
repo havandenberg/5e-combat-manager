@@ -16,15 +16,16 @@ class ViewCharacter extends React.Component {
     createCharacter: React.PropTypes.func.isRequired,
     deleteCharacter: React.PropTypes.func.isRequired,
     isNew: React.PropTypes.bool,
-    updateCharacter: React.PropTypes.func.isRequired,
-    uploadImage: React.PropTypes.func.isRequired
+    updateCharacter: React.PropTypes.func.isRequired
   }
 
   constructor() {
     super();
 
     this.state = {
-      errors: []
+      errors: [],
+      files: [],
+      updated: false
     };
   }
 
@@ -41,7 +42,7 @@ class ViewCharacter extends React.Component {
   }
 
   handleDrop = (files) => {
-    this.props.uploadImage(this.props.character.id, files[0]);
+    this.setState({files, updated: true});
   }
 
   handleOpenClick = () => {
@@ -55,6 +56,8 @@ class ViewCharacter extends React.Component {
 
   handleSaveCharacter = () => {
     const {character, isNew} = this.props;
+    const {files} = this.state;
+    const image = files.length > 0 ? files[0] : null;
     const name = this.refs.name.value;
     const race = this.refs.race.value;
     const klass = this.refs.klass.value;
@@ -65,15 +68,15 @@ class ViewCharacter extends React.Component {
 
     if (this.validate()) {
       if (isNew) {
-        this.props.createCharacter(charObj);
-        return;
+        this.props.createCharacter(charObj, image);
+      } else {
+        this.props.updateCharacter(character.id, charObj, image);
       }
-      this.props.updateCharacter(character.id, charObj);
     }
   }
 
   render() {
-    const {errors} = this.state;
+    const {errors, files, updated} = this.state;
     const {character, isNew} = this.props;
 
     return (
@@ -85,7 +88,9 @@ class ViewCharacter extends React.Component {
         <div className="page-content">
         <div className="form-field drag-and-drop">
           <Dropzone ref="dropzone" onDrop={this.handleDrop}>
-            {character && character.imageURL && <img src={character.imageURL} className="character-avatar" />}
+            {(!updated && character && character.imageURL)
+              ? <img src={character.imageURL} className="character-avatar" />
+              : <div>{files.map((file, i) => <img src={file.preview} className="character-avatar" key={i} />)}</div>}
           </Dropzone>
           <div className="upload-file">Upload avatar image</div>
         </div>
@@ -157,6 +162,5 @@ export default connect((state, props) => {
 }, {
   createCharacter: characterActions.startAddCharacter,
   updateCharacter: characterActions.startUpdateCharacter,
-  deleteCharacter: characterActions.startDeleteCharacter,
-  uploadImage: characterActions.startUploadImage
+  deleteCharacter: characterActions.startDeleteCharacter
 })(ViewCharacter);

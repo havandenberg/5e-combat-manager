@@ -82,12 +82,30 @@ export function uploadImage(id, imageURL) {
   };
 }
 
-export function startAddCharacter(character) {
+export function startUploadImage(id, image) {
+  return (dispatch, getState) => {
+    const uid = getState().auth.get('uid');
+    const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
+    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+
+    return imageRef.put(image).then(() => {
+      imageRef.getDownloadURL().then((url) => {
+        characterRef.update({imageURL: url});
+        dispatch(uploadImage(characterRef.key, url));
+      });
+    });
+  };
+}
+
+export function startAddCharacter(character, image) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters`).push(character);
 
     return characterRef.then(() => {
+      if (image) {
+        dispatch(startUploadImage(characterRef.key, image));
+      }
       dispatch(addCharacter({
         ...character,
         id: characterRef.key
@@ -97,7 +115,7 @@ export function startAddCharacter(character) {
   };
 }
 
-export function startUpdateCharacter(id, character) {
+export function startUpdateCharacter(id, character, image) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
@@ -111,6 +129,9 @@ export function startUpdateCharacter(id, character) {
     };
 
     return characterRef.update(updates).then(() => {
+      if (image) {
+        dispatch(startUploadImage(characterRef.key, image));
+      }
       dispatch(updateCharacter(id, updates));
       dispatch(routerActions.push('/dashboard'));
     });
@@ -148,21 +169,6 @@ export function startAddCharacters() {
       });
 
       dispatch(addCharacters(parsedCharacters));
-    });
-  };
-}
-
-export function startUploadImage(id, image) {
-  return (dispatch, getState) => {
-    const uid = getState().auth.get('uid');
-    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
-    const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
-
-    return imageRef.put(image).then(() => {
-      imageRef.getDownloadURL().then((url) => {
-        characterRef.update({imageURL: url});
-        dispatch(uploadImage(id, url));
-      });
     });
   };
 }
