@@ -142,10 +142,10 @@ export function startDeleteCharacter(id) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
-    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/`);
 
     return characterRef.remove().then(() => {
-      if (imageRef) {imageRef.delete();}
+      imageRef.delete();
       dispatch(deleteCharacter(id));
       dispatch(routerActions.push('/dashboard'));
     });

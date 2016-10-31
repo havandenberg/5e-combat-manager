@@ -37,14 +37,15 @@ class PlayerDashboard extends React.Component {
           <hr className="hr" />
           <div className="page-subtitle">My characters</div>
           <div className="character-container">
-            {
-              characters.map((c, i) => {
+            {!characters.isEmpty()
+              ? characters.map((c, i) => {
                 return (
                     <Link className="no-decoration" key={i} to={`/edit-character/${characters.indexOf(c)}`}>
                       <CharacterCard character={c} />
                     </Link>
                 );
               })
+              : <div className="combat-sessions-empty center">No characters</div>
             }
           </div>
           <div className="form-field center">
