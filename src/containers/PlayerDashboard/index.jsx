@@ -37,13 +37,15 @@ class PlayerDashboard extends React.Component {
           <hr className="hr" />
           <div className="page-subtitle">My characters</div>
           <div className="character-container">
-          {
-            characters.map((c, i) => {
-              return (
-                <CharacterCard key={i} character={c} />
-              );
-            })
-          }
+            {
+              characters.map((c, i) => {
+                return (
+                    <Link className="no-decoration" key={i} to={`/edit-character/${characters.indexOf(c)}`}>
+                      <CharacterCard character={c} />
+                    </Link>
+                );
+              })
+            }
           </div>
           <div className="form-field center">
             <Link to="/create-character"><button className="btn btn-action full-width">Create new character</button></Link>
