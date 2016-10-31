@@ -3,11 +3,11 @@ import firebase from 'firebase';
 
 try {
   const config = {
-    apiKey: 'AIzaSyAOyBEc5oCGY2Sh2fOBBbXVTQo1AEbhQ_0',
-    authDomain: 'ecombatmanager-7896c.firebaseapp.com',
-    databaseURL: 'https://ecombatmanager-7896c.firebaseio.com',
-    storageBucket: 'ecombatmanager-7896c.appspot.com',
-    messagingSenderId: '813490613492'
+    apiKey: 'AIzaSyAXuL1_Asb5v1ekKzHrRv6EOJfvaxra8IM',
+    authDomain: 'combat-manager-dev.firebaseapp.com',
+    databaseURL: 'https://combat-manager-dev.firebaseio.com',
+    storageBucket: 'combat-manager-dev.appspot.com',
+    messagingSenderId: '920846101857'
   };
 
   firebase.initializeApp(config);

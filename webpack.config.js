@@ -87,9 +87,6 @@ module.exports = {
   // Plugins
   plugins: [
     new OpenBrowserPlugin({url: `http://localhost:${port}`}),
-    new webpack.DefinePlugin({
-      PRODUCTION: process.env.NODE_ENV === 'production'
-    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({

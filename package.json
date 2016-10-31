@@ -13,8 +13,7 @@
     "pretest": "npm run lint --silent",
     "test": "mocha --reporter spec src/tests/.setup.js src/tests/**/*.test.js",
     "pretestci": "npm run lint --silent",
-    "testci": "MOCHA_FILE=$CIRCLE_TEST_REPORTS/junit/test-result.xml mocha --reporter mocha-junit-reporter src/tests/.setup.js src/tests/**/*.test.js",
-    "docs": "bootprint swagger ./docs/swagger.json docs"
+    "testci": "MOCHA_FILE=$CIRCLE_TEST_REPORTS/junit/test-result.xml mocha --reporter mocha-junit-reporter src/tests/.setup.js src/tests/**/*.test.js"
   },
   "author": "",
   "dependencies": {
