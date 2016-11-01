@@ -9,7 +9,8 @@ input[type=datetime],
 input[type=datetime-local],
 input[type=tel],
 input[type=number],
-input[type=search]
+input[type=search],
+textarea
   border: 1px solid $light-gray
   border-radius: 4px
   box-sizing: border-box
@@ -29,6 +30,10 @@ input[type=search]
 
   &.input-error
     border: 1px solid $error-red
+
+textarea
+  height: 300px
+  resize: vertical
 
 .form-field
   padding-bottom: $spacing-small

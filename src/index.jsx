@@ -11,6 +11,7 @@ import routes from './routes';
 import reducers from 'reducers/reducer';
 import * as authActions from 'reducers/auth';
 import * as characterActions from 'reducers/character';
+import * as combatActions from 'reducers/combat';
 
 import 'styles/main.styl';
 
@@ -27,9 +28,12 @@ firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     store.dispatch(authActions.login(user.uid));
     store.dispatch(characterActions.startAddCharacters());
+    store.dispatch(combatActions.startAddCombats());
     history.push('/dashboard');
   } else {
     store.dispatch(authActions.logout());
+    store.dispatch(characterActions.clear());
+    store.dispatch(combatActions.clear());
     history.push('/');
   }
 });

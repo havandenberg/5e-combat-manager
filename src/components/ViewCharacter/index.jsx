@@ -73,7 +73,8 @@ class ViewCharacter extends React.Component {
     this.props.deleteCharacter(character.id);
   }
 
-  handleSaveCharacter = () => {
+  handleSaveCharacter = (e) => {
+    e.preventDefault();
     const {character, isNew} = this.props;
     const {files} = this.state;
     const image = files.length > 0 ? files[0] : null;
@@ -105,69 +106,71 @@ class ViewCharacter extends React.Component {
           <div className="page-title vcenter center">{isNew ? 'Create character' : 'Edit character'}</div>
         </div>
         <div className="page-content">
-          <div className="form-field drag-and-drop">
-            <Dropzone ref="dropzone" onDrop={this.handleDrop}>
-              {(!updated && character && character.imageURL)
-                ? <img src={character.imageURL} className="character-avatar" />
-                : <div>{files.map((file, i) => <img src={file.preview} className="character-avatar" key={i} />)}</div>}
-            </Dropzone>
-            <div className="upload-file">Upload avatar image</div>
-          </div>
-          {hasError(errors, ['nameEmpty']) && <div className="alert alert-error">Enter character name</div>}
-          <div className="form-field">
-            <input
-              className={classNames({'input-error': hasError(errors, ['nameEmpty'])})}
-              defaultValue={character ? character.name : ''}
-              placeholder="name"
-              type="text"
-              ref="name" />
-          </div>
-          <div className="form-field">
-            <input
-              defaultValue={character ? character.race : ''}
-              placeholder="race"
-              type="text"
-              ref="race" />
-          </div>
-          <div className="form-field">
-            <input
-              defaultValue={character ? character.klass : ''}
-              placeholder="class"
-              type="text"
-              ref="klass" />
-          </div>
-          {hasError(errors, ['hpEmpty']) && <div className="alert alert-error">Enter base hp</div>}
-          {hasError(errors, ['acEmpty']) && <div className="alert alert-error">Enter base ac</div>}
-          {hasError(errors, ['hpNaN']) && <div className="alert alert-error">HP must be a number</div>}
-          {hasError(errors, ['acNaN']) && <div className="alert alert-error">AC must be a number</div>}
-          <div className="form-field character-stats">
-            <input
-              className={classNames({'input-error': hasError(errors, ['hpEmpty', 'hpNaN'])})}
-              defaultValue={character ? character.hp : ''}
-              placeholder="base hp"
-              type="text"
-              ref="hp" />
-            <input
-              className={classNames({'input-error': hasError(errors, ['acEmpty', 'acNaN'])})}
-              defaultValue={character ? character.ac : ''}
-              placeholder="ac"
-              type="text"
-              ref="ac" />
-          </div>
-          <div className="form-field center">
-            <button className="btn btn-action full-width" onClick={this.handleSaveCharacter}>
-              {isNew ? 'Create character' : 'Save character'}
-            </button>
-          </div>
+          <form onSubmit={this.handleSaveCharacter}>
+            <div className="form-field drag-and-drop">
+              <Dropzone ref="dropzone" onDrop={this.handleDrop}>
+                {(!updated && character && character.imageURL)
+                  ? <img src={character.imageURL} className="character-avatar" />
+                  : <div>{files.map((file, i) => <img src={file.preview} className="character-avatar" key={i} />)}</div>}
+              </Dropzone>
+              <div className="upload-file">Upload avatar image</div>
+            </div>
+            {hasError(errors, ['nameEmpty']) && <div className="alert alert-error">Enter character name</div>}
+            <div className="form-field">
+              <input
+                className={classNames({'input-error': hasError(errors, ['nameEmpty'])})}
+                defaultValue={character ? character.name : ''}
+                placeholder="name"
+                type="text"
+                ref="name" />
+            </div>
+            <div className="form-field">
+              <input
+                defaultValue={character ? character.race : ''}
+                placeholder="race"
+                type="text"
+                ref="race" />
+            </div>
+            <div className="form-field">
+              <input
+                defaultValue={character ? character.klass : ''}
+                placeholder="class"
+                type="text"
+                ref="klass" />
+            </div>
+            {hasError(errors, ['hpEmpty']) && <div className="alert alert-error">Enter base hp</div>}
+            {hasError(errors, ['acEmpty']) && <div className="alert alert-error">Enter base ac</div>}
+            {hasError(errors, ['hpNaN']) && <div className="alert alert-error">HP must be a number</div>}
+            {hasError(errors, ['acNaN']) && <div className="alert alert-error">AC must be a number</div>}
+            <div className="form-field character-stats">
+              <input
+                className={classNames({'input-error': hasError(errors, ['hpEmpty', 'hpNaN'])})}
+                defaultValue={character ? character.hp : ''}
+                placeholder="base hp"
+                type="text"
+                ref="hp" />
+              <input
+                className={classNames({'input-error': hasError(errors, ['acEmpty', 'acNaN'])})}
+                defaultValue={character ? character.ac : ''}
+                placeholder="ac"
+                type="text"
+                ref="ac" />
+            </div>
+            <div className="form-field center">
+              <button className="btn btn-action full-width" type="submit" onClick={this.handleSaveCharacter}>
+                {isNew ? 'Create character' : 'Save character'}
+              </button>
+            </div>
+          </form>
           {confirmDelete && <div className="form-field confirm-delete">Are you sure you want to delete this character?</div>}
           <div className="form-field">
-            {!isNew && confirmDelete
+            {!isNew && (confirmDelete
               ? <button className="btn btn-delete full-width" onClick={this.handleConfirmDeleteCharacter}>
                 Confirm Delete
               </button>
               : <button className="btn btn-delete full-width" onClick={this.handleDeleteCharacter}>
                 Delete Character
-              </button>
+              </button>)
             }
           </div>
         </div>

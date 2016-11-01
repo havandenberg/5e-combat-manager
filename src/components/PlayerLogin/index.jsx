@@ -11,7 +11,7 @@ import backImg from 'images/back.svg';
 class PlayerLogin extends React.Component {
   static propTypes = {
     auth: React.PropTypes.object.isRequired,
-    playerLogin: React.PropTypes.func.isRequired
+    login: React.PropTypes.func.isRequired
   }
 
   constructor() {
@@ -39,12 +39,13 @@ class PlayerLogin extends React.Component {
     return (!errors.length);
   }
 
-  handlePlayerLogin = () => {
+  handleLogin = (e) => {
+    e.preventDefault();
     const email = this.refs.email.value;
     const password = this.refs.password.value;
 
     if (this.validate()) {
-      this.props.playerLogin(email, password);
+      this.props.login(email, password);
     }
   }
 
@@ -58,28 +59,30 @@ class PlayerLogin extends React.Component {
           <div className="page-title vcenter center">Player Login</div>
         </div>
         <div className="page-content">
-          {hasError(errors, ['emailEmpty']) && <div className="alert alert-error">Enter email</div>}
-          <div className="form-field">
-            <input
-              className={classNames({'input-error': hasError(errors, ['email'])})}
-              placeholder="email"
-              type="text"
-              ref="email" />
-          </div>
-          {hasError(errors, ['passwordEmpty']) && <div className="alert alert-error">Enter password</div>}
-          <div className="form-field">
-            <input
-              className={classNames({'input-error': hasError(errors, ['password'])})}
-              placeholder="password"
-              type="password"
-              ref="password" />
-          </div>
-          <div className="form-field center">
-            <button className="btn btn-action full-width" onClick={this.handlePlayerLogin}>Login</button>
-          </div>
-          <div className="form-field center">
-            <Link to="/create-account"><button className="btn btn-action full-width">Create account</button></Link>
-          </div>
+          <form onSubmit={this.handleLogin}>
+            {hasError(errors, ['emailEmpty']) && <div className="alert alert-error">Enter email</div>}
+            <div className="form-field">
+              <input
+                className={classNames({'input-error': hasError(errors, ['email'])})}
+                placeholder="email"
+                type="text"
+                ref="email" />
+            </div>
+            {hasError(errors, ['passwordEmpty']) && <div className="alert alert-error">Enter password</div>}
+            <div className="form-field">
+              <input
+                className={classNames({'input-error': hasError(errors, ['password'])})}
+                placeholder="password"
+                type="password"
+                ref="password" />
+            </div>
+            <div className="form-field center">
+              <button className="btn btn-action full-width" type="submit">Login</button>
+            </div>
+            <div className="form-field center">
+              <Link to="/create-account"><button className="btn btn-action full-width">Create account</button></Link>
+            </div>
+          </form>
         </div>
       </div>
     );
@@ -91,5 +94,5 @@ export default connect((state) => {
     auth: state.auth
   };
 }, {
-  playerLogin: authActions.startPlayerLogin
+  login: authActions.startLogin
 })(PlayerLogin);

@@ -11,7 +11,7 @@ import backImg from 'images/back.svg';
 class DMLogin extends React.Component {
   static propTypes = {
     auth: React.PropTypes.object.isRequired,
-    dmLogin: React.PropTypes.func.isRequired
+    login: React.PropTypes.func.isRequired
   }
 
   constructor() {
@@ -23,7 +23,6 @@ class DMLogin extends React.Component {
   }
 
   validate = () => {
-    const {auth} = this.props;
     const errors = [];
     const password = this.refs.password.value;
 
@@ -31,7 +30,7 @@ class DMLogin extends React.Component {
       errors.push('passwordEmpty');
     }
 
-    if (password !== auth.get('dmPassword')) {
+    if (password !== 'slaiderules') {
       errors.push('passwordIncorrect');
     }
 
@@ -39,11 +38,11 @@ class DMLogin extends React.Component {
     return (!errors.length);
   }
 
-  handleDMLogin = () => {
+  handleLogin = (e) => {
+    e.preventDefault();
     if (this.validate()) {
-      this.props.dmLogin();
-    }
-    this.refs.password.value = '';
+      this.props.login('dm@5ecombatmanager.com', this.refs.password.value);
+    } else {this.refs.password.value = '';}
   }
 
   render() {
@@ -56,21 +55,23 @@ class DMLogin extends React.Component {
           <div className="page-title vcenter center">DM Login</div>
         </div>
         <div className="page-content">
-          {hasError(errors, ['passwordEmpty', 'passwordIncorrect']) &&
-            <div className="alert alert-error">
-              {hasError(errors, ['passwordEmpty']) ? 'Enter password' : 'Incorrect password'}
+          <form onSubmit={this.handleLogin}>
+            {hasError(errors, ['passwordEmpty', 'passwordIncorrect']) &&
+              <div className="alert alert-error">
+                {hasError(errors, ['passwordEmpty']) ? 'Enter password' : 'Incorrect password'}
+              </div>
+            }
+            <div className="form-field">
+              <input
+                className={classNames({'input-error': hasError(errors, ['passwordEmpty', 'passwordIncorrect'])})}
+                placeholder="enter DM password"
+                type="password"
+                ref="password" />
             </div>
-          }
-          <div className="form-field">
-            <input
-              className={classNames({'input-error': hasError(errors, ['passwordEmpty', 'passwordIncorrect'])})}
-              placeholder="enter DM password"
-              type="text"
-              ref="password" />
-          </div>
-          <div className="form-field center">
-            <button className="btn btn-action full-width" onClick={this.handleDMLogin}>Login</button>
-          </div>
+            <div className="form-field center">
+              <button className="btn btn-action full-width" type="submit">Login</button>
+            </div>
+          </form>
         </div>
       </div>
     );
@@ -82,5 +83,5 @@ export default connect((state) => {
     auth: state.auth
   };
 }, {
-  dmLogin: authActions.dmLogin
+  login: authActions.startLogin
 })(DMLogin);

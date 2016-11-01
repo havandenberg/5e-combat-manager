@@ -11,9 +11,11 @@ export default function reducer(auth = initialState, action = {}) {
   switch (action.type) {
   case LOGIN:
     return auth
-      .set('uid', action.uid);
+      .set('uid', action.uid)
+      .set('isDM', action.uid === 'FIZvJUfXSbMJj0D0BLpxR4s7Ow13');
   case LOGOUT:
     return auth
+      .set('isDM', false)
       .delete('uid');
   default:
     return auth;
@@ -44,7 +46,7 @@ export function startCreateAccount(email, password) {
   };
 }
 
-export function startPlayerLogin(email, password) {
+export function startLogin(email, password) {
   return (dispatch) => {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(() => {
 

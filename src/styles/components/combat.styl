@@ -1,4 +1,4 @@
-.character
+.combat
 
   &-container
     display: flex
@@ -14,9 +14,6 @@
     +breakpoint(mobile)
       margin: 0 auto $spacing-small auto
       width: 90%
-
-    &--selected
-      border: 3px solid #994595
 
   &-card
     background-image: url('/images/forward.svg')
@@ -34,10 +31,6 @@
     &:hover
       border: 2px solid $black
 
-    &--avatar
-      flex-basis: 30%
-      margin: auto $spacing-micro
-
     &--text
       display: flex
       flex-direction: column
@@ -51,30 +44,7 @@
       font-size: 1rem
       margin-bottom: $spacing-micro
 
-    &--selectable
-      background-image: none
-      padding: $spacing-small
-
-  &-stats
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    margin: 0 auto
-    width: 60%
-
-    +breakpoint(mobile)
-      width: 100%
-
-    input
-      margin-right: $spacing-small
-
-    &:last-child
-      margin-right: 0
-
   &-grid
     position: relative
     float: left
     width: 46%
-
-  &-avatar
-    height: 200px

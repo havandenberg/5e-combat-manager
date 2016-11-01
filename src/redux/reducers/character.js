@@ -9,6 +9,7 @@ export const UPDATE_CHARACTER = 'UPDATE_CHARACTER';
 export const DELETE_CHARACTER = 'DELETE_CHARACTER';
 export const ADD_CHARACTERS = 'ADD_CHARACTERS';
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+export const CLEAR = 'CLEAR';
 
 export default function reducer(characters = initialState, action = {}) {
   switch (action.type) {
@@ -40,6 +41,8 @@ export default function reducer(characters = initialState, action = {}) {
       }
       return character;
     });
+  case CLEAR:
+    return initialState;
   default:
     return characters;
   }
@@ -79,6 +82,12 @@ export function uploadImage(id, imageURL) {
     type: UPLOAD_IMAGE,
     id,
     imageURL
+  };
+}
+
+export function clear() {
+  return {
+    type: CLEAR
   };
 }
 
@@ -142,7 +151,7 @@ export function startDeleteCharacter(id) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
-    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/`);
+    const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
 
     return characterRef.remove().then(() => {
       imageRef.delete();
