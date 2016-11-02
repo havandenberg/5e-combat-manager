@@ -53,9 +53,28 @@
     &:active
       background-color: darken($error-red, 10%)
 
+  &-combat
+    background-color: darken($success-green, 20%)
+
+    &:hover
+      background-color: darken($success-green, 10%)
+
+    &:active
+      background-color: darken($success-green, 10%)
+
   &-back
     height: 100%
     padding: 0 $spacing-micro
+
+    img
+      height: 100%
+
+  &-settings
+    position: absolute
+    top: 20px
+    right: 20px
+    height: 30px
+    width: 30px
 
     img
       height: 100%

@@ -1,0 +1,70 @@
+.card
+  border: $border
+  border-radius: $border-radius
+  position: relative
+  transition: all 0.1s ease
+
+  &-unselectable
+    background-image: url('/images/forward.svg')
+    background-position: right $spacing-small center
+    background-repeat: no-repeat
+    background-size: 16px
+    cursor: pointer
+    display: flex
+    flex-direction: row
+    padding: $spacing-small $spacing-medium $spacing-small $spacing-small
+
+    &:hover
+      border: 2px solid $black
+
+  &-selectable
+    cursor: pointer
+    display: flex
+    flex-direction: row
+    padding: $spacing-small
+
+    &:hover
+      border: 5px solid $purple
+
+  &-selected
+    border: 5px solid $purple
+
+  &-combat
+    display: flex
+    flex-direction: column
+    padding: $spacing-small
+
+  &-container
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    margin: 0 auto
+    width: 100%
+
+  &-wrapper
+    margin-bottom: $spacing-small
+    width: 48%
+
+    +breakpoint(mobile)
+      margin: 0 auto $spacing-small auto
+      width: 90%
+
+  &-avatar
+    margin: auto $spacing-micro
+
+    img
+      height: 160px
+
+  &-text
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    flex-basis: 70%
+
+  &-name
+    font-size: 1.5rem
+    margin-bottom: $spacing-micro
+
+  &-field
+    font-size: 1rem
+    margin-bottom: $spacing-micro

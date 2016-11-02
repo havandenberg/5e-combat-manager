@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
+import moment from 'moment';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {hasError} from 'utils/errors';
@@ -10,7 +11,7 @@ import * as combatActions from 'reducers/combat';
 
 import backImg from 'images/back.svg';
 
-class ViewCombat extends React.Component {
+class EditCombat extends React.Component {
   static propTypes = {
     characters: React.PropTypes.object,
     combat: React.PropTypes.object,
@@ -23,8 +24,10 @@ class ViewCombat extends React.Component {
   constructor(props) {
     super(props);
 
+    const {combat} = props;
+
     this.state = {
-      characters: props.combat ? props.combat.characters : {name: true},
+      charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
       confirmDelete: false,
       errors: [],
       updated: false
@@ -55,14 +58,23 @@ class ViewCombat extends React.Component {
   handleSaveCombat = (e) => {
     e.preventDefault();
     const {combat, isNew} = this.props;
-    const {characters} = this.state;
+    const {charactersInCombat} = this.state;
     const name = this.refs.name.value;
     const description = this.refs.description.value;
 
-    let combObj = {name, description};
+    _.each(charactersInCombat, (c) => {
+      c.isNPC = true;
+      if (c.isRemoved === undefined) {
+        c.isRemoved = false;
+      }
+    });
 
-    if (characters) {
-      combObj = {...combObj, characters};
+    const combObj = {name, description, charactersInCombat};
+
+    if (isNew) {
+      combObj.createdAt = moment().unix();
+      combObj.isStarted = false;
+      combObj.isActive = false;
     }
 
     if (this.validate()) {
@@ -74,8 +86,43 @@ class ViewCombat extends React.Component {
     }
   }
 
+  handleSelectCharacter = (c) => {
+    return (e) => {
+      e.preventDefault();
+      const {charactersInCombat} = this.state;
+
+      if (this.containsCharacter(charactersInCombat, c)) {
+        if (this.getRemoved(c) !== undefined) {
+          c.isRemoved = !c.isRemoved;
+        }
+      } else {charactersInCombat.push(c);}
+
+      this.setState({charactersInCombat});
+    };
+  }
+
+  containsCharacter = (charArray, char) => {
+    let result = false;
+
+    _.each(charArray, (c) => {
+      result = result || c.id === char.id;
+    });
+
+    return result;
+  }
+
+  getRemoved = (c) => {
+    let removed = false;
+    _.each(this.state.charactersInCombat, (char) => {
+      if (c.id === char.id) {
+        removed = char.isRemoved;
+      }
+    });
+    return removed;
+  }
+
   render() {
-    const {confirmDelete, errors} = this.state;
+    const {charactersInCombat, confirmDelete, errors} = this.state;
     const {characters, combat, isNew} = this.props;
 
     return (
@@ -102,21 +149,23 @@ class ViewCombat extends React.Component {
                 type="text"
                 ref="description" />
             </div>
-            <div className="page-subtitle">Add NPCs</div>
-            <div className="character-container">
-              {!characters.isEmpty() && (characters.get(0)
+            <div className="page-subtitle">NPCs</div>
+            <div className="card-container">
+              {!characters.isEmpty()
                 ? characters.map((c, i) => {
                   return (
                       <div
                         key={i}
-                        className={classNames(
-                          'character-card-wrapper',
-                          {'character-card-wrapper--selected': true})}>
-                        <CharacterCard character={c} selectable={true} />
+                        className="card-wrapper"
+                        onClick={this.handleSelectCharacter(c)}>
+                        <CharacterCard
+                          character={c}
+                          selectable={true}
+                          isSelected={this.containsCharacter(charactersInCombat, c) && !this.getRemoved(c)} />
                       </div>
                   );
                 })
-                : <div className="combats-empty center">No characters</div>)
+                : <div className="combats-empty center">No characters</div>
               }
             </div>
             <div className="form-field center">
@@ -161,4 +210,4 @@ export default connect((state, props) => {
   createCombat: combatActions.startAddCombat,
   updateCombat: combatActions.startUpdateCombat,
   deleteCombat: combatActions.startDeleteCombat
-})(ViewCombat);
+})(EditCombat);

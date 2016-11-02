@@ -10,7 +10,7 @@ import * as characterActions from 'reducers/character';
 
 import backImg from 'images/back.svg';
 
-class ViewCharacter extends React.Component {
+class EditCharacter extends React.Component {
   static propTypes = {
     character: React.PropTypes.object,
     createCharacter: React.PropTypes.func.isRequired,
@@ -195,4 +195,4 @@ export default connect((state, props) => {
   createCharacter: characterActions.startAddCharacter,
   updateCharacter: characterActions.startUpdateCharacter,
   deleteCharacter: characterActions.startDeleteCharacter
-})(ViewCharacter);
+})(EditCharacter);

@@ -1,10 +1,10 @@
 import React from 'react';
-import ViewCombat from 'components/ViewCombat';
+import EditCombat from 'components/EditCombat';
 
 export default class CreateCombat extends React.Component {
   render() {
     return (
-        <ViewCombat isNew={true} />
+        <EditCombat isNew={true} />
     );
   }
 }

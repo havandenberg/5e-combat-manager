@@ -22,14 +22,12 @@ class Dashboard extends React.Component {
         </div>
         <div className="page-content">
           <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
-          <div className="combat-container">
+          <div className="card-container">
             {!combats.isEmpty()
               ? combats.map((c, i) => {
                 return (
-                    <div key={i} className="combat-card-wrapper">
-                      <Link className="no-decoration" to={`/edit-combat/${combats.indexOf(c)}`}>
-                        <CombatCard combat={c} />
-                      </Link>
+                    <div key={i} className="card-wrapper">
+                      <CombatCard combat={c} index={i} />
                     </div>
                 );
               })
@@ -41,11 +39,11 @@ class Dashboard extends React.Component {
           </div>}
           <hr className="hr" />
           <div className="page-subtitle">{`${isDM ? 'NPCs' : 'My characters'}`}</div>
-          <div className="character-container">
+          <div className="card-container">
             {!characters.isEmpty()
               ? characters.map((c, i) => {
                 return (
-                    <div key={i} className="character-card-wrapper">
+                    <div key={i} className="card-wrapper">
                       <Link className="no-decoration" to={`/edit-character/${characters.indexOf(c)}`}>
                         <CharacterCard character={c} />
                       </Link>

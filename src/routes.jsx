@@ -7,9 +7,9 @@ import DMLogin from 'components/DMLogin';
 import PlayerLogin from 'components/PlayerLogin';
 import CreateAccount from 'components/CreateAccount';
 import CreateCharacter from 'components/CreateCharacter';
-import ViewCharacter from 'components/ViewCharacter';
+import EditCharacter from 'components/EditCharacter';
 import CreateCombat from 'components/CreateCombat';
-import ViewCombat from 'components/ViewCombat';
+import EditCombat from 'components/EditCombat';
 
 const routes = (
   <Route>
@@ -20,9 +20,9 @@ const routes = (
       <Route path="create-account" component={CreateAccount} />
       <Route path="dashboard" component={Dashboard} />
       <Route path="create-character" component={CreateCharacter} />
-      <Route path="edit-character/:characterIndex" component={ViewCharacter} />
+      <Route path="edit-character/:characterIndex" component={EditCharacter} />
       <Route path="create-combat" component={CreateCombat} />
-      <Route path="edit-combat/:combatIndex" component={ViewCombat} />
+      <Route path="edit-combat/:combatIndex" component={EditCombat} />
     </Route>
   </Route>
 );

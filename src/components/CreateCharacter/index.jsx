@@ -1,10 +1,10 @@
 import React from 'react';
-import ViewCharacter from 'components/ViewCharacter';
+import EditCharacter from 'components/EditCharacter';
 
 export default class CreateCharacter extends React.Component {
   render() {
     return (
-        <ViewCharacter isNew={true} />
+        <EditCharacter isNew={true} />
     );
   }
 }
