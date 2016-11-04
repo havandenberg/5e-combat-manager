@@ -9,6 +9,7 @@
     height: 50px
     margin-bottom: $spacing-large
     padding: 0 $spacing-medium
+    position: relative
 
     +breakpoint(mobile)
       height: 42px
@@ -30,4 +31,13 @@
     width: 70%
 
     +breakpoint(mobile)
+      width: 90%
+
+    &--combat
+      position: relative
+      top: -100px
+
+    &--dm-combat
+      display: flex
+      flex-direction: row
       width: 90%
