@@ -1,0 +1,34 @@
+.name-card
+  border: $border
+  border-radius: $border-radius
+  padding: $spacing-micro
+  position: relative
+  margin-bottom: $spacing-small
+
+  &:hover
+    border: 2px solid $black
+
+  &--container
+    display: flex
+    flex-direction: column
+    flex-basis: 20%
+    margin-right: $spacing-medium
+
+  &--title
+    font-size: 1.2rem
+    text-align: center
+
+  &--tag
+    position: absolute
+    top: 50%
+    transform: translateY(-50%)
+    right: 10px
+
+    &-init
+      top: 25px
+
+  &--not-ready
+    background-color: lighten($error-red, 30%)
+
+  &--ready
+    background-color: lighten($success-green, 30%)

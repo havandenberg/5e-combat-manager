@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
@@ -9,11 +10,30 @@ class Dashboard extends React.Component {
   static propTypes = {
     characters: React.PropTypes.object.isRequired,
     combats: React.PropTypes.object.isRequired,
-    isDM: React.PropTypes.bool
+    isDM: React.PropTypes.bool,
+    uid: React.PropTypes.string
+  }
+
+  getParsedCombats = () => {
+    const {combats, isDM} = this.props;
+    return isDM ? combats : combats.filter((c) => {
+      return c.isActive;
+    });
+  }
+
+  hasCharacterInCombat = (c) => {
+    let result = '';
+    _.each(c.charactersInCombat, (char) => {
+      if (char.user === this.props.uid) {
+        result = char.name;
+      }
+    });
+    return result;
   }
 
   render() {
-    const {characters, combats, isDM} = this.props;
+    const {characters, isDM} = this.props;
+    const parsedCombats = this.getParsedCombats();
 
     return (
       <div className="page">
@@ -23,12 +43,12 @@ class Dashboard extends React.Component {
         <div className="page-content">
           <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
           <div className="card-container">
-            {!combats.isEmpty()
-              ? combats.map((c, i) => {
+            {!parsedCombats.isEmpty()
+              ? parsedCombats.map((c, i) => {
                 return (
-                    <div key={i} className="card-wrapper">
-                      <CombatCard combat={c} index={i} />
-                    </div>
+                  <div key={i} className="card-wrapper">
+                    <CombatCard characterName={isDM ? '' : this.hasCharacterInCombat(c)} combat={c} index={i} isDM={isDM} />
+                  </div>
                 );
               })
               : <div className="combats-empty center">{`No ${isDM ? 'saved' : 'active'} combats`}</div>
@@ -66,6 +86,7 @@ export default connect((state) => {
   return {
     characters: state.characters,
     combats: state.combats,
-    isDM: state.auth.get('isDM')
+    isDM: state.auth.get('isDM'),
+    uid: state.auth.get('uid')
   };
 }, {})(Dashboard);

@@ -2,6 +2,9 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import App from 'containers/App';
 import Dashboard from 'containers/Dashboard';
+import DMCombat from 'containers/DMCombat';
+import PlayerCombat from 'containers/PlayerCombat';
+
 import Home from 'components/Home';
 import DMLogin from 'components/DMLogin';
 import PlayerLogin from 'components/PlayerLogin';
@@ -10,6 +13,7 @@ import CreateCharacter from 'components/CreateCharacter';
 import EditCharacter from 'components/EditCharacter';
 import CreateCombat from 'components/CreateCombat';
 import EditCombat from 'components/EditCombat';
+import ChooseCharacter from 'components/ChooseCharacter';
 
 const routes = (
   <Route>
@@ -23,6 +27,9 @@ const routes = (
       <Route path="edit-character/:characterIndex" component={EditCharacter} />
       <Route path="create-combat" component={CreateCombat} />
       <Route path="edit-combat/:combatIndex" component={EditCombat} />
+      <Route path="combat/:combatIndex" component={DMCombat} />
+      <Route path="choose-character/:combatIndex" component={ChooseCharacter} />
+      <Route path="player-combat/:combatIndex" component={PlayerCombat} />
     </Route>
   </Route>
 );

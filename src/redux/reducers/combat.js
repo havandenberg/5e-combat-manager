@@ -73,9 +73,8 @@ export function clear() {
 }
 
 export function startAddCombat(combat) {
-  return (dispatch, getState) => {
-    const uid = getState().auth.get('uid');
-    const combatRef = firebaseRef.child(`users/${uid}/combats`).push(combat);
+  return (dispatch) => {
+    const combatRef = firebaseRef.child('combats').push(combat);
 
     return combatRef.then(() => {
       dispatch(addCombat({
@@ -87,10 +86,9 @@ export function startAddCombat(combat) {
   };
 }
 
-export function startUpdateCombat(id, combat) {
-  return (dispatch, getState) => {
-    const uid = getState().auth.get('uid');
-    const combatRef = firebaseRef.child(`users/${uid}/combats/${id}`);
+export function startUpdateCombat(id, combat, next) {
+  return (dispatch) => {
+    const combatRef = firebaseRef.child(`combats/${id}`);
 
     const updates = {
       ...combat
@@ -98,15 +96,14 @@ export function startUpdateCombat(id, combat) {
 
     return combatRef.update(updates).then(() => {
       dispatch(updateCombat(id, updates));
-      dispatch(routerActions.push('/dashboard'));
+      if (next !== '#') {dispatch(routerActions.push(next ? next : '/dashboard'));}
     });
   };
 }
 
 export function startDeleteCombat(id) {
-  return (dispatch, getState) => {
-    const uid = getState().auth.get('uid');
-    const combatRef = firebaseRef.child(`users/${uid}/combats/${id}`);
+  return (dispatch) => {
+    const combatRef = firebaseRef.child(`combats/${id}`);
 
     return combatRef.remove().then(() => {
       dispatch(deleteCombat(id));
@@ -116,9 +113,8 @@ export function startDeleteCombat(id) {
 }
 
 export function startAddCombats() {
-  return (dispatch, getState) => {
-    const uid = getState().auth.get('uid');
-    const combatsRef = firebaseRef.child(`users/${uid}/combats`);
+  return (dispatch) => {
+    const combatsRef = firebaseRef.child('combats');
 
     return combatsRef.once('value').then((snapshot) => {
       const combats = snapshot.val() || {};

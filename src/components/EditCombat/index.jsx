@@ -63,7 +63,7 @@ class EditCombat extends React.Component {
     const description = this.refs.description.value;
 
     _.each(charactersInCombat, (c) => {
-      c.isNPC = true;
+      if (!c.user) {c.isNPC = true;}
       if (c.isRemoved === undefined) {
         c.isRemoved = false;
       }
@@ -90,35 +90,31 @@ class EditCombat extends React.Component {
     return (e) => {
       e.preventDefault();
       const {charactersInCombat} = this.state;
+      const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
 
-      if (this.containsCharacter(charactersInCombat, c)) {
-        if (this.getRemoved(c) !== undefined) {
-          c.isRemoved = !c.isRemoved;
+      if (combatCharacter) {
+        if (combatCharacter.isRemoved !== undefined) {
+          combatCharacter.isRemoved = !combatCharacter.isRemoved;
         }
-      } else {charactersInCombat.push(c);}
+      } else {
+        c.isRemoved = false;
+        charactersInCombat.push(c);
+      }
 
       this.setState({charactersInCombat});
     };
   }
 
-  containsCharacter = (charArray, char) => {
+  getCombatCharacter = (charArray, char) => {
     let result = false;
 
     _.each(charArray, (c) => {
-      result = result || c.id === char.id;
+      if (c.id === char.id) {
+        result = c;
+      }
     });
 
     return result;
-  }
-
-  getRemoved = (c) => {
-    let removed = false;
-    _.each(this.state.charactersInCombat, (char) => {
-      if (c.id === char.id) {
-        removed = char.isRemoved;
-      }
-    });
-    return removed;
   }
 
   render() {
@@ -153,6 +149,7 @@ class EditCombat extends React.Component {
             <div className="card-container">
               {!characters.isEmpty()
                 ? characters.map((c, i) => {
+                  const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
                   return (
                       <div
                         key={i}
@@ -161,7 +158,7 @@ class EditCombat extends React.Component {
                         <CharacterCard
                           character={c}
                           selectable={true}
-                          isSelected={this.containsCharacter(charactersInCombat, c) && !this.getRemoved(c)} />
+                          isSelected={combatCharacter && !combatCharacter.isRemoved} />
                       </div>
                   );
                 })

@@ -38,12 +38,6 @@
   &-disabled
     background-color: $gray
 
-    &:hover
-      background-color: lighten($gray, 10%)
-
-    &:active
-      background-color: lighten($gray, 10%)
-
   &-delete
     background-color: darken($error-red, 20%)
 
@@ -53,7 +47,7 @@
     &:active
       background-color: darken($error-red, 10%)
 
-  &-combat
+  &-choose
     background-color: darken($success-green, 20%)
 
     &:hover
@@ -78,3 +72,8 @@
 
     img
       height: 100%
+
+  &-toggle-start-combat
+    position: absolute
+    top: 0px
+    right: 20px

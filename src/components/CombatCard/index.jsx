@@ -8,8 +8,10 @@ import settingsImg from 'images/settings.svg';
 
 export default class CombatCard extends React.Component {
   static propTypes = {
+    characterName: React.PropTypes.string,
     combat: React.PropTypes.object.isRequired,
-    index: React.PropTypes.number.isRequired
+    index: React.PropTypes.number.isRequired,
+    isDM: React.PropTypes.bool.isRequired
   }
 
   getStats = () => {
@@ -19,10 +21,12 @@ export default class CombatCard extends React.Component {
 
     if (charactersInCombat) {
       _.each(charactersInCombat, (c) => {
-        if (c.isNPC) {
-          npcs++;
-        } else {
-          players++;
+        if (!c.isRemoved) {
+          if (c.user === 'FIZvJUfXSbMJj0D0BLpxR4s7Ow13') {
+            npcs++;
+          } else {
+            players++;
+          }
         }
       });
     }
@@ -31,13 +35,16 @@ export default class CombatCard extends React.Component {
   }
 
   render() {
-    const {combat, index} = this.props;
+    const {characterName, combat, index, isDM} = this.props;
     const stats = this.getStats();
 
     return (
-      <div className="card card-combat">
+      <div className="card card-choose">
         <div className="card-text card-field">
           <div className="card-name center">{combat.name}</div>
+          {!isDM &&
+            <div className="card-field"><strong>{characterName ? `Character: ${characterName}` : 'No character in combat'}</strong></div>
+          }
           <div className="card-field">
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>
             <div>Players: {stats.players}</div>
@@ -45,13 +52,19 @@ export default class CombatCard extends React.Component {
           </div>
           <div className="card-field">{combat.description}</div>
         </div>
-        <Link className="no-decoration btn-settings" to={`/edit-combat/${index}`}>
-          <img src={settingsImg} />
+        {isDM &&
+          <div>
+            <Link className="no-decoration btn-settings" to={`/edit-combat/${index}`}>
+              <img src={settingsImg} />
+            </Link>
+            <div className="tag-combat-card">
+              <Tag type={combat.isActive ? 'active' : 'inactive'} />
+            </div>
+          </div>
+        }
+        <Link className="center" to={isDM ? `/combat/${index}` : characterName ? `player-combat/${index}` : `choose-character/${index}`}>
+          <button className="btn btn-choose">Enter</button>
         </Link>
-        <div className="tag-combat-card">
-          <Tag type={combat.isActive ? 'active' : 'inactive'} />
-        </div>
-        <Link className="center" to={`/combat/${index}`}><button className="btn btn-combat">Enter</button></Link>
       </div>
     );
   }

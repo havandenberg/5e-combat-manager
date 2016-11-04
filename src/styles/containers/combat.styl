@@ -1,0 +1,76 @@
+.enter-initiative
+  margin: $spacing-medium auto 0 auto
+  width: 60%
+
+  &--name-card
+    display: flex
+    flex-direction: row
+    margin-top: $spacing-micro
+    width: 80%
+
+    input
+      flex-grow: 1
+
+    button
+      padding: 0 $spacing-micro
+      margin-left: $spacing-micro
+
+      .end-of-round
+        font-size: 1.5rem
+
+.combat-content
+  margin-top: $spacing-large
+
+  .actions
+    display: flex
+    flex-direction: column
+    margin: $spacing-medium auto 0 auto
+    width: 70%
+
+    +breakpoint(mobile)
+      width: 90%
+
+    button
+      margin-bottom: $spacing-small
+
+    &:last-child
+      margin-bottom: none
+
+.end-of-round
+  text-align: center
+  position: relative
+  height: 1.5rem
+  width: 100%
+
+  &--card
+    font-size: 1.5rem
+
+    .end-of-round--content
+      &:before, &:after
+          width: 31%
+
+  &--name
+    font-size: 1.2rem
+
+    .end-of-round--content
+      &:before, &:after
+        width: 10%
+
+  &--content
+    position: absolute
+    width: 100%
+    display: block
+
+  &--content:before, &--content:after
+    content: ''
+    border: 2px solid $black
+    border-radius: $border-radius
+    height: 0rem
+    display: inline-block
+    vertical-align: middle
+
+  &--content:before
+    margin-right: 15px
+
+  &--content:after
+    margin-left: 15px

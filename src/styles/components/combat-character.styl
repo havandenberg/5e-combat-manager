@@ -1,0 +1,35 @@
+.combat-character
+  border: $border
+  border-radius: $border-radius
+  display: flex
+  flex-direction: column
+  padding: $spacing-small
+  margin-bottom: $spacing-medium
+
+  .inner-one
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+
+    &--avatar
+      flex-basis: 30%
+
+    &--stats
+      display: flex
+      flex-direction: column
+      flex-basis: 60%
+
+      .bubbles
+        flex-grow: 1
+        margin: auto
+
+  .inner-two
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    padding: $spacing-micro $spacing-small 0 $spacing-small
+
+  &--container
+    display: flex
+    flex-direction: column
+    flex-basis: 50%

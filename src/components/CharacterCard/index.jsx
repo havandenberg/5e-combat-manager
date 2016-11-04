@@ -5,27 +5,38 @@ import StatBubble from 'components/StatBubble';
 export default class CharacterCard extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
+    handleChooseCharacter: React.PropTypes.func,
+    isChoose: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
     selectable: React.PropTypes.bool
   }
 
   render() {
-    const {character, isSelected, selectable} = this.props;
+    const {character, handleChooseCharacter, isChoose, isSelected, selectable} = this.props;
 
     return (
       <div className={classNames('card',
         {'card-selectable': selectable},
-        {'card-unselectable': !selectable},
-        {'card-selected': isSelected})}>
-        {character.imageURL && <div className="card-avatar"><img src={character.imageURL} /></div>}
-        <div className="card-text">
+        {'card-unselectable': !selectable && !isChoose},
+        {'card-selected': isSelected},
+        {'card-choose': isChoose})}>
+        {character.imageURL &&
+          <div className={classNames('card-avatar', 'center', {'card-avatar--large': isChoose})}>
+            <img src={character.imageURL} />
+          </div>}
+        <div className="card-text card-field">
           <div className="card-name center">{character.name}</div>
           <div className="card-field">
             <div>Race: {character.race}</div>
             <div>Class: {character.klass}</div>
           </div>
-          <StatBubble character={character} size="med" />
+          <div className="card-field">
+            <StatBubble character={character} size="med" />
+          </div>
         </div>
+        {isChoose &&
+          <button className="btn btn-choose center" onClick={handleChooseCharacter}>Enter combat!</button>
+        }
       </div>
     );
   }
