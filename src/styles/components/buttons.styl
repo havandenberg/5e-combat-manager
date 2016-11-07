@@ -5,7 +5,7 @@
   font-family: inherit
   font-size: 1.125rem
   height: 3rem
-  padding: 0 32px
+  padding: 0 $spacing-small
   transition: all 0.3s ease
 
   +breakpoint(mobile)
@@ -34,9 +34,6 @@
 
     &:active
       background-color: lighten($black, 10%)
-
-  &-disabled
-    background-color: $gray
 
   &-delete
     background-color: darken($error-red, 20%)
@@ -73,7 +70,24 @@
     img
       height: 100%
 
-  &-toggle-start-combat
+  &-open-view
     position: absolute
-    top: 0px
+    bottom: 20px
     right: 20px
+    height: 30px
+    width: 30px
+
+    img
+      height: 100%
+
+  &-advance-turn
+    background-color: $blue
+
+    &:hover
+      background-color: lighten($blue, 10%)
+
+    &:active
+      background-color: lighten($blue, 10%)
+
+  &-disabled
+    background-color: $gray

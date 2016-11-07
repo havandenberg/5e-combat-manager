@@ -5,13 +5,15 @@ import {Link} from 'react-router';
 import Tag from 'components/Tag';
 
 import settingsImg from 'images/settings.svg';
+import rightArrowImg from 'images/right-arrow.svg';
 
 export default class CombatCard extends React.Component {
   static propTypes = {
     characterName: React.PropTypes.string,
     combat: React.PropTypes.object.isRequired,
     index: React.PropTypes.number.isRequired,
-    isDM: React.PropTypes.bool.isRequired
+    isDM: React.PropTypes.bool.isRequired,
+    updateCombat: React.PropTypes.func
   }
 
   getStats = () => {
@@ -22,7 +24,7 @@ export default class CombatCard extends React.Component {
     if (charactersInCombat) {
       _.each(charactersInCombat, (c) => {
         if (!c.isRemoved) {
-          if (c.user === 'FIZvJUfXSbMJj0D0BLpxR4s7Ow13') {
+          if (c.isNPC) {
             npcs++;
           } else {
             players++;
@@ -32,6 +34,12 @@ export default class CombatCard extends React.Component {
     }
 
     return {players, npcs};
+  }
+
+  handleToggleActive = () => {
+    const {combat, updateCombat} = this.props;
+    combat.isActive = !combat.isActive;
+    updateCombat(combat.id, combat, '#');
   }
 
   render() {
@@ -57,7 +65,10 @@ export default class CombatCard extends React.Component {
             <Link className="no-decoration btn-settings" to={`/edit-combat/${index}`}>
               <img src={settingsImg} />
             </Link>
-            <div className="tag-combat-card">
+            <Link className="no-decoration btn-open-view" to={`/view-combat/${index}`}>
+              <img src={rightArrowImg} />
+            </Link>
+            <div className="tag-combat-card" onClick={this.handleToggleActive}>
               <Tag type={combat.isActive ? 'active' : 'inactive'} />
             </div>
           </div>

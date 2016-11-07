@@ -23,6 +23,7 @@ class ChooseCharacter extends React.Component {
       c.isRemoved = false;
       c.user = uid;
       combat.charactersInCombat.push(c);
+      combat.isStarted = false;
       updateCombat(combat.id, combat, `/player-combat/${combatIndex}`);
     };
   }

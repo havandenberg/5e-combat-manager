@@ -29,6 +29,7 @@ firebase.auth().onAuthStateChanged((user) => {
     store.dispatch(authActions.login(user.uid));
     store.dispatch(characterActions.startAddCharacters());
     store.dispatch(combatActions.startAddCombats());
+    // store.dispatch(combatActions.listenForChanges());
     history.push('/dashboard');
   } else {
     store.dispatch(authActions.logout());

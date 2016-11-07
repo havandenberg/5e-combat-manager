@@ -3,6 +3,8 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
+import * as combatActions from 'reducers/combat';
+
 import CharacterCard from 'components/CharacterCard';
 import CombatCard from 'components/CombatCard';
 
@@ -11,7 +13,8 @@ class Dashboard extends React.Component {
     characters: React.PropTypes.object.isRequired,
     combats: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool,
-    uid: React.PropTypes.string
+    uid: React.PropTypes.string,
+    updateCombat: React.PropTypes.func.isRequired
   }
 
   getParsedCombats = () => {
@@ -32,7 +35,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const {characters, isDM} = this.props;
+    const {characters, isDM, updateCombat} = this.props;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -47,7 +50,12 @@ class Dashboard extends React.Component {
               ? parsedCombats.map((c, i) => {
                 return (
                   <div key={i} className="card-wrapper">
-                    <CombatCard characterName={isDM ? '' : this.hasCharacterInCombat(c)} combat={c} index={i} isDM={isDM} />
+                    <CombatCard
+                      characterName={isDM ? '' : this.hasCharacterInCombat(c)}
+                      combat={c}
+                      index={i}
+                      isDM={isDM}
+                      updateCombat={updateCombat} />
                   </div>
                 );
               })
@@ -65,7 +73,7 @@ class Dashboard extends React.Component {
                 return (
                     <div key={i} className="card-wrapper">
                       <Link className="no-decoration" to={`/edit-character/${characters.indexOf(c)}`}>
-                        <CharacterCard character={c} />
+                        <CharacterCard character={c} isDM={isDM} />
                       </Link>
                     </div>
                 );
@@ -89,4 +97,6 @@ export default connect((state) => {
     isDM: state.auth.get('isDM'),
     uid: state.auth.get('uid')
   };
-}, {})(Dashboard);
+}, {
+  updateCombat: combatActions.startUpdateCombat
+})(Dashboard);

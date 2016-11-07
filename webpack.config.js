@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 const AUTOPREFIXER_BROWSERS = ['last 2 version'];
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2999;
 
 module.exports = {
   // Entry point(s) for the bundle

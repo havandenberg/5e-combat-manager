@@ -7,12 +7,13 @@ export default class CharacterCard extends React.Component {
     character: React.PropTypes.object.isRequired,
     handleChooseCharacter: React.PropTypes.func,
     isChoose: React.PropTypes.bool,
+    isDM: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
     selectable: React.PropTypes.bool
   }
 
   render() {
-    const {character, handleChooseCharacter, isChoose, isSelected, selectable} = this.props;
+    const {character, handleChooseCharacter, isChoose, isDM, isSelected, selectable} = this.props;
 
     return (
       <div className={classNames('card',
@@ -31,7 +32,7 @@ export default class CharacterCard extends React.Component {
             <div>Class: {character.klass}</div>
           </div>
           <div className="card-field">
-            <StatBubble character={character} size="med" />
+            <StatBubble character={character} size="med" isDM={isDM} />
           </div>
         </div>
         {isChoose &&

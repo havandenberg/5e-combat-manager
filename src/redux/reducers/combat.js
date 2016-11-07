@@ -6,6 +6,7 @@ const initialState = Immutable.List();
 
 export const ADD_COMBAT = 'ADD_COMBAT';
 export const UPDATE_COMBAT = 'UPDATE_COMBAT';
+export const UPDATE_COMBATS = 'UPDATE_COMBATS';
 export const DELETE_COMBAT = 'DELETE_COMBAT';
 export const ADD_COMBATS = 'ADD_COMBATS';
 export const CLEAR = 'CLEAR';
@@ -24,6 +25,8 @@ export default function reducer(combats = initialState, action = {}) {
       }
       return combat;
     });
+  case UPDATE_COMBATS:
+    return combats.clear().push(...action.combats);
   case DELETE_COMBAT:
     return combats.filterNot((combat) => {
       return combat.id === action.id;
@@ -52,6 +55,13 @@ export function updateCombat(id, updates) {
   };
 }
 
+export function updateCombats(combats) {
+  return {
+    type: UPDATE_COMBATS,
+    combats
+  };
+}
+
 export function deleteCombat(id) {
   return {
     type: DELETE_COMBAT,
@@ -69,6 +79,14 @@ export function addCombats(combats) {
 export function clear() {
   return {
     type: CLEAR
+  };
+}
+
+export function listenForChanges() {
+  return (dispatch) => {
+    firebaseRef.child('combats').on('child_changed', (snapshot) => {
+      dispatch(updateCombats(snapshot.val()));
+    });
   };
 }
 

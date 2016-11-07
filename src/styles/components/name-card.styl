@@ -14,15 +14,25 @@
     flex-basis: 20%
     margin-right: $spacing-medium
 
+    +breakpoint(mobile)
+      margin: 0 auto $spacing-small auto
+      width: 50%
+
+  &--inverted
+    background-color: $black
+    color: $white
+    font-weight: bold
+
   &--title
-    font-size: 1.2rem
+    font-size: 1rem
     text-align: center
 
   &--tag
-    position: absolute
-    top: 50%
-    transform: translateY(-50%)
-    right: 10px
+    float: right
+
+    img
+      height: 24px
+      padding: 0 7px
 
     &-init
       top: 25px

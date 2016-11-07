@@ -4,6 +4,7 @@ import App from 'containers/App';
 import Dashboard from 'containers/Dashboard';
 import DMCombat from 'containers/DMCombat';
 import PlayerCombat from 'containers/PlayerCombat';
+import ViewCombat from 'containers/ViewCombat';
 
 import Home from 'components/Home';
 import DMLogin from 'components/DMLogin';
@@ -30,6 +31,7 @@ const routes = (
       <Route path="combat/:combatIndex" component={DMCombat} />
       <Route path="choose-character/:combatIndex" component={ChooseCharacter} />
       <Route path="player-combat/:combatIndex" component={PlayerCombat} />
+      <Route path="view-combat/:combatIndex" component={ViewCombat} />
     </Route>
   </Route>
 );

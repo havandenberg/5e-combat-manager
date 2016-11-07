@@ -13,6 +13,7 @@ class PlayerCombat extends React.Component {
     character: React.PropTypes.object.isRequired,
     combat: React.PropTypes.object.isRequired,
     combatIndex: React.PropTypes.string.isRequired,
+    uid: React.PropTypes.string.isRequired,
     updateCombat: React.PropTypes.func.isRequired
   }
 
@@ -22,6 +23,32 @@ class PlayerCombat extends React.Component {
     this.state = {
       action: {}
     };
+  }
+
+  getNextTurns = () => {
+    const {combat, uid} = this.props;
+    let count = 0;
+    _.each(combat.charactersInCombat, (c) => {
+      if (c.user === uid) {return false;}
+      count++;
+    });
+
+    switch (count) {
+    case 0:
+      return 'It\'s your turn!';
+    case 1:
+      return 'You\'re up next!';
+    default:
+      return `You\'re up in ${count} turns`;
+    }
+  }
+
+  handleAttack = () => {
+
+  }
+
+  handleCastSpell = () => {
+
   }
 
   handleEnterInitiative = () => {
@@ -49,8 +76,8 @@ class PlayerCombat extends React.Component {
           <div className="page-title center">{character.name}</div>
           {!combat.isStarted && <div>
             <div className="page-subtitle center">Waiting for combat to start...</div>
-            {!character.init
-              ? <div className="enter-initiative center">
+            {!character.init &&
+              <div className="enter-initiative center">
                 <div className="form-field">
                   <input
                     placeholder="1-20"
@@ -59,16 +86,18 @@ class PlayerCombat extends React.Component {
                 </div>
                 <button className="btn btn-action" onClick={this.handleEnterInitiative}>Enter initiative</button>
               </div>
-              : <div className="combat-content">
-                <StatBubble character={character} size="large" />
-                <div className="actions">
-                  <div className="page-subtitle">Combat actions:</div>
-                  <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
-                  <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
-                  <button className="btn btn-action" onClick={this.handleHoldAction}>Hold action</button>
-                </div>
-              </div>
             }
+          </div>}
+          {combat.isStarted && <div>
+            <div className="page-subtitle center">{this.getNextTurns()}</div>
+            <div className="combat-content">
+              <StatBubble character={character} size="large" />
+              <div className="actions">
+                <div className="page-subtitle">Combat actions:</div>
+                <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
+                <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
+              </div>
+            </div>
           </div>}
         </div>
       </div>
@@ -90,7 +119,8 @@ export default connect((state, props) => {
   return {
     character,
     combat,
-    combatIndex
+    combatIndex,
+    uid: state.auth.get('uid')
   };
 }, {
   updateCombat: combatActions.startUpdateCombat

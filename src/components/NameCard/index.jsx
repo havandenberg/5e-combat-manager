@@ -2,17 +2,22 @@ import React from 'react';
 import classNames from 'classnames';
 import Tag from 'components/Tag';
 
+import lockedImg from 'images/locked.svg';
+import unlockedImg from 'images/unlocked.svg';
+import lockedWhiteImg from 'images/locked-white.svg';
+import unlockedWhiteImg from 'images/unlocked-white.svg';
+
 export default class NameCard extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
+    isInverted: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
     started: React.PropTypes.bool,
-    updateCombat: React.PropTypes.func,
-    onClick: React.PropTypes.func
+    updateCombat: React.PropTypes.func
   }
 
-  handleClick = () => {
-    this.props.onClick();
+  handleSelectCharacter = () => {
+
   }
 
   handleEnterInitiative = () => {
@@ -20,21 +25,35 @@ export default class NameCard extends React.Component {
     this.props.updateCombat();
   }
 
+  handleToggleLockCharacter = () => {
+    const {character, updateCombat} = this.props;
+    character.isLocked = !character.isLocked;
+    updateCombat();
+  }
+
   render() {
-    const {character, isSelected, started} = this.props;
+    const {character, isInverted, isSelected, started} = this.props;
 
     return (
       <div
         className={classNames(
           'name-card',
-          {'name-card-selected': isSelected},
+          {'name-card--inverted': isInverted && started},
+          {'name-card--selected': isSelected},
           {'name-card--not-ready': !started && !character.init},
           {'name-card--ready': !started && character.init}
         )}
-        onClick={this.handleClick}>
+        onClick={this.handleSelectCharacter}>
+        {character.isNPC
+          ? <div className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}><Tag type="npc" /></div>
+          : <div
+            className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}
+            onClick={this.handleToggleLockCharacter}>
+            <img src={character.isLocked ? isInverted ? lockedWhiteImg : lockedImg : isInverted ? unlockedWhiteImg : unlockedImg} />
+          </div>
+        }
         <div className="name-card--title">{character.name}</div>
         {character.isNPC && <div>
-          <div className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}><Tag type="npc" /></div>
           {!character.init &&
             <div className="enter-initiative--name-card center">
               <input

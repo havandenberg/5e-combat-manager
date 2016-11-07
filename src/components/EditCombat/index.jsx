@@ -3,7 +3,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import moment from 'moment';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {browserHistory} from 'react-router';
 import {hasError} from 'utils/errors';
 import CharacterCard from 'components/CharacterCard';
 
@@ -11,6 +11,7 @@ import * as combatActions from 'reducers/combat';
 
 import backImg from 'images/back.svg';
 
+/* eslint react/jsx-handler-names: 0 */
 class EditCombat extends React.Component {
   static propTypes = {
     characters: React.PropTypes.object,
@@ -75,15 +76,18 @@ class EditCombat extends React.Component {
       combObj.createdAt = moment().unix();
       combObj.isStarted = false;
       combObj.isActive = false;
+      combObj.currentTurn = 0;
     }
 
     if (this.validate()) {
       if (isNew) {
         this.props.createCombat(combObj);
       } else {
-        this.props.updateCombat(combat.id, combObj);
+        this.props.updateCombat(combat.id, combObj, '#');
       }
     }
+
+    browserHistory.goBack();
   }
 
   handleSelectCharacter = (c) => {
@@ -124,7 +128,9 @@ class EditCombat extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
+          <button className="btn-back pull-left" onClick={browserHistory.goBack}>
+            <img src={backImg} />
+          </button>
           <div className="page-title vcenter center">{isNew ? 'Create combat' : 'Edit combat'}</div>
         </div>
         <div className="page-content">
@@ -158,6 +164,7 @@ class EditCombat extends React.Component {
                         <CharacterCard
                           character={c}
                           selectable={true}
+                          isDM={true}
                           isSelected={combatCharacter && !combatCharacter.isRemoved} />
                       </div>
                   );

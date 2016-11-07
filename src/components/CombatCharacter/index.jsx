@@ -10,11 +10,12 @@ class CombatCharacter extends React.Component {
     combat: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool.isRequired,
     key: React.PropTypes.number,
-    updateCombat: React.PropTypes.func.isRequired
+    updateCombat: React.PropTypes.func.isRequired,
+    view: React.PropTypes.bool
   }
 
   render() {
-    const {character, isDM} = this.props;
+    const {character, isDM, view} = this.props;
 
     return (
       <div className="combat-character">
@@ -24,7 +25,7 @@ class CombatCharacter extends React.Component {
               <img src={character.imageURL} />
             </div>
           }
-          <div className="inner-one--stats card-text card-field">
+          <div className="card-text card-field">
             <div className="card-name center">{character.name}</div>
             <div className="card-field">
               <div>Race: {character.race}</div>
@@ -35,11 +36,12 @@ class CombatCharacter extends React.Component {
             </div>
           </div>
         </div>
-        <div className="inner-two">
-          <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
-          <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
-          <button className="btn btn-action" onClick={this.handleHoldAction}>Hold action</button>
-        </div>
+        {character.isNPC && !view &&
+          <div className="inner-two">
+            <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
+            <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
+          </div>
+        }
       </div>
     );
   }
