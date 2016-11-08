@@ -5,14 +5,10 @@
   transition: all 0.1s ease
 
   &-unselectable
-    background-image: url('/images/forward.svg')
-    background-position: right $spacing-small center
-    background-repeat: no-repeat
-    background-size: 16px
     cursor: pointer
     display: flex
     flex-direction: row
-    padding: $spacing-small $spacing-medium $spacing-small $spacing-small
+    padding: $spacing-small $spacing-small $spacing-small $spacing-small
 
     &:hover
       border: 2px solid $black
@@ -76,3 +72,9 @@
   &-field
     font-size: 1rem
     margin-bottom: $spacing-micro
+
+  &-forward
+    margin: auto 0
+
+    img
+      width: 20px

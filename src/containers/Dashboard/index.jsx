@@ -17,6 +17,16 @@ class Dashboard extends React.Component {
     updateCombat: React.PropTypes.func.isRequired
   }
 
+  getCombatIndex = (combat) => {
+    const {combats} = this.props;
+    let index = 0;
+    combats.map((c) => {
+      if (combat.id === c.id) {return;}
+      index++;
+    });
+    return index;
+  }
+
   getParsedCombats = () => {
     const {combats, isDM} = this.props;
     return isDM ? combats : combats.filter((c) => {
@@ -53,7 +63,7 @@ class Dashboard extends React.Component {
                     <CombatCard
                       characterName={isDM ? '' : this.hasCharacterInCombat(c)}
                       combat={c}
-                      index={i}
+                      index={this.getCombatIndex(c)}
                       isDM={isDM}
                       updateCombat={updateCombat} />
                   </div>

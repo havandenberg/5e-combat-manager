@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import StatBubble from 'components/StatBubble';
 
+import forwardImg from 'images/forward.svg';
+
 export default class CharacterCard extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
@@ -35,6 +37,11 @@ export default class CharacterCard extends React.Component {
             <StatBubble character={character} size="med" isDM={isDM} />
           </div>
         </div>
+        {!isChoose &&
+          <div className="card-forward">
+            <img src={forwardImg} />
+          </div>
+        }
         {isChoose &&
           <button className="btn btn-choose center" onClick={handleChooseCharacter}>Enter combat!</button>
         }
