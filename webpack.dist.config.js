@@ -71,7 +71,7 @@ module.exports = {
       compress: {warnings: false}
     }),
     new HtmlWebpackPlugin({
-      favicon: 'favicon.ico',
+      favicon: 'src/images/favicon.ico',
       template: 'src/index.ejs',
       filename: '../index.html',
       inject: true,

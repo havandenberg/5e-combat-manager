@@ -90,7 +90,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
-      favicon: 'favicon.ico',
+      favicon: 'src/images/favicon.ico',
       template: 'src/index.ejs',
       inject: true,
       hash: true
