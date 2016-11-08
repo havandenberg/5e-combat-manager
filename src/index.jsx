@@ -27,14 +27,13 @@ const history = syncHistoryWithStore(browserHistory, store);
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     store.dispatch(authActions.login(user.uid));
-    store.dispatch(characterActions.startAddCharacters());
-    store.dispatch(combatActions.startAddCombats());
-    // store.dispatch(combatActions.listenForChanges());
+    store.dispatch(characterActions.listenForCharacterChanges());
+    store.dispatch(combatActions.listenForCombatChanges());
     history.push('/dashboard');
   } else {
     store.dispatch(authActions.logout());
-    store.dispatch(characterActions.clear());
-    store.dispatch(combatActions.clear());
+    store.dispatch(characterActions.clearCharacters());
+    store.dispatch(combatActions.clearCombats());
     history.push('/');
   }
 });

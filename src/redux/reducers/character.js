@@ -9,7 +9,7 @@ export const UPDATE_CHARACTER = 'UPDATE_CHARACTER';
 export const DELETE_CHARACTER = 'DELETE_CHARACTER';
 export const ADD_CHARACTERS = 'ADD_CHARACTERS';
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
-export const CLEAR = 'CLEAR';
+export const CLEAR_CHARACTERS = 'CLEAR_CHARACTERS';
 
 export default function reducer(characters = initialState, action = {}) {
   switch (action.type) {
@@ -30,7 +30,7 @@ export default function reducer(characters = initialState, action = {}) {
       return character.id === action.id;
     });
   case ADD_CHARACTERS:
-    return characters.push(...action.characters);
+    return characters.clear().push(...action.characters);
   case UPLOAD_IMAGE:
     return characters.map((character) => {
       if (character.id === action.id) {
@@ -41,7 +41,7 @@ export default function reducer(characters = initialState, action = {}) {
       }
       return character;
     });
-  case CLEAR:
+  case CLEAR_CHARACTERS:
     return initialState;
   default:
     return characters;
@@ -85,9 +85,9 @@ export function uploadImage(id, imageURL) {
   };
 }
 
-export function clear() {
+export function clearCharacters() {
   return {
-    type: CLEAR
+    type: CLEAR_CHARACTERS
   };
 }
 
@@ -177,6 +177,25 @@ export function startAddCharacters() {
         });
       });
 
+      dispatch(addCharacters(parsedCharacters));
+    });
+  };
+}
+
+export function listenForCharacterChanges() {
+  return (dispatch, getState) => {
+    const uid = getState().auth.get('uid');
+    const charactersRef = firebaseRef.child(`users/${uid}/characters`);
+    charactersRef.on('value', (snapshot) => {
+      const characters = snapshot.val() || {};
+      const parsedCharacters = [];
+
+      Object.keys(characters).forEach((characterId) => {
+        parsedCharacters.push({
+          id: characterId,
+          ...characters[characterId]
+        });
+      });
       dispatch(addCharacters(parsedCharacters));
     });
   };

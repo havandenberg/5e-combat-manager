@@ -6,10 +6,9 @@ const initialState = Immutable.List();
 
 export const ADD_COMBAT = 'ADD_COMBAT';
 export const UPDATE_COMBAT = 'UPDATE_COMBAT';
-export const UPDATE_COMBATS = 'UPDATE_COMBATS';
 export const DELETE_COMBAT = 'DELETE_COMBAT';
 export const ADD_COMBATS = 'ADD_COMBATS';
-export const CLEAR = 'CLEAR';
+export const CLEAR_COMBATS = 'CLEAR_COMBATS';
 
 export default function reducer(combats = initialState, action = {}) {
   switch (action.type) {
@@ -25,15 +24,13 @@ export default function reducer(combats = initialState, action = {}) {
       }
       return combat;
     });
-  case UPDATE_COMBATS:
-    return combats.clear().push(...action.combats);
   case DELETE_COMBAT:
     return combats.filterNot((combat) => {
       return combat.id === action.id;
     });
   case ADD_COMBATS:
-    return combats.push(...action.combats);
-  case CLEAR:
+    return combats.clear().push(...action.combats);
+  case CLEAR_COMBATS:
     return initialState;
   default:
     return combats;
@@ -55,13 +52,6 @@ export function updateCombat(id, updates) {
   };
 }
 
-export function updateCombats(combats) {
-  return {
-    type: UPDATE_COMBATS,
-    combats
-  };
-}
-
 export function deleteCombat(id) {
   return {
     type: DELETE_COMBAT,
@@ -76,17 +66,9 @@ export function addCombats(combats) {
   };
 }
 
-export function clear() {
+export function clearCombats() {
   return {
-    type: CLEAR
-  };
-}
-
-export function listenForChanges() {
-  return (dispatch) => {
-    firebaseRef.child('combats').on('child_changed', (snapshot) => {
-      dispatch(updateCombats(snapshot.val()));
-    });
+    type: CLEAR_COMBATS
   };
 }
 
@@ -135,6 +117,24 @@ export function startAddCombats() {
     const combatsRef = firebaseRef.child('combats');
 
     return combatsRef.once('value').then((snapshot) => {
+      const combats = snapshot.val() || {};
+      const parsedCombats = [];
+
+      Object.keys(combats).forEach((combatId) => {
+        parsedCombats.push({
+          id: combatId,
+          ...combats[combatId]
+        });
+      });
+
+      dispatch(addCombats(parsedCombats));
+    });
+  };
+}
+
+export function listenForCombatChanges() {
+  return (dispatch) => {
+    firebaseRef.child('combats').on('value', (snapshot) => {
       const combats = snapshot.val() || {};
       const parsedCombats = [];
 

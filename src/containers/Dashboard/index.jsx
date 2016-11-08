@@ -20,9 +20,10 @@ class Dashboard extends React.Component {
   getCombatIndex = (combat) => {
     const {combats} = this.props;
     let index = 0;
+    let stop = false;
     combats.map((c) => {
-      if (combat.id === c.id) {return;}
-      index++;
+      if (combat.id === c.id) {stop = true;}
+      if (!stop) {index++;}
     });
     return index;
   }
@@ -63,7 +64,7 @@ class Dashboard extends React.Component {
                     <CombatCard
                       characterName={isDM ? '' : this.hasCharacterInCombat(c)}
                       combat={c}
-                      index={this.getCombatIndex(c)}
+                      index={isDM ? i : this.getCombatIndex(c)}
                       isDM={isDM}
                       updateCombat={updateCombat} />
                   </div>
