@@ -40,6 +40,7 @@ class CombatCharacter extends React.Component {
           <div className="inner-two">
             <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
             <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
+            <button className="btn btn-action" onClick={this.handleHoldAction}>Hold action</button>
           </div>
         }
       </div>

@@ -4,31 +4,12 @@ import firebase, {firebaseRef} from 'utils/firebase';
 
 const initialState = Immutable.List();
 
-export const ADD_CHARACTER = 'ADD_CHARACTER';
-export const UPDATE_CHARACTER = 'UPDATE_CHARACTER';
-export const DELETE_CHARACTER = 'DELETE_CHARACTER';
 export const ADD_CHARACTERS = 'ADD_CHARACTERS';
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 export const CLEAR_CHARACTERS = 'CLEAR_CHARACTERS';
 
 export default function reducer(characters = initialState, action = {}) {
   switch (action.type) {
-  case ADD_CHARACTER:
-    return characters.push(action.character);
-  case UPDATE_CHARACTER:
-    return characters.map((character) => {
-      if (character.id === action.id) {
-        return {
-          ...character,
-          ...action.updates
-        };
-      }
-      return character;
-    });
-  case DELETE_CHARACTER:
-    return characters.filterNot((character) => {
-      return character.id === action.id;
-    });
   case ADD_CHARACTERS:
     return characters.clear().push(...action.characters);
   case UPLOAD_IMAGE:
@@ -46,28 +27,6 @@ export default function reducer(characters = initialState, action = {}) {
   default:
     return characters;
   }
-}
-
-export function addCharacter(character) {
-  return {
-    type: ADD_CHARACTER,
-    character
-  };
-}
-
-export function updateCharacter(id, updates) {
-  return {
-    type: UPDATE_CHARACTER,
-    id,
-    updates
-  };
-}
-
-export function deleteCharacter(id) {
-  return {
-    type: DELETE_CHARACTER,
-    id
-  };
 }
 
 export function addCharacters(characters) {
@@ -115,10 +74,6 @@ export function startAddCharacter(character, image) {
       if (image) {
         dispatch(startUploadImage(characterRef.key, image));
       }
-      dispatch(addCharacter({
-        ...character,
-        id: characterRef.key
-      }));
       dispatch(routerActions.push('/dashboard'));
     });
   };
@@ -141,7 +96,6 @@ export function startUpdateCharacter(id, character, image) {
       if (image) {
         dispatch(startUploadImage(characterRef.key, image));
       }
-      dispatch(updateCharacter(id, updates));
       dispatch(routerActions.push('/dashboard'));
     });
   };
@@ -155,7 +109,6 @@ export function startDeleteCharacter(id) {
 
     return characterRef.remove().then(() => {
       imageRef.delete();
-      dispatch(deleteCharacter(id));
       dispatch(routerActions.push('/dashboard'));
     });
   };

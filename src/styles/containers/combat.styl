@@ -33,8 +33,58 @@
     button
       margin-bottom: $spacing-small
 
+    input
+      text-align: center
+      margin: 0 auto
+      width: 50%
+
     &:last-child
       margin-bottom: none
+
+    .target
+      border: $border
+      border-radius: $border-radius
+      cursor: pointer
+      padding: $spacing-micro
+      position: relative
+      margin: 0 auto $spacing-small auto
+      width: 50%
+
+      &:hover
+        background-color: $purple
+        color: $white
+
+      &-selected
+        background-color: $purple
+        color: $white
+        font-weight: bold
+
+    .target-error
+      border-color: $error-red
+      color: $error-red
+
+    .attack-container
+      display: flex
+      flex-direction: row
+      justify-content: space-around
+      margin: 0 auto
+      width: 80%
+
+      button
+        width: 45%
+
+      label
+        font-size: 1.2rem
+        width: 20%
+
+        input
+          height: 20px
+          width: 20px
+          vertical-align: middle
+          margin-right: 10px
+
+    .btn-back
+      margin-right: $spacing-small
 
 .end-of-round
   align-items: center

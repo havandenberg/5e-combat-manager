@@ -79,6 +79,14 @@ class ViewCombat extends React.Component {
               : <div className="combats-empty center">No characters</div>
             }
           </div>
+          <div className="turn-history--container">
+            <div className="page-subtitle center">Turn history</div>
+            {combat.actions.map((a, i) => {
+              return (
+                <div key={i} className="turn-history--action">{a.message}</div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );

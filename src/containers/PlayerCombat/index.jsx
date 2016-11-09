@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import StatBubble from 'components/StatBubble';
+import CombatActions from 'components/CombatActions';
 
 import * as combatActions from 'reducers/combat';
 
@@ -17,14 +18,6 @@ class PlayerCombat extends React.Component {
     updateCombat: React.PropTypes.func.isRequired
   }
 
-  constructor() {
-    super();
-
-    this.state = {
-      action: {}
-    };
-  }
-
   getNextTurns = () => {
     const {combat, uid} = this.props;
     let count = 0;
@@ -32,23 +25,18 @@ class PlayerCombat extends React.Component {
       if (c.user === uid) {return false;}
       count++;
     });
+    return count;
+  }
 
-    switch (count) {
+  getNextTurnsMessage = (nextTurns) => {
+    switch (nextTurns) {
     case 0:
       return 'It\'s your turn!';
     case 1:
       return 'You\'re up next!';
     default:
-      return `You\'re up in ${count} turns`;
+      return `You\'re up in ${nextTurns} turns`;
     }
-  }
-
-  handleAttack = () => {
-
-  }
-
-  handleCastSpell = () => {
-
   }
 
   handleEnterInitiative = () => {
@@ -57,12 +45,14 @@ class PlayerCombat extends React.Component {
   }
 
   updateCombat = () => {
-    const {combat, combatIndex, updateCombat} = this.props;
-    updateCombat(combat.id, combat, `/player-combat/${combatIndex}`);
+    const {combat, updateCombat} = this.props;
+    updateCombat(combat.id, combat, '#');
   }
 
   render() {
     const {character, combat} = this.props;
+    const nextTurns = this.getNextTurns();
+    const isUpNow = nextTurns === 0;
 
     return (
       <div className="page">
@@ -89,14 +79,10 @@ class PlayerCombat extends React.Component {
             }
           </div>}
           {combat.isStarted && <div>
-            <div className="page-subtitle center">{this.getNextTurns()}</div>
+            <div className="page-subtitle center">{this.getNextTurnsMessage(nextTurns)}</div>
             <div className="combat-content">
               <StatBubble character={character} size="large" />
-              <div className="actions">
-                <div className="page-subtitle">Combat actions:</div>
-                <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
-                <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
-              </div>
+              <CombatActions character={character} combat={combat} isUpNow={isUpNow} updateCombat={this.updateCombat} />
             </div>
           </div>}
         </div>
