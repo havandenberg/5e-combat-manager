@@ -36,6 +36,10 @@ class CreateAccount extends React.Component {
       errors.push('passwordEmpty');
     }
 
+    if (password.length < 8) {
+      errors.push('passwordTooShort');
+    }
+
     if (_.isEmpty(confirmPassword)) {
       errors.push('confirmPasswordEmpty');
     }
@@ -77,10 +81,11 @@ class CreateAccount extends React.Component {
           </div>
           {hasError(errors, ['passwordEmpty']) && <div className="alert alert-error">Enter password</div>}
           {hasError(errors, ['passwordMatch']) && <div className="alert alert-error">Passwords do not match</div>}
+          {hasError(errors, ['passwordTooShort']) && <div className="alert alert-error">Password must be at least 8 characters</div>}
           <div className="form-field">
             <input
-              className={classNames({'input-error': hasError(errors, ['passwordEmpty', 'passwordMatch'])})}
-              placeholder="password"
+              className={classNames({'input-error': hasError(errors, ['passwordEmpty', 'passwordMatch', 'passwordTooShort'])})}
+              placeholder="password (8 characters or more)"
               type="password"
               ref="password" />
           </div>

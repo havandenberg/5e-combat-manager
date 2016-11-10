@@ -30,7 +30,7 @@ const routes = (
       <Route path="edit-combat/:combatIndex" component={EditCombat} />
       <Route path="combat/:combatIndex" component={DMCombat} />
       <Route path="choose-character/:combatIndex" component={ChooseCharacter} />
-      <Route path="player-combat/:combatIndex" component={PlayerCombat} />
+      <Route path="player-combat/:combatIndex/:characterName" component={PlayerCombat} />
       <Route path="view-combat/:combatIndex" component={ViewCombat} />
     </Route>
   </Route>

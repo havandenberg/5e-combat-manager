@@ -164,7 +164,7 @@ export default class CombatActions extends React.Component {
     return (
       <div>
         {step === 0 &&
-          <div className="actions">
+          <div className="actions actions-dm-row">
             <div className="page-subtitle">Combat actions:</div>
             {!character.isHoldingAction &&
               <button
@@ -184,7 +184,7 @@ export default class CombatActions extends React.Component {
           </div>
         }
         {step === 1 &&
-          <div className="actions">
+          <div className="actions actions-dm-column">
             <div className="page-subtitle">
               <button className="btn-back pull-left" onClick={this.handleBackStep}><img src={backImg} /></button>
               Choose target(s):
@@ -214,7 +214,7 @@ export default class CombatActions extends React.Component {
           </div>
         }
         {step === 2 &&
-          <div className="actions">
+          <div className="actions actions-dm-column">
             <div className="page-subtitle">
               <button className="btn-back pull-left" onClick={this.handleBackStep}><img src={backImg} /></button>
               {action.type === 0 ? 'Roll to hit:' : 'Roll for success:'}
@@ -230,7 +230,7 @@ export default class CombatActions extends React.Component {
           </div>
         }
         {step === 3 &&
-          <div className="actions">
+          <div className="actions actions-dm-column">
             <div className="page-subtitle">
               <button className="btn-back pull-left" onClick={this.handleBackStep}><img src={backImg} /></button>
               Enter damage:

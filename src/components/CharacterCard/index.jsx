@@ -37,7 +37,7 @@ export default class CharacterCard extends React.Component {
             <StatBubble character={character} size="med" isDM={isDM} />
           </div>
         </div>
-        {!isChoose &&
+        {!selectable && !isChoose &&
           <div className="card-forward">
             <img src={forwardImg} />
           </div>

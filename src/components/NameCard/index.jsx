@@ -13,7 +13,8 @@ export default class NameCard extends React.Component {
     isInverted: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
     started: React.PropTypes.bool,
-    updateCombat: React.PropTypes.func
+    updateCombat: React.PropTypes.func,
+    view: React.PropTypes.bool
   }
 
   handleSelectCharacter = () => {
@@ -32,7 +33,7 @@ export default class NameCard extends React.Component {
   }
 
   render() {
-    const {character, isInverted, isSelected, started} = this.props;
+    const {character, isInverted, isSelected, started, view} = this.props;
 
     return (
       <div
@@ -46,7 +47,7 @@ export default class NameCard extends React.Component {
         onClick={this.handleSelectCharacter}>
         {character.isNPC
           ? <div className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}><Tag type="npc" /></div>
-          : <div
+          : !view && <div
             className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}
             onClick={this.handleToggleLockCharacter}>
             <img src={character.isLocked ? isInverted ? lockedWhiteImg : lockedImg : isInverted ? unlockedWhiteImg : unlockedImg} />

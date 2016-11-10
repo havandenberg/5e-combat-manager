@@ -21,7 +21,9 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--med': size === 'med'},
           {'stat-bubble--small': size === 'small'})}>
           <span className="stat-bubble--label">HP</span>
-          <span className="stat-bubble--text">{character.isNPC && !isDM ? character.isUnlocked ? character.hp : '???' : character.hp}</span>
+          <span className="stat-bubble--text">
+            {(character.isNPC && !isDM) ? character.isUnlocked ? character.hp : '???' : character.hp}
+          </span>
         </div>
         <div className={classNames(
           'stat-bubble',
@@ -31,7 +33,9 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--med': size === 'med'},
           {'stat-bubble--small': size === 'small'})}>
           <span className="stat-bubble--label">AC</span>
-          <span className="stat-bubble--text">{character.isNPC && !isDM ? character.isUnlocked ? character.ac : '??' : character.ac}</span>
+          <span className="stat-bubble--text">
+            {(character.isNPC && !isDM) ? character.isUnlocked ? character.ac : '??' : character.ac}
+          </span>
         </div>
         {character.init &&
           <div className={classNames(
@@ -43,7 +47,7 @@ export default class StatBubble extends React.Component {
             {'stat-bubble--small': size === 'small'})}>
             <span className="stat-bubble--label">IN</span>
             <span className="stat-bubble--text">
-              {character.isNPC && !isDM ? character.isUnlocked ? character.init : '??' : character.init}
+              {(character.isNPC && !isDM) ? character.isUnlocked ? character.init : '??' : character.init}
             </span>
           </div>
         }

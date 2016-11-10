@@ -1,21 +1,19 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import StatBubble from 'components/StatBubble';
+import CombatActions from 'components/CombatActions';
 
-import * as combatActions from 'reducers/combat';
-
-class CombatCharacter extends React.Component {
+export default class CombatCharacter extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
     combat: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool.isRequired,
     key: React.PropTypes.number,
-    updateCombat: React.PropTypes.func.isRequired,
+    updateCombat: React.PropTypes.func,
     view: React.PropTypes.bool
   }
 
   render() {
-    const {character, isDM, view} = this.props;
+    const {character, combat, isDM, updateCombat, view} = this.props;
 
     return (
       <div className="combat-character">
@@ -37,21 +35,11 @@ class CombatCharacter extends React.Component {
           </div>
         </div>
         {character.isNPC && !view &&
-          <div className="inner-two">
-            <button className="btn btn-action" onClick={this.handleAttack}>Attack</button>
-            <button className="btn btn-action" onClick={this.handleCastSpell}>Cast spell</button>
-            <button className="btn btn-action" onClick={this.handleHoldAction}>Hold action</button>
+          <div className="dm-combat-content">
+            <CombatActions character={character} combat={combat} isUpNow={true} updateCombat={updateCombat} />
           </div>
         }
       </div>
     );
   }
 }
-
-export default connect((state) => {
-  return {
-    isDM: state.auth.get('isDM')
-  };
-}, {
-  updateCombat: combatActions.startUpdateCombat
-})(CombatCharacter);

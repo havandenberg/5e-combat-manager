@@ -9,11 +9,23 @@ import rightArrowImg from 'images/right-arrow.svg';
 
 export default class CombatCard extends React.Component {
   static propTypes = {
-    characterName: React.PropTypes.string,
+    characterNames: React.PropTypes.array,
     combat: React.PropTypes.object.isRequired,
     index: React.PropTypes.number.isRequired,
     isDM: React.PropTypes.bool.isRequired,
     updateCombat: React.PropTypes.func
+  }
+
+  getCharacterNamesString = () => {
+    const {characterNames} = this.props;
+    let isFirst = true;
+    let characterNamesString = '';
+    _.each(characterNames, (name) => {
+      if (!isFirst) {characterNamesString += ', ';}
+      characterNamesString += name;
+      if (isFirst) {isFirst = false;}
+    });
+    return characterNames ? `Character${characterNames.length > 1 ? 's' : ''}: ${characterNamesString}` : 'No character in combat';
   }
 
   getStats = () => {
@@ -43,7 +55,7 @@ export default class CombatCard extends React.Component {
   }
 
   render() {
-    const {characterName, combat, index, isDM} = this.props;
+    const {combat, index, isDM} = this.props;
     const stats = this.getStats();
 
     return (
@@ -51,7 +63,7 @@ export default class CombatCard extends React.Component {
         <div className="card-text card-field">
           <div className="card-name center">{combat.name}</div>
           {!isDM &&
-            <div className="card-field"><strong>{characterName ? `Character: ${characterName}` : 'No character in combat'}</strong></div>
+            <div className="card-field"><strong>{this.getCharacterNamesString()}</strong></div>
           }
           <div className="card-field">
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>
@@ -73,7 +85,7 @@ export default class CombatCard extends React.Component {
             </div>
           </div>
         }
-        <Link className="center" to={isDM ? `/combat/${index}` : characterName ? `player-combat/${index}` : `choose-character/${index}`}>
+        <Link className="center" to={isDM ? `/combat/${index}` : `choose-character/${index}`}>
           <button className="btn btn-choose">Enter</button>
         </Link>
       </div>

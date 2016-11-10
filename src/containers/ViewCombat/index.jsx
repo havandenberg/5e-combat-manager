@@ -37,10 +37,10 @@ class ViewCombat extends React.Component {
                   <div key={i}>
                     <NameCard
                       started={combat.isStarted}
-                      updateCombat={this.updateCombat}
                       isInverted={i === 0}
                       isSelected={false}
-                      character={c} />
+                      character={c}
+                      view={true} />
                     {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
                       <div className="end-of-round end-of-round--name">
                         <div className="end-of-round--line"></div>
@@ -64,6 +64,7 @@ class ViewCombat extends React.Component {
                     <CombatCharacter
                       character={c}
                       combat={combat}
+                      isDM={false}
                       key={i}
                       view={true} />
                     {combat.isStarted && parseInt(c.init, 10) === lowestInit &&

@@ -171,7 +171,7 @@ class DMCombat extends React.Component {
                     <CombatCharacter
                       character={c}
                       combat={combat}
-                      key={i}
+                      isDM={true}
                       updateCombat={this.updateCombat} />
                     {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
                       <div className="end-of-round end-of-round--card">

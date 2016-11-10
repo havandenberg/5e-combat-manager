@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {browserHistory} from 'react-router';
 import StatBubble from 'components/StatBubble';
 import CombatActions from 'components/CombatActions';
 
@@ -39,6 +39,10 @@ class PlayerCombat extends React.Component {
     }
   }
 
+  handleGoBack = () => {
+    browserHistory.goBack();
+  }
+
   handleEnterInitiative = () => {
     this.props.character.init = this.refs.init.value;
     this.updateCombat();
@@ -57,7 +61,7 @@ class PlayerCombat extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
+          <button className="btn-back pull-left" onClick={this.handleGoBack}><img src={backImg} /></button>
         </div>
         <div className="page-content page-content--combat">
           <div className="page-title center">
@@ -92,12 +96,12 @@ class PlayerCombat extends React.Component {
 }
 
 export default connect((state, props) => {
-  const {combatIndex} = props.params;
+  const {combatIndex, characterName} = props.params;
   const combat = state.combats.get(combatIndex);
   let character = {};
 
   _.each(combat.charactersInCombat, (c) => {
-    if (c.user === state.auth.get('uid')) {
+    if (c.user === state.auth.get('uid') && c.name === characterName) {
       character = c;
     }
   });

@@ -1,6 +1,7 @@
 import React from 'react';
+import _ from 'lodash';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import * as combatActions from 'reducers/combat';
 
 import CharacterCard from 'components/CharacterCard';
@@ -16,16 +17,31 @@ class ChooseCharacter extends React.Component {
     updateCombat: React.PropTypes.func.isRequired
   }
 
+  handleGoBack = () => {
+    browserHistory.goBack();
+  }
+
   handleChooseCharacter = (c) => {
     return (e) => {
       e.preventDefault();
       const {combat, combatIndex, updateCombat, uid} = this.props;
-      c.isRemoved = false;
-      c.user = uid;
-      combat.charactersInCombat.push(c);
-      combat.isStarted = false;
-      updateCombat(combat.id, combat, `/player-combat/${combatIndex}`);
+      if (!this.isInCombat(c)) {
+        c.isRemoved = false;
+        c.user = uid;
+        combat.charactersInCombat.push(c);
+        combat.isStarted = false;
+      }
+      updateCombat(combat.id, combat, `/player-combat/${combatIndex}/${c.name}`);
     };
+  }
+
+  isInCombat = (c) => {
+    const {combat} = this.props;
+    let result = false;
+    _.each(combat.charactersInCombat, (char) => {
+      if (c.id === char.id) {result = true;}
+    });
+    return result;
   }
 
   render() {
@@ -34,7 +50,7 @@ class ChooseCharacter extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
+          <button className="btn-back pull-left" onClick={this.handleGoBack}><img src={backImg} /></button>
           <div className="page-title vcenter center">Choose character</div>
         </div>
         <div className="page-content">

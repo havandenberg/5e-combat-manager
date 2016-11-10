@@ -35,11 +35,11 @@ class Dashboard extends React.Component {
     });
   }
 
-  hasCharacterInCombat = (c) => {
-    let result = '';
+  hasCharactersInCombat = (c) => {
+    const result = [];
     _.each(c.charactersInCombat, (char) => {
       if (char.user === this.props.uid) {
-        result = char.name;
+        result.push(char.name);
       }
     });
     return result;
@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
                 return (
                   <div key={i} className="card-wrapper">
                     <CombatCard
-                      characterName={isDM ? '' : this.hasCharacterInCombat(c)}
+                      characterNames={isDM ? '' : this.hasCharactersInCombat(c)}
                       combat={c}
                       index={isDM ? i : this.getCombatIndex(c)}
                       isDM={isDM}
