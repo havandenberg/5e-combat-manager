@@ -47,6 +47,19 @@ class EditCombat extends React.Component {
     return (!errors.length);
   }
 
+  validateQuantity = (quantity) => {
+    const errors = [];
+
+    if (_.isEmpty(quantity)) {
+      errors.push('quantityEmpty');
+    } else if (!/^[0-9]\d*$/.test(quantity)) {
+      errors.push('quantityNaN');
+    }
+
+    this.setState({errors});
+    return (!errors.length);
+  }
+
   handleDeleteCombat = () => {
     this.setState({confirmDelete: true});
   }
@@ -91,40 +104,91 @@ class EditCombat extends React.Component {
     browserHistory.goBack();
   }
 
-  handleSelectCharacter = (c) => {
+  handleSelectCharacter = (c, i) => {
     return (e) => {
       e.preventDefault();
       const {charactersInCombat} = this.state;
-      const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
+      const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
+      const charactersToAdd = [];
 
-      if (combatCharacter) {
-        if (combatCharacter.isRemoved !== undefined) {
-          combatCharacter.isRemoved = !combatCharacter.isRemoved;
-        }
+      if (combatCharacters) {
+        const isRemoved = combatCharacters[0].isRemoved;
+        _.each(combatCharacters, (combatCharacter) => {
+          if (combatCharacter.isRemoved !== undefined) {
+            combatCharacter.isRemoved = !isRemoved;
+          }
+        });
       } else {
         c.isRemoved = false;
-        charactersInCombat.push(c);
+        let count = 0;
+        _.times(this.refs[`q${i}`] ? this.refs[`q${i}`].value : 1, () => {
+          const charCopy = {...c};
+          charCopy.copy = count;
+          charactersToAdd.push(charCopy);
+          count++;
+        });
+        console.log(charactersToAdd);
+        charactersInCombat.push(...charactersToAdd);
       }
 
       this.setState({charactersInCombat});
     };
   }
 
-  getCombatCharacter = (charArray, char) => {
+  getCombatCharacters = (charArray, char) => {
     let result = false;
 
     _.each(charArray, (c) => {
       if (c.id === char.id) {
-        result = c;
+        if (!result) {result = [];}
+        result.push(c);
       }
     });
 
     return result;
   }
 
+  updateQuantity = (charArray, c) => {
+    return (e) => {
+      const quantity = e.target.value;
+      if (this.validateQuantity(quantity)) {
+        const {charactersInCombat} = this.state;
+        let count = 0;
+        const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
+        const charactersToAdd = [];
+
+        console.log(quantity, combatCharacters.length);
+        if (quantity < combatCharacters.length) {
+          console.log('lessThan');
+          for (let i = quantity; i <= combatCharacters.length; i++) {
+            if (combatCharacters[i].isRemoved !== undefined) {
+              combatCharacters[i].isRemoved = !combatCharacters[i].isRemoved;
+            }
+          }
+        } else if (quantity > combatCharacters.length) {
+          console.log('greaterThan');
+          _.times(combatCharacters.length, () => {
+            charactersToAdd.push(combatCharacters[count]);
+            count++;
+          });
+          _.times(quantity - combatCharacters.length, () => {
+            const charCopy = {...c};
+            charCopy.copy = count;
+            charCopy.name += ` ${count}`;
+            charactersToAdd.push(charCopy);
+            count++;
+          });
+        }
+        console.log(charactersToAdd);
+      }
+    };
+  }
+
   render() {
     const {charactersInCombat, confirmDelete, errors} = this.state;
     const {characters, combat, isNew} = this.props;
+
+    console.log('charactersInCombat', charactersInCombat);
 
     return (
       <div className="page">
@@ -156,17 +220,29 @@ class EditCombat extends React.Component {
             <div className="card-container">
               {!characters.isEmpty()
                 ? characters.map((c, i) => {
-                  const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
+                  const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
                   return (
                       <div
                         key={i}
-                        className="card-wrapper"
-                        onClick={this.handleSelectCharacter(c)}>
-                        <CharacterCard
-                          character={c}
-                          selectable={true}
-                          isDM={true}
-                          isSelected={combatCharacter && !combatCharacter.isRemoved} />
+                        className="card-wrapper">
+                        <div onClick={this.handleSelectCharacter(c, i)}>
+                          <CharacterCard
+                            character={c}
+                            selectable={true}
+                            isDM={true}
+                            isEditCombat={true}
+                            isSelected={combatCharacters && !combatCharacters[0].isRemoved} />
+                          </div>
+                        {combatCharacters && !combatCharacters[0].isRemoved && <div>
+                          {hasError(errors, ['quantityEmpty']) && <div className="alert alert-error">Enter quantity</div>}
+                          {hasError(errors, ['quantityNaN']) && <div className="alert alert-error">Quantity must be a number</div>}
+                          <input
+                            className={classNames('quantity', {'input-error': hasError(errors, ['quantityEmpty', 'quantityNaN'])})}
+                            type="text"
+                            defaultValue={combatCharacters.length || 1}
+                            placeholder="quantity"
+                            onChange={this.updateQuantity(charactersInCombat, c)} />
+                        </div>}
                       </div>
                   );
                 })

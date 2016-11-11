@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
                 return (
                   <div key={i} className="card-wrapper">
                     <CombatCard
-                      characterNames={isDM ? '' : this.hasCharactersInCombat(c)}
+                      characterNames={isDM ? [] : this.hasCharactersInCombat(c)}
                       combat={c}
                       index={isDM ? i : this.getCombatIndex(c)}
                       isDM={isDM}
