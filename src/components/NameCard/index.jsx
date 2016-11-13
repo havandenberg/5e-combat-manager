@@ -50,7 +50,9 @@ export default class NameCard extends React.Component {
           : !view && <div
             className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}
             onClick={this.handleToggleLockCharacter}>
-            <img src={character.isLocked ? isInverted ? lockedWhiteImg : lockedImg : isInverted ? unlockedWhiteImg : unlockedImg} />
+            <img src={character.isLocked
+              ? isInverted && started ? lockedWhiteImg : lockedImg
+              : isInverted && started ? unlockedWhiteImg : unlockedImg} />
           </div>
         }
         <div className="name-card--title">{character.name}</div>

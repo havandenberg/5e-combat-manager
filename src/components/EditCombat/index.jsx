@@ -10,6 +10,7 @@ import CharacterCard from 'components/CharacterCard';
 import * as combatActions from 'reducers/combat';
 
 import backImg from 'images/back.svg';
+import addImg from 'images/add.svg';
 
 /* eslint react/jsx-handler-names: 0 */
 class EditCombat extends React.Component {
@@ -41,6 +42,19 @@ class EditCombat extends React.Component {
 
     if (_.isEmpty(name)) {
       errors.push('nameEmpty');
+    }
+
+    this.setState({errors});
+    return (!errors.length);
+  }
+
+  validateQuantity = (quantity) => {
+    const errors = [];
+
+    if (_.isEmpty(quantity)) {
+      errors.push('quantityEmpty');
+    } else if (!/^[0-9]\d*$/.test(quantity)) {
+      errors.push('quantityNaN');
     }
 
     this.setState({errors});
@@ -95,31 +109,85 @@ class EditCombat extends React.Component {
     return (e) => {
       e.preventDefault();
       const {charactersInCombat} = this.state;
-      const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
+      const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
 
-      if (combatCharacter) {
-        if (combatCharacter.isRemoved !== undefined) {
-          combatCharacter.isRemoved = !combatCharacter.isRemoved;
-        }
+      if (!combatCharacters) {
+        this.addCharacterCopy(c);
+      } else if (this.hasActiveCopies(combatCharacters, c)) {
+        _.each(combatCharacters, (char) => {
+          char.isRemoved = true;
+        });
       } else {
-        c.isRemoved = false;
-        charactersInCombat.push(c);
+        _.each(combatCharacters, (char) => {
+          char.isRemoved = false;
+        });
       }
 
       this.setState({charactersInCombat});
     };
   }
 
-  getCombatCharacter = (charArray, char) => {
+  hasActiveCopies = (combatCharacters, char) => {
+    let result = false;
+    _.each(combatCharacters, (c) => {
+      if (c.id === char.id) {
+        if (!c.isRemoved) {
+          result = true;
+          return false;
+        }
+      }
+    });
+    return result;
+  }
+
+  getCombatCharacters = (charArray, char) => {
     let result = false;
 
     _.each(charArray, (c) => {
       if (c.id === char.id) {
-        result = c;
+        if (!result) {result = [];}
+        result.push(c);
       }
     });
 
     return result;
+  }
+
+  addCharacterCopy = (character) => {
+    const {charactersInCombat} = this.state;
+    const newChar = {...character};
+    const combatCharacters = this.getCombatCharacters(charactersInCombat, character);
+    const nameIndex = combatCharacters.length || 0;
+    if (combatCharacters) {
+      newChar.name += ` ${nameIndex + 1}`;
+      if (combatCharacters.length === 1) {
+        combatCharacters[0].name += ' 1';
+      }
+    }
+    newChar.copy = nameIndex;
+    newChar.isRemoved = false;
+    charactersInCombat.push(newChar);
+    this.setState({charactersInCombat});
+  }
+
+  handleAddCopy = (c) => {
+    return (e) => {
+      e.preventDefault();
+      this.addCharacterCopy(c);
+    };
+  }
+
+  handleToggleRemoveCopy = (c) => {
+    return (e) => {
+      e.preventDefault();
+      const {charactersInCombat} = this.state;
+      _.each(charactersInCombat, (char) => {
+        if (c.id === char.id && c.copy === char.copy) {
+          char.isRemoved = !char.isRemoved;
+        }
+      });
+      this.setState({charactersInCombat});
+    };
   }
 
   render() {
@@ -156,17 +224,36 @@ class EditCombat extends React.Component {
             <div className="card-container">
               {!characters.isEmpty()
                 ? characters.map((c, i) => {
-                  const combatCharacter = this.getCombatCharacter(charactersInCombat, c);
+                  const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
                   return (
                       <div
                         key={i}
-                        className="card-wrapper"
-                        onClick={this.handleSelectCharacter(c)}>
-                        <CharacterCard
-                          character={c}
-                          selectable={true}
-                          isDM={true}
-                          isSelected={combatCharacter && !combatCharacter.isRemoved} />
+                        className="card-wrapper">
+                        <div onClick={this.handleSelectCharacter(c, i)}>
+                          <CharacterCard
+                            character={c}
+                            selectable={true}
+                            isDM={true}
+                            isEditCombat={true}
+                            isSelected={combatCharacters && this.hasActiveCopies(combatCharacters, c)} />
+                          </div>
+                        {combatCharacters &&
+                          <div className="copies-container">
+                            {combatCharacters.map((char, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className={classNames('copy', {'copy-active': !char.isRemoved}, {'copy-removed': char.isRemoved})}
+                                  onClick={this.handleToggleRemoveCopy(char)}>
+                                    {char.copy + 1}
+                                </div>
+                              );
+                            })}
+                            <div className="add-copy" onClick={this.handleAddCopy(c)}>
+                              <img src={addImg} />
+                            </div>
+                          </div>
+                        }
                       </div>
                   );
                 })

@@ -49,6 +49,18 @@ class PlayerLogin extends React.Component {
     }
   }
 
+  hasLoginError = (code) => {
+    const {auth} = this.props;
+    let result = false;
+    _.each(auth.get('errors'), (error) => {
+      if (error.code === code) {
+        result = true;
+        return false;
+      }
+    });
+    return result;
+  }
+
   render() {
     const {errors} = this.state;
 
@@ -61,6 +73,8 @@ class PlayerLogin extends React.Component {
         <div className="page-content">
           <form onSubmit={this.handleLogin}>
             {hasError(errors, ['emailEmpty']) && <div className="alert alert-error">Enter email</div>}
+            {this.hasLoginError('auth/user-not-found') &&
+              <div className="alert alert-error">Username not found</div>}
             <div className="form-field">
               <input
                 className={classNames({'input-error': hasError(errors, ['email'])})}
@@ -68,6 +82,8 @@ class PlayerLogin extends React.Component {
                 type="text"
                 ref="email" />
             </div>
+            {this.hasLoginError('auth/wrong-password') &&
+              <div className="alert alert-error">Wrong password</div>}
             {hasError(errors, ['passwordEmpty']) && <div className="alert alert-error">Enter password</div>}
             <div className="form-field">
               <input

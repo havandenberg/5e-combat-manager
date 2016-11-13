@@ -19,10 +19,10 @@ class PlayerCombat extends React.Component {
   }
 
   getNextTurns = () => {
-    const {combat, uid} = this.props;
+    const {combat, character, uid} = this.props;
     let count = 0;
     _.each(combat.charactersInCombat, (c) => {
-      if (c.user === uid) {return false;}
+      if (c.user === uid && character.name === c.name) {return false;}
       count++;
     });
     return count;

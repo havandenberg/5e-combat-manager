@@ -68,7 +68,7 @@ export default class CombatActions extends React.Component {
     let result = false;
 
     _.each(array, (c) => {
-      if (c.id === char.id) {
+      if (c.id === char.id && c.copy === char.copy) {
         result = c;
       }
     });

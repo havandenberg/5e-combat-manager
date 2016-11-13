@@ -25,7 +25,14 @@ class ChooseCharacter extends React.Component {
     return (e) => {
       e.preventDefault();
       const {combat, combatIndex, updateCombat, uid} = this.props;
-      if (!this.isInCombat(c)) {
+      let result = false;
+      _.each(combat.charactersInCombat, (char) => {
+        if (c.id === char.id) {
+          char.isRemoved = !char.isRemoved;
+          result = true;
+        }
+      });
+      if (!result) {
         c.isRemoved = false;
         c.user = uid;
         combat.charactersInCombat.push(c);
@@ -35,11 +42,24 @@ class ChooseCharacter extends React.Component {
     };
   }
 
+  handleRemoveCharacter = (c) => {
+    return (e) => {
+      e.preventDefault();
+      const {combat, updateCombat} = this.props;
+      if (this.isInCombat(c)) {
+        _.each(combat.charactersInCombat, (char) => {
+          if (c.id === char.id) {char.isRemoved = true;}
+        });
+        updateCombat(combat.id, combat, '#');
+      }
+    };
+  }
+
   isInCombat = (c) => {
     const {combat} = this.props;
     let result = false;
     _.each(combat.charactersInCombat, (char) => {
-      if (c.id === char.id) {result = true;}
+      if (c.id === char.id && !char.isRemoved) {result = true;}
     });
     return result;
   }
@@ -59,7 +79,12 @@ class ChooseCharacter extends React.Component {
               ? characters.map((c, i) => {
                 return (
                     <div key={i} className="card-wrapper">
-                      <CharacterCard character={c} isChoose={true} handleChooseCharacter={this.handleChooseCharacter(c)} />
+                      <CharacterCard
+                        character={c}
+                        isChoose={true}
+                        isInCombat={this.isInCombat(c)}
+                        handleChooseCharacter={this.handleChooseCharacter(c)}
+                        handleRemoveCharacter={this.handleRemoveCharacter(c)} />
                     </div>
                 );
               })

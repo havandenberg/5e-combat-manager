@@ -1,6 +1,10 @@
 import React from 'react';
 import StatBubble from 'components/StatBubble';
+import Tag from 'components/Tag';
 import CombatActions from 'components/CombatActions';
+
+import lockedImg from 'images/locked.svg';
+import unlockedImg from 'images/unlocked.svg';
 
 export default class CombatCharacter extends React.Component {
   static propTypes = {
@@ -12,11 +16,27 @@ export default class CombatCharacter extends React.Component {
     view: React.PropTypes.bool
   }
 
+  handleToggleLockCharacter = () => {
+    const {character, updateCombat} = this.props;
+    character.isLocked = !character.isLocked;
+    updateCombat();
+  }
+
   render() {
     const {character, combat, isDM, updateCombat, view} = this.props;
 
     return (
       <div className="combat-character">
+        {!view &&
+          <div className="combat-character--tag-container">
+            <div className="combat-character--tag" onClick={this.handleToggleLockCharacter}>
+              <img src={character.isLocked ? lockedImg : unlockedImg} />
+            </div>
+            {character.isNPC &&
+              <div className="combat-character--tag"><Tag type="npc" /></div>
+            }
+          </div>
+        }
         <div className="inner-one">
           {character.imageURL &&
             <div className="inner-one--avatar center">
@@ -34,7 +54,7 @@ export default class CombatCharacter extends React.Component {
             </div>
           </div>
         </div>
-        {character.isNPC && !view &&
+        {character.isNPC && !view && combat.isStarted &&
           <div className="dm-combat-content">
             <CombatActions character={character} combat={combat} isUpNow={true} updateCombat={updateCombat} />
           </div>
