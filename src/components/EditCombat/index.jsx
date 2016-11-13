@@ -10,6 +10,7 @@ import CharacterCard from 'components/CharacterCard';
 import * as combatActions from 'reducers/combat';
 
 import backImg from 'images/back.svg';
+import addImg from 'images/add.svg';
 
 /* eslint react/jsx-handler-names: 0 */
 class EditCombat extends React.Component {
@@ -104,35 +105,39 @@ class EditCombat extends React.Component {
     browserHistory.goBack();
   }
 
-  handleSelectCharacter = (c, i) => {
+  handleSelectCharacter = (c) => {
     return (e) => {
       e.preventDefault();
       const {charactersInCombat} = this.state;
       const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
-      const charactersToAdd = [];
 
-      if (combatCharacters) {
-        const isRemoved = combatCharacters[0].isRemoved;
-        _.each(combatCharacters, (combatCharacter) => {
-          if (combatCharacter.isRemoved !== undefined) {
-            combatCharacter.isRemoved = !isRemoved;
-          }
+      if (!combatCharacters) {
+        this.addCharacterCopy(c);
+      } else if (this.hasActiveCopies(combatCharacters, c)) {
+        _.each(combatCharacters, (char) => {
+          char.isRemoved = true;
         });
       } else {
-        c.isRemoved = false;
-        let count = 0;
-        _.times(this.refs[`q${i}`] ? this.refs[`q${i}`].value : 1, () => {
-          const charCopy = {...c};
-          charCopy.copy = count;
-          charactersToAdd.push(charCopy);
-          count++;
+        _.each(combatCharacters, (char) => {
+          char.isRemoved = false;
         });
-        console.log(charactersToAdd);
-        charactersInCombat.push(...charactersToAdd);
       }
 
       this.setState({charactersInCombat});
     };
+  }
+
+  hasActiveCopies = (combatCharacters, char) => {
+    let result = false;
+    _.each(combatCharacters, (c) => {
+      if (c.id === char.id) {
+        if (!c.isRemoved) {
+          result = true;
+          return false;
+        }
+      }
+    });
+    return result;
   }
 
   getCombatCharacters = (charArray, char) => {
@@ -148,47 +153,46 @@ class EditCombat extends React.Component {
     return result;
   }
 
-  updateQuantity = (charArray, c) => {
-    return (e) => {
-      const quantity = e.target.value;
-      if (this.validateQuantity(quantity)) {
-        const {charactersInCombat} = this.state;
-        let count = 0;
-        const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
-        const charactersToAdd = [];
-
-        console.log(quantity, combatCharacters.length);
-        if (quantity < combatCharacters.length) {
-          console.log('lessThan');
-          for (let i = quantity; i <= combatCharacters.length; i++) {
-            if (combatCharacters[i].isRemoved !== undefined) {
-              combatCharacters[i].isRemoved = !combatCharacters[i].isRemoved;
-            }
-          }
-        } else if (quantity > combatCharacters.length) {
-          console.log('greaterThan');
-          _.times(combatCharacters.length, () => {
-            charactersToAdd.push(combatCharacters[count]);
-            count++;
-          });
-          _.times(quantity - combatCharacters.length, () => {
-            const charCopy = {...c};
-            charCopy.copy = count;
-            charCopy.name += ` ${count}`;
-            charactersToAdd.push(charCopy);
-            count++;
-          });
-        }
-        console.log(charactersToAdd);
+  addCharacterCopy = (character) => {
+    const {charactersInCombat} = this.state;
+    const newChar = {...character};
+    const combatCharacters = this.getCombatCharacters(charactersInCombat, character);
+    const nameIndex = combatCharacters.length || 0;
+    if (combatCharacters) {
+      newChar.name += ` ${nameIndex + 1}`;
+      if (combatCharacters.length === 1) {
+        combatCharacters[0].name += ' 1';
       }
+    }
+    newChar.copy = nameIndex;
+    newChar.isRemoved = false;
+    charactersInCombat.push(newChar);
+    this.setState({charactersInCombat});
+  }
+
+  handleAddCopy = (c) => {
+    return (e) => {
+      e.preventDefault();
+      this.addCharacterCopy(c);
+    };
+  }
+
+  handleToggleRemoveCopy = (c) => {
+    return (e) => {
+      e.preventDefault();
+      const {charactersInCombat} = this.state;
+      _.each(charactersInCombat, (char) => {
+        if (c.id === char.id && c.copy === char.copy) {
+          char.isRemoved = !char.isRemoved;
+        }
+      });
+      this.setState({charactersInCombat});
     };
   }
 
   render() {
     const {charactersInCombat, confirmDelete, errors} = this.state;
     const {characters, combat, isNew} = this.props;
-
-    console.log('charactersInCombat', charactersInCombat);
 
     return (
       <div className="page">
@@ -231,18 +235,25 @@ class EditCombat extends React.Component {
                             selectable={true}
                             isDM={true}
                             isEditCombat={true}
-                            isSelected={combatCharacters && !combatCharacters[0].isRemoved} />
+                            isSelected={combatCharacters && this.hasActiveCopies(combatCharacters, c)} />
                           </div>
-                        {combatCharacters && !combatCharacters[0].isRemoved && <div>
-                          {hasError(errors, ['quantityEmpty']) && <div className="alert alert-error">Enter quantity</div>}
-                          {hasError(errors, ['quantityNaN']) && <div className="alert alert-error">Quantity must be a number</div>}
-                          <input
-                            className={classNames('quantity', {'input-error': hasError(errors, ['quantityEmpty', 'quantityNaN'])})}
-                            type="text"
-                            defaultValue={combatCharacters.length || 1}
-                            placeholder="quantity"
-                            onChange={this.updateQuantity(charactersInCombat, c)} />
-                        </div>}
+                        {combatCharacters &&
+                          <div className="copies-container">
+                            {combatCharacters.map((char, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className={classNames('copy', {'copy-active': !char.isRemoved}, {'copy-removed': char.isRemoved})}
+                                  onClick={this.handleToggleRemoveCopy(char)}>
+                                    {char.copy + 1}
+                                </div>
+                              );
+                            })}
+                            <div className="add-copy" onClick={this.handleAddCopy(c)}>
+                              <img src={addImg} />
+                            </div>
+                          </div>
+                        }
                       </div>
                   );
                 })

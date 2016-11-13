@@ -38,7 +38,7 @@ class Dashboard extends React.Component {
   hasCharactersInCombat = (c) => {
     const result = [];
     _.each(c.charactersInCombat, (char) => {
-      if (char.user === this.props.uid) {
+      if (char.user === this.props.uid && !char.isRemoved) {
         result.push(char.name);
       }
     });
