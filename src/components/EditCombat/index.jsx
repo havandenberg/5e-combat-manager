@@ -270,10 +270,10 @@ class EditCombat extends React.Component {
           <div className="form-field">
             {!isNew && (confirmDelete
               ? <button className="btn btn-delete full-width" onClick={this.handleConfirmDeleteCombat}>
-                Confirm Delete
+                Confirm delete
               </button>
               : <button className="btn btn-delete full-width" onClick={this.handleDeleteCombat}>
-                Delete Combat
+                Delete combat
               </button>)
             }
           </div>

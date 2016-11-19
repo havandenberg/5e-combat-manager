@@ -28,7 +28,7 @@ class ChooseCharacter extends React.Component {
       let result = false;
       _.each(combat.charactersInCombat, (char) => {
         if (c.id === char.id) {
-          char.isRemoved = !char.isRemoved;
+          char.isRemoved = false;
           result = true;
         }
       });

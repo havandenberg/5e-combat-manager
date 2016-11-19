@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import StatBubble from 'components/StatBubble';
 import CombatActions from 'components/CombatActions';
+import Tag from 'components/Tag';
 
 import * as combatActions from 'reducers/combat';
 
 import backImg from 'images/back.svg';
+import lockedImg from 'images/locked.svg';
 
 class PlayerCombat extends React.Component {
   static propTypes = {
@@ -62,6 +64,11 @@ class PlayerCombat extends React.Component {
       <div className="page">
         <div className="page-header">
           <button className="btn-back pull-left" onClick={this.handleGoBack}><img src={backImg} /></button>
+          {character.isLocked &&
+            <div className="pull-right">
+              <img className="image-large" src={lockedImg} />
+            </div>
+          }
         </div>
         <div className="page-content page-content--combat">
           <div className="page-title center">
@@ -84,6 +91,17 @@ class PlayerCombat extends React.Component {
           </div>}
           {combat.isStarted && <div>
             <div className="page-subtitle center">{this.getNextTurnsMessage(nextTurns)}</div>
+            <div className="card-field character-tag--container">
+              {character.tags &&
+                character.tags.map((t, i) => {
+                  return (
+                    <div className="character-tag" key={i}>
+                      <Tag type={t.type} text={t.text} />
+                    </div>
+                  );
+                })
+              }
+            </div>
             <div className="combat-content">
               <StatBubble character={character} size="large" />
               <CombatActions character={character} combat={combat} isUpNow={isUpNow} updateCombat={this.updateCombat} />

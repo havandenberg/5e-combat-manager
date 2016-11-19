@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 import Tag from 'components/Tag';
 
 import settingsImg from 'images/settings.svg';
-import rightArrowImg from 'images/right-arrow.svg';
+import eyeImg from 'images/eye.svg';
 
 export default class CombatCard extends React.Component {
   static propTypes = {
@@ -25,7 +25,9 @@ export default class CombatCard extends React.Component {
       characterNamesString += name;
       if (isFirst) {isFirst = false;}
     });
-    return characterNames ? `Character${characterNames.length > 1 ? 's' : ''}: ${characterNamesString}` : 'No character in combat';
+    return characterNames.length > 0
+      ? `Character${characterNames.length > 1 ? 's' : ''}: ${characterNamesString}`
+      : 'No character in combat';
   }
 
   getStats = () => {
@@ -69,6 +71,7 @@ export default class CombatCard extends React.Component {
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>
             <div>Players: {stats.players}</div>
             <div>NPCs: {stats.npcs}</div>
+            <div>Turn: {combat.currentTurn}</div>
           </div>
           <div className="card-field">{combat.description}</div>
         </div>
@@ -77,8 +80,8 @@ export default class CombatCard extends React.Component {
             <Link className="no-decoration btn-settings" to={`/edit-combat/${index}`}>
               <img src={settingsImg} />
             </Link>
-            <Link className="no-decoration btn-open-view" to={`/view-combat/${index}`}>
-              <img src={rightArrowImg} />
+            <Link className="no-decoration btn-open-view circle" to={`/view-combat/${index}`}>
+              <img src={eyeImg} />
             </Link>
             <div className="tag-combat-card" onClick={this.handleToggleActive}>
               <Tag type={combat.isActive ? 'active' : 'inactive'} />

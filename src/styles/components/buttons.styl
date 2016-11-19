@@ -71,14 +71,41 @@
       height: 100%
 
   &-open-view
+    border: $border
     position: absolute
+    padding: 3px
     bottom: 20px
     right: 20px
-    height: 30px
-    width: 30px
+    height: 26px
+    width: 26px
 
     img
       height: 100%
+
+    &--dm
+      border: $border
+      position: absolute
+      padding: 3px
+      top: 20px
+      right: 65px
+      height: 26px
+      width: 26px
+
+  &-turn
+    position: absolute
+    top: 24px
+    right: 100px
+    height: 20px
+    width: 70px
+    font-weight: bold
+    font-size: 1.2rem
+
+    &--view
+      width: 100%
+      text-align: right
+      font-size: 1.2rem
+      font-weight: bold
+      padding-bottom: $spacing-micro
 
   &-advance-turn
     background-color: $blue

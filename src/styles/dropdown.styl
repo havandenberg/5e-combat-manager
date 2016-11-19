@@ -1,0 +1,23 @@
+select
+  appearance: none
+  background-image: url('/images/down.svg')
+  background-position: right $spacing-micro center
+  background-repeat: no-repeat
+  background-size: 10px
+  display: inline-block
+  font-size: 0.8rem
+  padding: $spacing-micro $spacing-small $spacing-micro $spacing-micro
+
+  &.select-error
+    border-color: $error-red
+
+.dropdown-group
+  display: flex
+  width: 100%
+
+  select
+    margin-right: $spacing-micro
+    width: auto
+
+    &:last-child
+      margin-right: 0

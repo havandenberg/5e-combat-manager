@@ -15,6 +15,7 @@ class EditCharacter extends React.Component {
     character: React.PropTypes.object,
     createCharacter: React.PropTypes.func.isRequired,
     deleteCharacter: React.PropTypes.func.isRequired,
+    isDM: React.PropTypes.bool,
     isNew: React.PropTypes.bool,
     updateCharacter: React.PropTypes.func.isRequired
   }
@@ -75,7 +76,7 @@ class EditCharacter extends React.Component {
 
   handleSaveCharacter = (e) => {
     e.preventDefault();
-    const {character, isNew} = this.props;
+    const {character, isDM, isNew} = this.props;
     const {files} = this.state;
     const image = files.length > 0 ? files[0] : null;
     const name = this.refs.name.value;
@@ -85,6 +86,10 @@ class EditCharacter extends React.Component {
     const ac = this.refs.ac.value;
 
     const charObj = {name, race, klass, hp, ac};
+
+    if (isNew && isDM) {
+      charObj.isLocked = true;
+    }
 
     if (this.validate()) {
       if (isNew) {
@@ -166,10 +171,10 @@ class EditCharacter extends React.Component {
           <div className="form-field">
             {!isNew && (confirmDelete
               ? <button className="btn btn-delete full-width" onClick={this.handleConfirmDeleteCharacter}>
-                Confirm Delete
+                Confirm delete
               </button>
               : <button className="btn btn-delete full-width" onClick={this.handleDeleteCharacter}>
-                Delete Character
+                Delete character
               </button>)
             }
           </div>
@@ -186,11 +191,14 @@ export default connect((state, props) => {
     const character = state.characters.get(characterIndex);
 
     return {
-      character
+      character,
+      isDM: state.auth.get('isDM')
     };
   }
 
-  return {};
+  return {
+    isDM: state.auth.get('isDM')
+  };
 }, {
   createCharacter: characterActions.startAddCharacter,
   updateCharacter: characterActions.startUpdateCharacter,

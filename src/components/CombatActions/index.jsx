@@ -28,12 +28,20 @@ export default class CombatActions extends React.Component {
     const {character} = this.props;
     const isHeal = action.damage < 0;
     let targetsString = '';
+    let count = 0;
     _.each(action.targets, (target) => {
-      targetsString += `${target.name}`;
+      if (count === 0) {
+        targetsString += `${target.name}`;
+      } else if (count === action.targets.length - 1) {
+        targetsString += ` and ${target.name}`;
+      } else {
+        targetsString += `, ${target.name}`;
+      }
+      count++;
     });
     return `${character.name} ${action.type === 0
       ? 'attacked' : isHeal ? 'healed' : 'cast a spell on'} ${targetsString} ${missed
-      ? 'but missed!' : `for ${action.damage >= 0 ? action.damage : action.damage * -1} ${isHeal ? 'points' : 'damage'}.`}`;
+      ? 'but missed!' : `for ${action.damage >= 0 ? action.damage : action.damage * -1} ${isHeal ? 'points' : 'damage'}!`}`;
   }
 
   handleAttack = () => {
@@ -102,6 +110,7 @@ export default class CombatActions extends React.Component {
   handleMiss = () => {
     const {action} = this.state;
     const updatedAction = action;
+    updatedAction.damage = 0;
     updatedAction.message = this.getActionMessage(updatedAction, true);
     this.executeAction(updatedAction);
     this.setState({action: {targets: []}, step: 0});

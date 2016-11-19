@@ -5,6 +5,9 @@
   font-size: 0.6rem
   padding: 5px
 
+  &-combat
+    font-size: 0.8rem
+
   &-active
     background-color: $success-green
 
@@ -14,8 +17,64 @@
   &-npc
     background-color: $purple
 
+  &-blinded
+    background-color: #285E68
+
+  &-charmed
+    background-color: #F28682
+
+  &-deafened
+    background-color: #ffef53
+
+  &-frightened
+    background-color: rgb(57, 41, 23)
+
+  &-grappled
+    background-color: rgb(242, 96, 76)
+
+  &-incapacitated
+    background-color: rgb(150, 196, 65)
+
+  &-invisible
+    background-color: rgb(189, 189, 189)
+
+  &-paralyzed
+    background-color: rgb(233, 232, 105)
+
+  &-petrified
+    background-color: rgb(30, 70, 39)
+
+  &-poisoned
+    background-color: rgb(95, 47, 96)
+
+  &-prone
+    background-color: rgb(73, 180, 177)
+
+  &-restrained
+    background-color: rgb(10, 128, 50)
+
+  &-stunned
+    background-color: rgb(150, 149, 44)
+
+  &-unconscious
+    background-color: $black
+
   &-combat-card
     position: absolute
     top: 20px
     left: 20px
     cursor: pointer
+
+.character-tag
+  margin-right: $spacing-micro
+
+  &--container
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    flex-wrap: wrap
+
+  .tag
+    font-size: 0.8rem
+    margin-bottom: 2px

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import StatBubble from 'components/StatBubble';
 import Tag from 'components/Tag';
 import CombatActions from 'components/CombatActions';
@@ -6,14 +7,71 @@ import CombatActions from 'components/CombatActions';
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
 
+const tags = [
+  {type: 'blinded', text: 'bli'},
+  {type: 'charmed', text: 'chr'},
+  {type: 'deafened', text: 'def'},
+  {type: 'frightened', text: 'fri'},
+  {type: 'grappled', text: 'grp'},
+  {type: 'incapacitated', text: 'inc'},
+  {type: 'invisible', text: 'inv'},
+  {type: 'paralyzed', text: 'par'},
+  {type: 'petrified', text: 'pet'},
+  {type: 'poisoned', text: 'poi'},
+  {type: 'prone', text: 'prn'},
+  {type: 'restrained', text: 'rst'},
+  {type: 'stunned', text: 'stn'},
+  {type: 'unconscious', text: 'unc'}
+];
+
 export default class CombatCharacter extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
     combat: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool.isRequired,
-    key: React.PropTypes.number,
     updateCombat: React.PropTypes.func,
     view: React.PropTypes.bool
+  }
+
+  hasTag = (tagsArray, type) => {
+    let result = false;
+    _.each(tagsArray, (t) => {
+      if (t.type === type) {result = true;}
+    });
+    return result;
+  }
+
+  handleSelectTag = (e) => {
+    const {character, updateCombat} = this.props;
+    const tag = e.target.value;
+    let newTag = {};
+    _.each(tags, (t) => {
+      if (t.type === tag) {newTag = t;}
+    });
+    if (character.tags) {
+      if (this.hasTag(character.tags, tag)) {
+        _.remove(character.tags, (t) => {
+          if (t.type === tag) {return true;}
+        });
+      } else {
+        character.tags.push(newTag);
+      }
+    } else {
+      character.tags = [newTag];
+    }
+    this.refs.selectTag.value = 'Status';
+    updateCombat();
+  }
+
+  handleRemoveTag = (tag) => {
+    return (e) => {
+      e.preventDefault();
+      const {character, updateCombat} = this.props;
+      _.remove(character.tags, (t) => {
+        if (t === tag) {return true;}
+      });
+      updateCombat();
+    };
   }
 
   handleToggleLockCharacter = () => {
@@ -48,6 +106,29 @@ export default class CombatCharacter extends React.Component {
             <div className="card-field">
               <div>Race: {character.race}</div>
               <div>Class: {character.klass}</div>
+            </div>
+            <div className="card-field character-tag--container">
+              {character.tags &&
+                character.tags.map((t, i) => {
+                  return (
+                    <div className="character-tag" key={i} onClick={this.handleRemoveTag(t)}>
+                      <Tag type={t.type} text={t.text} />
+                    </div>
+                  );
+                })
+              }
+              {!view &&
+                <select
+                  onChange={this.handleSelectTag}
+                  ref="selectTag" >
+                  <option key="">Status</option>
+                  {
+                    tags.map((t, i) => {
+                      return <option key={i}>{t.type}</option>;
+                    })
+                  }
+                </select>
+              }
             </div>
             <div className="card-field bubbles">
               <StatBubble character={character} size="med" isDM={isDM} />
