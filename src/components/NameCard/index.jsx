@@ -57,7 +57,7 @@ export default class NameCard extends React.Component {
         }
         <div className="name-card--title">{character.name}</div>
         {character.isNPC && <div>
-          {!character.init &&
+          {!view && !character.init &&
             <div className="enter-initiative--name-card center">
               <input
                 placeholder="initiative"
