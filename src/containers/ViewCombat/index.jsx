@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
 import CombatCharacter from 'components/CombatCharacter';
 import NameCard from 'components/NameCard';
 
@@ -22,7 +21,7 @@ class ViewCombat extends React.Component {
   }
 
   render() {
-    const {combat, combatIndex} = this.props;
+    const {combat} = this.props;
     const lowestInit = this.getLowestInit();
 
     return (
@@ -56,9 +55,7 @@ class ViewCombat extends React.Component {
             }
           </div>
           <div className="combat-character--container">
-            <Link className="no-decoration btn-turn--view" to={`/edit-combat/${combatIndex}`}>
-              <div>{`Turn ${combat.currentTurn + 1}`}</div>
-            </Link>
+            <div className="turn-count--view">{`Turn ${combat.currentTurn + 1}`}</div>
             {combat.charactersInCombat.length > 0
               ? combat.charactersInCombat.filter((c) => {
                 return !c.isRemoved;

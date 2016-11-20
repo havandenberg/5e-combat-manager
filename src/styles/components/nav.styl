@@ -1,11 +1,15 @@
 .nav
   background: $black
-  height: 80px
-  padding: 0 $spacing-small
+  height: 60px
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 10
 
   &-username
     color: $white
     font-size: 1.25rem
+    margin-left: $spacing-small
 
     +breakpoint(mobile)
       font-size: 1rem

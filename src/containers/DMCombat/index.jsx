@@ -111,9 +111,7 @@ class DMCombat extends React.Component {
           <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
           <div className="page-title vcenter center">{combat.name}</div>
           <div className="page-subtitle vcenter center">{combat.description}</div>
-          <Link className="no-decoration btn-turn" to={`/edit-combat/${combatIndex}`}>
-            <div>{`Turn ${combat.currentTurn + 1}`}</div>
-          </Link>
+          <div className="turn-count">{`Turn ${combat.currentTurn + 1}`}</div>
           <Link className="no-decoration btn-open-view--dm circle" to={`/view-combat/${combatIndex}`}>
             <img src={eyeImg} />
           </Link>

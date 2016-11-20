@@ -45,20 +45,7 @@ class EditCombat extends React.Component {
     }
 
     this.setState({errors});
-    return (!errors.length);
-  }
-
-  validateQuantity = (quantity) => {
-    const errors = [];
-
-    if (_.isEmpty(quantity)) {
-      errors.push('quantityEmpty');
-    } else if (!/^[0-9]\d*$/.test(quantity)) {
-      errors.push('quantityNaN');
-    }
-
-    this.setState({errors});
-    return (!errors.length);
+    return !errors.length;
   }
 
   handleDeleteCombat = () => {
@@ -100,9 +87,8 @@ class EditCombat extends React.Component {
       } else {
         this.props.updateCombat(combat.id, combObj, '#');
       }
+      browserHistory.goBack();
     }
-
-    browserHistory.goBack();
   }
 
   handleSelectCharacter = (c) => {

@@ -88,9 +88,11 @@ export default class CombatCard extends React.Component {
             </div>
           </div>
         }
-        <Link className="center" to={isDM ? `/combat/${index}` : `choose-character/${index}`}>
-          <button className="btn btn-choose">Enter</button>
-        </Link>
+        <div className="full-width center">
+          <Link to={isDM ? `/combat/${index}` : `choose-character/${index}`}>
+            <button className="btn btn-choose">Enter</button>
+          </Link>
+        </div>
       </div>
     );
   }

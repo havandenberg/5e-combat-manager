@@ -38,7 +38,7 @@ export default class CharacterCard extends React.Component {
           </div>
         }
         {character.imageURL &&
-          <div className={classNames('card-avatar', 'center', {'card-avatar--large': isChoose})}>
+          <div className={classNames('card-avatar', 'center')}>
             <img src={character.imageURL} />
           </div>}
         <div className="card-text card-field">
@@ -57,7 +57,9 @@ export default class CharacterCard extends React.Component {
           </div>
         }
         {isChoose &&
-          <button className="btn btn-choose center" onClick={handleChooseCharacter}>Enter combat!</button>
+          <div className="full-width center">
+            <button className="btn btn-choose" onClick={handleChooseCharacter}>Enter combat!</button>
+          </div>
         }
       </div>
     );

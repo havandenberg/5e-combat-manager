@@ -15,6 +15,7 @@
     background-color: $black
     border: $border
     border-color: $white
+    margin-right: $spacing-small
 
     +breakpoint(mobile)
       width: auto
@@ -46,6 +47,7 @@
 
   &-choose
     background-color: darken($success-green, 20%)
+    margin: 0 auto
 
     &:hover
       background-color: darken($success-green, 10%)
@@ -90,22 +92,6 @@
       right: 65px
       height: 26px
       width: 26px
-
-  &-turn
-    position: absolute
-    top: 24px
-    right: 100px
-    height: 20px
-    width: 70px
-    font-weight: bold
-    font-size: 1.2rem
-
-    &--view
-      width: 100%
-      text-align: right
-      font-size: 1.2rem
-      font-weight: bold
-      padding-bottom: $spacing-micro
 
   &-advance-turn
     background-color: $blue
