@@ -7,6 +7,7 @@ import CombatActions from 'components/CombatActions';
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
 import notesImg from 'images/notes.svg';
+import notesEmptyImg from 'images/notes-empty.svg';
 
 const tags = [
   {type: 'blinded', text: 'bli'},
@@ -115,13 +116,13 @@ export default class CombatCharacter extends React.Component {
           {!view &&
             <div className="combat-character--tag-container">
               <div className="combat-character--tag" onClick={this.handleOpenNotes}>
-                <img src={notesImg} />
+                <img src={(character.notes && character.notes.length > 0) ? notesImg : notesEmptyImg} />
               </div>
               <div className="combat-character--tag" onClick={this.handleToggleLockCharacter}>
                 <img src={character.isLocked ? lockedImg : unlockedImg} />
               </div>
               {character.isNPC &&
-                <div className="combat-character--tag"><Tag type="npc" /></div>
+                <div className="combat-character--tag no-cursor"><Tag type="npc" /></div>
               }
             </div>
           }
@@ -161,7 +162,12 @@ export default class CombatCharacter extends React.Component {
                 }
               </div>
               <div className="card-field bubbles">
-                <StatBubble character={character} size="med" isDM={isDM} />
+                <StatBubble
+                  character={character}
+                  size="med"
+                  isDM={isDM}
+                  isEditable={!view}
+                  updateCombat={updateCombat} />
               </div>
             </div>
           </div>

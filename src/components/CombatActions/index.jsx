@@ -41,7 +41,8 @@ export default class CombatActions extends React.Component {
     });
     return `${character.name} ${action.type === 0
       ? 'attacked' : isHeal ? 'healed' : 'cast a spell on'} ${targetsString} ${missed
-      ? 'but missed!' : `for ${action.damage >= 0 ? action.damage : action.damage * -1} ${isHeal ? 'points' : 'damage'}!`}`;
+      ? action.type === 0 ? 'but missed!' : 'but they resisted!' : `for ${action.damage >= 0
+      ? action.damage : action.damage * -1} ${isHeal ? 'points' : 'damage'}!`}`;
   }
 
   handleAttack = () => {
@@ -136,7 +137,7 @@ export default class CombatActions extends React.Component {
       const target = this.getTarget(combat.charactersInCombat, t);
       target.hp -= action.damage;
     });
-    combat.actions.push(action);
+    combat.actions.splice(0, 0, action);
     updateCombat();
   }
 
@@ -174,7 +175,7 @@ export default class CombatActions extends React.Component {
       <div>
         {step === 0 &&
           <div className="actions actions-dm-row">
-            <div className="page-subtitle">Combat actions:</div>
+            {!character.isNPC && <div className="page-subtitle">Combat actions:</div>}
             {!character.isHoldingAction &&
               <button
                 className="btn btn-action"

@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import classNames from 'classnames';
 import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import StatBubble from 'components/StatBubble';
@@ -45,7 +46,9 @@ class PlayerCombat extends React.Component {
     browserHistory.goBack();
   }
 
-  handleEnterInitiative = () => {
+  handleEnterStats = () => {
+    this.props.character.hp = this.refs.hp.value;
+    this.props.character.ac = this.refs.ac.value;
     this.props.character.init = this.refs.init.value;
     this.updateCombat();
   }
@@ -78,30 +81,51 @@ class PlayerCombat extends React.Component {
           {!combat.isStarted && <div>
             <div className="page-subtitle center">Waiting for combat to start...</div>
             {!character.init &&
-              <div className="enter-initiative center">
+              <div className="enter-initial-stats center">
+                <div className="left-align">HP</div>
                 <div className="form-field">
                   <input
-                    placeholder="1-20"
+                    defaultValue={character.hp}
+                    type="text"
+                    ref="hp" />
+                </div>
+                <div className="left-align">AC</div>
+                <div className="form-field">
+                  <input
+                    defaultValue={character.ac}
+                    type="text"
+                    ref="ac" />
+                </div>
+                <div className="left-align">Initiative</div>
+                <div className="form-field">
+                  <input
+                    placeholder="Enter integer"
                     type="text"
                     ref="init" />
                 </div>
-                <button className="btn btn-action" onClick={this.handleEnterInitiative}>Enter initiative</button>
+                <button className="btn btn-action" onClick={this.handleEnterStats}>Set</button>
               </div>
             }
           </div>}
           {combat.isStarted && <div>
-            <div className="page-subtitle center">{this.getNextTurnsMessage(nextTurns)}</div>
-            <div className="card-field character-tag--container">
-              {character.tags &&
-                character.tags.map((t, i) => {
+            <div className={classNames('page-subtitle',
+              'center',
+              'player-up',
+              {'player-up-now': nextTurns === 0},
+              {'player-up-next': nextTurns === 1})}>
+              {this.getNextTurnsMessage(nextTurns)}
+            </div>
+            {character.tags &&
+              <div className="card-field player-character-tag--container">
+                {character.tags.map((t, i) => {
                   return (
-                    <div className="character-tag" key={i}>
+                    <div className="player-character-tag" key={i}>
                       <Tag type={t.type} text={t.text} />
                     </div>
                   );
-                })
-              }
-            </div>
+                })}
+              </div>
+            }
             <div className="combat-content">
               <StatBubble character={character} size="large" />
               <CombatActions character={character} combat={combat} isUpNow={isUpNow} updateCombat={this.updateCombat} />

@@ -5,11 +5,44 @@ export default class StatBubble extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool,
-    size: React.PropTypes.string
+    isEditable: React.PropTypes.bool,
+    size: React.PropTypes.string,
+    updateCombat: React.PropTypes.func
+  }
+
+  validate = (string) => {
+    return /^[0-9]\d*$/.test(string) || string === '';
+  }
+
+  handleHPChange = () => {
+    const {character, updateCombat} = this.props;
+    const hp = this.refs.hp.value;
+    if (this.validate(hp)) {
+      character.hp = hp;
+    }
+    updateCombat();
+  }
+
+  handleACChange = () => {
+    const {character, updateCombat} = this.props;
+    const ac = this.refs.ac.value;
+    if (this.validate(ac)) {
+      character.ac = ac;
+    }
+    updateCombat();
+  }
+
+  handleInitChange = () => {
+    const {character, updateCombat} = this.props;
+    const init = this.refs.init.value;
+    if (this.validate(init)) {
+      character.init = init;
+    }
+    updateCombat();
   }
 
   render() {
-    const {character, isDM, size} = this.props;
+    const {character, isDM, isEditable, size} = this.props;
 
     return (
       <div className="stat-bubble-container">
@@ -22,7 +55,10 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--small': size === 'small'})}>
           <span className="stat-bubble--label">HP</span>
           <span className="stat-bubble--text">
-            {(character.isNPC && !isDM) ? !character.isLocked ? character.hp : '???' : character.hp}
+            {isEditable
+              ? <input className="stats-input" value={character.hp} ref="hp" onChange={this.handleHPChange} />
+              : (character.isNPC && !isDM) ? !character.isLocked ? character.hp : '???' : character.hp
+            }
           </span>
         </div>
         <div className={classNames(
@@ -34,7 +70,10 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--small': size === 'small'})}>
           <span className="stat-bubble--label">AC</span>
           <span className="stat-bubble--text">
-            {(character.isNPC && !isDM) ? !character.isLocked ? character.ac : '??' : character.ac}
+            {isEditable
+              ? <input className="stats-input" value={character.ac} ref="ac" onChange={this.handleACChange} />
+              : (character.isNPC && !isDM) ? !character.isLocked ? character.ac : '??' : character.ac
+            }
           </span>
         </div>
         {character.init &&
@@ -47,7 +86,10 @@ export default class StatBubble extends React.Component {
             {'stat-bubble--small': size === 'small'})}>
             <span className="stat-bubble--label">IN</span>
             <span className="stat-bubble--text">
-              {(character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init}
+              {isEditable
+                ? <input className="stats-input" value={character.init} ref="init" onChange={this.handleInitChange} />
+                : (character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init
+              }
             </span>
           </div>
         }

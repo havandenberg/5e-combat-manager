@@ -4,14 +4,13 @@ import Tag from 'components/Tag';
 
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
-import lockedWhiteImg from 'images/locked-white.svg';
-import unlockedWhiteImg from 'images/unlocked-white.svg';
 
 export default class NameCard extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
-    isInverted: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
+    isUpNext: React.PropTypes.bool,
+    isUpNow: React.PropTypes.bool,
     started: React.PropTypes.bool,
     updateCombat: React.PropTypes.func,
     view: React.PropTypes.bool
@@ -33,13 +32,14 @@ export default class NameCard extends React.Component {
   }
 
   render() {
-    const {character, isInverted, isSelected, started, view} = this.props;
+    const {character, isUpNext, isUpNow, isSelected, started, view} = this.props;
 
     return (
       <div
         className={classNames(
           'name-card',
-          {'name-card--inverted': isInverted && started},
+          {'name-card--upnow': isUpNow && started},
+          {'name-card--upnext': isUpNext && started},
           {'name-card--selected': isSelected},
           {'name-card--not-ready': !started && !character.init},
           {'name-card--ready': !started && character.init}
@@ -51,14 +51,14 @@ export default class NameCard extends React.Component {
             className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}
             onClick={this.handleToggleLockCharacter}>
             <img src={character.isLocked
-              ? isInverted && started ? lockedWhiteImg : lockedImg
-              : isInverted && started ? unlockedWhiteImg : unlockedImg} />
+              ? lockedImg
+              : unlockedImg} />
           </div>
         }
         <div className="name-card--title">{character.name}</div>
         {character.isNPC && <div>
           {!view && !character.init &&
-            <div className="enter-initiative--name-card center">
+            <div className="enter-initial-stats--name-card center">
               <input
                 placeholder="initiative"
                 type="text"

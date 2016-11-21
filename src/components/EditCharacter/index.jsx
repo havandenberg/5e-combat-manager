@@ -139,7 +139,7 @@ class EditCharacter extends React.Component {
             <div className="form-field">
               <input
                 defaultValue={character ? character.klass : ''}
-                placeholder="class"
+                placeholder="class (lv)"
                 type="text"
                 ref="klass" />
             </div>

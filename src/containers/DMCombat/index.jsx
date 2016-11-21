@@ -40,10 +40,17 @@ class DMCombat extends React.Component {
 
   handleAdvanceTurn = () => {
     const {combat} = this.props;
-    combat.currentTurn++;
+    combat.turns++;
     const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
     const temp = combat.charactersInCombat.splice(0, 1);
     combat.charactersInCombat.splice(index, 0, temp[0]);
+    if (parseInt(temp[0].init, 10) === this.getLowestInit()) {
+      combat.rounds++;
+      combat.turns = 1;
+      _.each(combat.charactersInCombat, (c) => {
+        if (!c.isRemoved) {c.isHoldingAction = false;}
+      });
+    }
     this.updateCombat();
   }
 
@@ -111,13 +118,16 @@ class DMCombat extends React.Component {
           <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
           <div className="page-title vcenter center">{combat.name}</div>
           <div className="page-subtitle vcenter center">{combat.description}</div>
-          <div className="turn-count">{`Turn ${combat.currentTurn + 1}`}</div>
-          <Link className="no-decoration btn-open-view--dm circle" to={`/view-combat/${combatIndex}`}>
-            <img src={eyeImg} />
-          </Link>
-          <Link className="no-decoration btn-settings" to={`/edit-combat/${combatIndex}`}>
-            <img src={settingsImg} />
-          </Link>
+          <div className="dm-combat--tag-container">
+            <div className="dm-combat--tag">Round <strong>{combat.rounds}</strong></div>
+            <div className="dm-combat--tag">Turn <strong>{combat.turns}</strong></div>
+            <Link className="no-decoration circle dm-combat--tag-view" to={`/view-combat/${combatIndex}`}>
+              <img src={eyeImg} />
+            </Link>
+            <Link className="no-decoration dm-combat--tag" to={`/edit-combat/${combatIndex}`}>
+              <img src={settingsImg} />
+            </Link>
+          </div>
         </div>
         <div className="page-content page-content--dm-combat">
           <div className="name-card--container">
@@ -131,7 +141,8 @@ class DMCombat extends React.Component {
                     <NameCard
                       started={combat.isStarted}
                       updateCombat={this.updateCombat}
-                      isInverted={i === 0}
+                      isUpNow={i === 0}
+                      isUpNext={i === 1}
                       isSelected={false}
                       character={c} />
                     {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
@@ -159,7 +170,7 @@ class DMCombat extends React.Component {
                 : <button
                   className={classNames(
                     'btn',
-                    {'btn-choose': !combat.isStarted && this.readyToStart()},
+                    {'btn-choose btn-choose--start': !combat.isStarted && this.readyToStart()},
                     {'btn-disabled': !combat.isStarted && !this.readyToStart()})}
                   onClick={this.handleStartCombat}
                   disabled={!combat.isStarted && !this.readyToStart()}>

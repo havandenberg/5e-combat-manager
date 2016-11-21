@@ -1,6 +1,9 @@
-.enter-initiative
-  margin: $spacing-medium auto 0 auto
-  width: 60%
+.enter-initial-stats
+  margin: $spacing-small auto 0 auto
+  width: 150px
+
+  input
+    text-align: center
 
   &--name-card
     display: flex
@@ -21,26 +24,10 @@
 .combat-content
   margin-top: $spacing-large
 
-  .character-tag
-    margin-right: $spacing-micro
-    cursor: pointer
-
-    &--container
-      display: flex
-      flex-direction: row
-      justify-content: center
-      align-items: center
-      flex-wrap: wrap
-      width: 90%
-
-    .tag
-      font-size: 0.8rem
-      margin-bottom: 2px
-
   .actions
     display: flex
     flex-direction: column
-    margin: $spacing-medium auto 0 auto
+    margin: $spacing-small auto 0 auto
     width: 70%
 
     +breakpoint(mobile)
@@ -107,7 +94,7 @@
   .actions-dm-row
     display: flex
     flex-direction: row
-    justify-content: space-around
+    justify-content: center
     width: 100%
 
     input
@@ -116,7 +103,7 @@
       width: 50%
 
     button
-      margin auto 0
+      margin auto 0 auto $spacing-small
 
     &:last-child
       margin-bottom: none
@@ -227,29 +214,81 @@
   width: 80%
   position: relative
 
-  button
-    margin-right: $spacing-small
-
   +breakpoint(mobile)
     display: block
     width: 50%
 
     button
-      margin-right: 0
       margin-bottom: $spacing-small
 
-.turn-count
-  position: absolute
-  top: 24px
-  right: 100px
-  height: 20px
-  width: 70px
-  font-weight: bold
-  font-size: 1.2rem
+.player-character-tag
+  margin-right: $spacing-micro
 
-  &--view
-    width: 100%
-    text-align: right
-    font-size: 1.2rem
+  &--container
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    flex-wrap: wrap
+    width: 80%
+    margin: $spacing-small auto 0 auto
+
+  .tag
+    font-size: 1rem
+    margin: auto 0
+
+.dm-combat--tag
+  font-size: 1.2rem
+  margin: auto 0
+  padding: 0 $spacing-micro
+
+  &-view
+    border: $border
+    height: 40px
+    width: 40px
+    display: flex
+    justify-content: center
+    align-items: center
+    margin: 0 $spacing-micro
+
+    img
+      height: 35px
+      width: 30px
+      vertical-align: middle
+
+  img
+    height: 40px
+    width: 40px
+    padding: 0 $spacing-micro
+    cursor: pointer
+    vertical-align: middle
+
+  &-container
+    position: absolute
+    top: 4px
+    right: 32px
+    display: flex
+    flex-direction: row
+
+.turn-view
+  width: 100%
+  text-align: right
+  font-size: 1.2rem
+  font-weight: bold
+  padding-bottom: $spacing-micro
+
+.player-up
+
+  &-now
+    background-color: lighten($success-green, 20%)
     font-weight: bold
-    padding-bottom: $spacing-micro
+    width: 180px
+    border-radius: $border-radius
+    margin-top: $spacing-small
+
+  &-next
+    background-color: lighten($error-red, 40%)
+    font-weight: bold
+    border-radius: $border-radius
+    width: 180px
+    margin-top: $spacing-small

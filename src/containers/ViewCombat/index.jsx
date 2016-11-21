@@ -37,7 +37,8 @@ class ViewCombat extends React.Component {
                   <div key={i}>
                     <NameCard
                       started={combat.isStarted}
-                      isInverted={i === 0}
+                      isUpNow={i === 0}
+                      isUpNext={i === 1}
                       isSelected={false}
                       character={c}
                       view={true} />
@@ -55,7 +56,7 @@ class ViewCombat extends React.Component {
             }
           </div>
           <div className="combat-character--container">
-            <div className="turn-count--view">{`Turn ${combat.currentTurn + 1}`}</div>
+            <div className="turn-view">{`Round ${combat.rounds}`}</div>
             {combat.charactersInCombat.length > 0
               ? combat.charactersInCombat.filter((c) => {
                 return !c.isRemoved;

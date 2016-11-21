@@ -71,7 +71,8 @@ export default class CombatCard extends React.Component {
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>
             <div>Players: {stats.players}</div>
             <div>NPCs: {stats.npcs}</div>
-            <div>Turn: {combat.currentTurn}</div>
+            <div>Round: {combat.rounds}</div>
+            <div>Turn: {combat.turns}</div>
           </div>
           <div className="card-field">{combat.description}</div>
         </div>

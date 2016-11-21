@@ -77,8 +77,9 @@ class EditCombat extends React.Component {
       combObj.createdAt = moment().unix();
       combObj.isStarted = false;
       combObj.isActive = false;
-      combObj.currentTurn = 0;
-      combObj.actions = [{type: -1, message: name}];
+      combObj.turns = 1;
+      combObj.rounds = 1;
+      combObj.actions = [{type: -1}];
     }
 
     if (this.validate()) {

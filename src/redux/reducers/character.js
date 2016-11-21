@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import _ from 'lodash';
 import {routerActions} from 'react-router-redux';
 import firebase, {firebaseRef} from 'utils/firebase';
 
@@ -55,10 +56,22 @@ export function startUploadImage(id, image) {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
     const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+    const combatsRef = firebaseRef.child('combats');
 
     return imageRef.put(image).then(() => {
       imageRef.getDownloadURL().then((url) => {
         characterRef.update({imageURL: url});
+        combatsRef.once('value', (snap) => {
+          snap.forEach((combatSnap) => {
+            const combat = combatSnap.val();
+            _.each(combat.charactersInCombat, (char, i) => {
+              if (char.id === id) {
+                const charRef = combatsRef.child(`${combat.id}/charactersInCombat/${i}`);
+                charRef.update({imageURL: url});
+              }
+            });
+          });
+        });
         dispatch(uploadImage(characterRef.key, url));
       });
     });
@@ -83,6 +96,7 @@ export function startUpdateCharacter(id, character, image) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
+    const combatsRef = firebaseRef.child('combats');
 
     const updates = {
       name: character.name,
@@ -91,6 +105,24 @@ export function startUpdateCharacter(id, character, image) {
       hp: character.hp,
       ac: character.ac
     };
+
+    const combatUpdates = {
+      name: character.name,
+      race: character.race,
+      klass: character.klass
+    };
+
+    combatsRef.once('value', (snap) => {
+      snap.forEach((combatSnap) => {
+        const combat = combatSnap.val();
+        _.each(combat.charactersInCombat, (char, i) => {
+          if (char.id === id) {
+            const charRef = combatsRef.child(`${combat.id}/charactersInCombat/${i}`);
+            charRef.update(combatUpdates);
+          }
+        });
+      });
+    });
 
     return characterRef.update(updates).then(() => {
       if (image) {
