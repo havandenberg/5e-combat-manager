@@ -6,6 +6,7 @@ import {browserHistory} from 'react-router';
 import StatBubble from 'components/StatBubble';
 import CombatActions from 'components/CombatActions';
 import Tag from 'components/Tag';
+import {hasError} from 'utils/errors';
 
 import * as combatActions from 'reducers/combat';
 
@@ -19,6 +20,14 @@ class PlayerCombat extends React.Component {
     combatIndex: React.PropTypes.string.isRequired,
     uid: React.PropTypes.string.isRequired,
     updateCombat: React.PropTypes.func.isRequired
+  }
+
+  constructor() {
+    super();
+
+    this.state = {
+      errors: []
+    };
   }
 
   getNextTurns = () => {
@@ -46,11 +55,42 @@ class PlayerCombat extends React.Component {
     browserHistory.goBack();
   }
 
+  validate = () => {
+    const errors = [];
+    const hp = this.refs.hp.value;
+    const ac = this.refs.ac.value;
+    const init = this.refs.init.value;
+
+    if (_.isEmpty(hp)) {
+      errors.push('hpEmpty');
+    } else if (!/^[0-9]\d*$/.test(hp)) {
+      errors.push('hpNaN');
+    }
+
+    if (_.isEmpty(ac)) {
+      errors.push('acEmpty');
+    } else if (!/^[0-9]\d*$/.test(ac)) {
+      errors.push('acNaN');
+    }
+
+    if (_.isEmpty(init)) {
+      errors.push('initEmpty');
+    } else if (!/^[0-9]\d*$/.test(init)) {
+      errors.push('initNaN');
+    }
+
+    this.setState({errors});
+    return (!errors.length);
+  }
+
   handleEnterStats = () => {
-    this.props.character.hp = this.refs.hp.value;
-    this.props.character.ac = this.refs.ac.value;
-    this.props.character.init = this.refs.init.value;
-    this.updateCombat();
+    const {character} = this.props;
+    if (this.validate()) {
+      character.hp = parseInt(this.refs.hp.value, 10);
+      character.ac = parseInt(this.refs.ac.value, 10);
+      character.init = parseInt(this.refs.init.value, 10);
+      this.updateCombat();
+    }
   }
 
   updateCombat = () => {
@@ -60,6 +100,7 @@ class PlayerCombat extends React.Component {
 
   render() {
     const {character, combat} = this.props;
+    const {errors} = this.state;
     const nextTurns = this.getNextTurns();
     const isUpNow = nextTurns === 0;
 
@@ -82,23 +123,32 @@ class PlayerCombat extends React.Component {
             <div className="page-subtitle center">Waiting for combat to start...</div>
             {!character.init &&
               <div className="enter-initial-stats center">
-                <div className="left-align">HP</div>
+                {hasError(errors, ['hpEmpty']) && <div className="alert alert-error">Enter hp</div>}
+                {hasError(errors, ['acEmpty']) && <div className="alert alert-error">Enter ac</div>}
+                {hasError(errors, ['initEmpty']) && <div className="alert alert-error">Enter init</div>}
+                {hasError(errors, ['hpNaN']) && <div className="alert alert-error">HP must be a number</div>}
+                {hasError(errors, ['acNaN']) && <div className="alert alert-error">AC must be a number</div>}
+                {hasError(errors, ['initNaN']) && <div className="alert alert-error">Init must be a number</div>}
+                <div className={classNames('left-align', {'form-label__error': hasError(errors, ['hpEmpty', 'hpNaN'])})}>HP</div>
                 <div className="form-field">
                   <input
+                    className={classNames({'input-error': hasError(errors, ['hpEmpty', 'hpNaN'])})}
                     defaultValue={character.hp}
                     type="text"
                     ref="hp" />
                 </div>
-                <div className="left-align">AC</div>
+                <div className={classNames('left-align', {'form-label__error': hasError(errors, ['acEmpty', 'acNaN'])})}>AC</div>
                 <div className="form-field">
                   <input
+                    className={classNames({'input-error': hasError(errors, ['acEmpty', 'acNaN'])})}
                     defaultValue={character.ac}
                     type="text"
                     ref="ac" />
                 </div>
-                <div className="left-align">Initiative</div>
+                <div className={classNames('left-align', {'form-label__error': hasError(errors, ['initEmpty', 'initNaN'])})}>Init</div>
                 <div className="form-field">
                   <input
+                    className={classNames({'input-error': hasError(errors, ['initEmpty', 'initNaN'])})}
                     placeholder="Enter integer"
                     type="text"
                     ref="init" />

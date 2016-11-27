@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import classNames from 'classnames';
 import Tag from 'components/Tag';
+import {hasError} from 'utils/errors';
 
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
@@ -16,13 +18,23 @@ export default class NameCard extends React.Component {
     view: React.PropTypes.bool
   }
 
+  constructor() {
+    super();
+
+    this.state = {
+      errors: []
+    };
+  }
+
   handleSelectCharacter = () => {
 
   }
 
   handleEnterInitiative = () => {
-    this.props.character.init = this.refs.init.value;
-    this.props.updateCombat();
+    if (this.validate()) {
+      this.props.character.init = parseInt(this.refs.init.value, 10);
+      this.props.updateCombat();
+    }
   }
 
   handleToggleLockCharacter = () => {
@@ -31,8 +43,23 @@ export default class NameCard extends React.Component {
     updateCombat();
   }
 
+  validate = () => {
+    const errors = [];
+    const init = this.refs.init.value;
+
+    if (_.isEmpty(init)) {
+      errors.push('initEmpty');
+    } else if (!/^[0-9]\d*$/.test(init)) {
+      errors.push('initNaN');
+    }
+
+    this.setState({errors});
+    return (!errors.length);
+  }
+
   render() {
     const {character, isUpNext, isUpNow, isSelected, started, view} = this.props;
+    const {errors} = this.state;
 
     return (
       <div
@@ -60,6 +87,7 @@ export default class NameCard extends React.Component {
           {!view && !character.init &&
             <div className="enter-initial-stats--name-card center">
               <input
+                className={classNames({'init-error': hasError(errors, ['initEmpty', 'initNaN'])})}
                 placeholder="initiative"
                 type="text"
                 ref="init" />

@@ -14,7 +14,7 @@ class ViewCombat extends React.Component {
     const {combat} = this.props;
     let lowestInit = 100000;
     _.each(combat.charactersInCombat, (c) => {
-      const currentInit = parseInt(c.init, 10);
+      const currentInit = c.init;
       if (!c.isRemoved && currentInit < lowestInit) {lowestInit = currentInit;}
     });
     return lowestInit;
@@ -42,7 +42,7 @@ class ViewCombat extends React.Component {
                       isSelected={false}
                       character={c}
                       view={true} />
-                    {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
+                    {combat.isStarted && c.init === lowestInit &&
                       <div className="end-of-round end-of-round--name">
                         <div className="end-of-round--line"></div>
                         <div className="end-of-round--text">End of Round</div>
@@ -57,7 +57,7 @@ class ViewCombat extends React.Component {
           </div>
           <div className="combat-character--container">
             <div className="turn-view">{`Round ${combat.rounds}`}</div>
-            {combat.charactersInCombat.length > 0
+            {combat.charactersInCombat
               ? combat.charactersInCombat.filter((c) => {
                 return !c.isRemoved;
               }).map((c, i) => {
@@ -67,15 +67,15 @@ class ViewCombat extends React.Component {
                       character={c}
                       combat={combat}
                       isDM={false}
-                      key={i}
+                      isChoose={true}
                       view={true} />
-                    {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
-                      <div className="end-of-round end-of-round--card">
-                        <div className="end-of-round--line"></div>
-                        <div className="end-of-round--text">End of Round</div>
-                        <div className="end-of-round--line"></div>
-                      </div>
-                    }
+                      {combat.isStarted && c.init === lowestInit &&
+                        <div className="end-of-round end-of-round--card">
+                          <div className="end-of-round--line"></div>
+                          <div className="end-of-round--text">End of Round</div>
+                          <div className="end-of-round--line"></div>
+                        </div>
+                      }
                   </div>
                 );
               })
@@ -85,9 +85,12 @@ class ViewCombat extends React.Component {
           <div className="turn-history--container">
             <div className="page-subtitle center">Turn history</div>
             {combat.actions.map((a, i) => {
-              return (
-                <div key={i} className="turn-history--action">{a.message}</div>
-              );
+              if (i >= combat.undoIndex && a.type !== 3) {
+                return (
+                  <div key={i} className="turn-history--action">{a.message}</div>
+                );
+              }
+              return true;
             })}
           </div>
         </div>

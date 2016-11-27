@@ -1,29 +1,26 @@
 import React from 'react';
 import _ from 'lodash';
+import classNames from 'classnames';
 import {connect} from 'react-redux';
-import {Link, browserHistory} from 'react-router';
 import * as combatActions from 'reducers/combat';
 
-import CharacterCard from 'components/CharacterCard';
-
-import backImg from 'images/back.svg';
+import addImg from 'images/add.svg';
+import removeImg from 'images/remove.svg';
 
 class ChooseCharacter extends React.Component {
   static propTypes = {
     characters: React.PropTypes.object.isRequired,
     combat: React.PropTypes.object.isRequired,
-    combatIndex: React.PropTypes.string.isRequired,
+    combatIndex: React.PropTypes.number.isRequired,
+    isAdding: React.PropTypes.bool,
     uid: React.PropTypes.string.isRequired,
-    updateCombat: React.PropTypes.func.isRequired
-  }
-
-  handleGoBack = () => {
-    browserHistory.goBack();
+    updateCombat: React.PropTypes.func.isRequired,
+    onToggleAdd: React.PropTypes.func.isRequired
   }
 
   handleChooseCharacter = (c) => {
     return (e) => {
-      e.preventDefault();
+      if (e) {e.preventDefault();}
       const {combat, combatIndex, updateCombat, uid} = this.props;
       let result = false;
       _.each(combat.charactersInCombat, (char) => {
@@ -40,6 +37,10 @@ class ChooseCharacter extends React.Component {
       }
       updateCombat(combat.id, combat, `/player-combat/${combatIndex}/${c.name}`);
     };
+  }
+
+  handleToggleAdd = () => {
+    this.props.onToggleAdd();
   }
 
   handleRemoveCharacter = (c) => {
@@ -65,51 +66,39 @@ class ChooseCharacter extends React.Component {
   }
 
   render() {
-    const {characters} = this.props;
+    const {characters, isAdding} = this.props;
 
     return (
-      <div className="page">
-        <div className="page-header">
-          <button className="btn-back pull-left" onClick={this.handleGoBack}><img src={backImg} /></button>
-          <div className="page-title vcenter center">Choose character</div>
-        </div>
-        <div className="page-content">
-          <div className="card-container">
-            {!characters.isEmpty()
-              ? characters.map((c, i) => {
-                return (
-                    <div key={i} className="card-wrapper">
-                      <CharacterCard
-                        character={c}
-                        isChoose={true}
-                        isInCombat={this.isInCombat(c)}
-                        handleChooseCharacter={this.handleChooseCharacter(c)}
-                        handleRemoveCharacter={this.handleRemoveCharacter(c)} />
-                    </div>
-                );
-              })
-              : <div className="combats-empty center">No characters</div>
-            }
-          </div>
-          {characters.isEmpty() &&
-            <Link className="no-decoration" to="/create-character">
-              <button className="btn btn-action full-width">Create new character</button>
-            </Link>
-          }
+      <div className="choose-character choose-character--container">
+        {!characters.isEmpty() &&
+          characters.filter((c) => {
+            return this.isInCombat(c);
+          }).map((c, i) => {
+            return (
+              <div key={i} className="choose-character">
+                {this.isInCombat(c) && !c.isRemoved &&
+                  <img className="choose-character--remove" src={removeImg} onClick={this.handleRemoveCharacter(c)} />
+                }
+                {c.imageURL &&
+                  <div className="card-avatar circle card-avatar--choose" onClick={this.handleChooseCharacter(c)}>
+                    <img src={c.imageURL} />
+                  </div>}
+              </div>
+            );
+          })
+        }
+        <div className={classNames('choose-character--add', {adding: isAdding})} onClick={this.handleToggleAdd}>
+          <img src={addImg} />
         </div>
       </div>
     );
   }
 }
 
-export default connect((state, props) => {
-  const {combatIndex} = props.params;
-  const combat = state.combats.get(combatIndex);
+export default connect((state) => {
 
   return {
     characters: state.characters,
-    combat,
-    combatIndex,
     uid: state.auth.get('uid')
   };
 }, {

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import {Link} from 'react-router';
 import Tag from 'components/Tag';
+import ChooseCharacter from 'components/ChooseCharacter';
 
 import settingsImg from 'images/settings.svg';
 import eyeImg from 'images/eye.svg';
@@ -10,10 +11,13 @@ import eyeImg from 'images/eye.svg';
 export default class CombatCard extends React.Component {
   static propTypes = {
     characterNames: React.PropTypes.array,
+    chooseCharacter: React.PropTypes.func,
     combat: React.PropTypes.object.isRequired,
     index: React.PropTypes.number.isRequired,
+    isAdding: React.PropTypes.bool,
     isDM: React.PropTypes.bool.isRequired,
-    updateCombat: React.PropTypes.func
+    updateCombat: React.PropTypes.func,
+    onToggleAdd: React.PropTypes.func
   }
 
   getCharacterNamesString = () => {
@@ -56,17 +60,19 @@ export default class CombatCard extends React.Component {
     updateCombat(combat.id, combat, '#');
   }
 
+  handleToggleAdd = () => {
+    this.props.onToggleAdd();
+  }
+
   render() {
-    const {combat, index, isDM} = this.props;
+    const {chooseCharacter, combat, index, isAdding, isDM} = this.props;
     const stats = this.getStats();
 
     return (
-      <div className="card card-choose">
-        <div className="card-text card-field">
+      <div className="card card-space">
+        <div className="card-text">
           <div className="card-name center">{combat.name}</div>
-          {!isDM &&
-            <div className="card-field"><strong>{this.getCharacterNamesString()}</strong></div>
-          }
+          <div className="card-field">{combat.description}</div>
           <div className="card-field">
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>
             <div>Players: {stats.players}</div>
@@ -74,7 +80,6 @@ export default class CombatCard extends React.Component {
             <div>Round: {combat.rounds}</div>
             <div>Turn: {combat.turns}</div>
           </div>
-          <div className="card-field">{combat.description}</div>
         </div>
         {isDM &&
           <div>
@@ -89,10 +94,21 @@ export default class CombatCard extends React.Component {
             </div>
           </div>
         }
+        {!isDM &&
+          <div className="card-field"><strong>Characters:</strong></div>
+        }
         <div className="full-width center">
-          <Link to={isDM ? `/combat/${index}` : `choose-character/${index}`}>
-            <button className="btn btn-choose">Enter</button>
-          </Link>
+          {isDM
+            ? <Link to={`/combat/${index}`}>
+              <button className="btn btn-choose">Enter</button>
+            </Link>
+            : <ChooseCharacter
+              chooseCharacter={chooseCharacter}
+              combat={combat}
+              combatIndex={index}
+              onToggleAdd={this.handleToggleAdd}
+              isAdding={isAdding} />
+          }
         </div>
       </div>
     );

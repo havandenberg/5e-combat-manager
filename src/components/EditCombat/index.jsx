@@ -80,6 +80,7 @@ class EditCombat extends React.Component {
       combObj.turns = 1;
       combObj.rounds = 1;
       combObj.actions = [{type: -1}];
+      combObj.undoIndex = 0;
     }
 
     if (this.validate()) {

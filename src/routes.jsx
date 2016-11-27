@@ -14,7 +14,6 @@ import CreateCharacter from 'components/CreateCharacter';
 import EditCharacter from 'components/EditCharacter';
 import CreateCombat from 'components/CreateCombat';
 import EditCombat from 'components/EditCombat';
-import ChooseCharacter from 'components/ChooseCharacter';
 
 const routes = (
   <Route>
@@ -29,7 +28,6 @@ const routes = (
       <Route path="create-combat" component={CreateCombat} />
       <Route path="edit-combat/:combatIndex" component={EditCombat} />
       <Route path="combat/:combatIndex" component={DMCombat} />
-      <Route path="choose-character/:combatIndex" component={ChooseCharacter} />
       <Route path="player-combat/:combatIndex/:characterName" component={PlayerCombat} />
       <Route path="view-combat/:combatIndex" component={ViewCombat} />
     </Route>

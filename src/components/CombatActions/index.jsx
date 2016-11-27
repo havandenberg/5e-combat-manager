@@ -89,7 +89,7 @@ export default class CombatActions extends React.Component {
     const {character, combat, updateCombat} = this.props;
     character.isHoldingAction = !character.isHoldingAction;
     if (character.isHoldingAction) {
-      combat.actions.push({type: 2, message: `${character.name} is holding action!`});
+      combat.actions.splice(0, 0, {type: 2, target: character, message: `${character.name} is holding action!`});
     }
     updateCombat();
   }
@@ -121,14 +121,14 @@ export default class CombatActions extends React.Component {
     const {action} = this.state;
     const updatedAction = action;
     if (this.validateAction()) {
-      updatedAction.damage = this.refs.damage.value;
+      updatedAction.damage = parseInt(this.refs.damage.value, 10);
       if (updatedAction.type === 1) {
         if (this.refs.heal.checked) {updatedAction.damage *= -1;}
       }
       updatedAction.message = this.getActionMessage(updatedAction);
+      this.executeAction(updatedAction);
+      this.setState({action: {targets: []}, step: 0});
     }
-    this.executeAction(updatedAction);
-    this.setState({action: {targets: []}, step: 0});
   }
 
   executeAction = (action) => {

@@ -11,6 +11,10 @@ import * as combatActions from 'reducers/combat';
 import backImg from 'images/back.svg';
 import settingsImg from 'images/settings.svg';
 import eyeImg from 'images/eye.svg';
+import undoImg from 'images/undo.svg';
+import undoDisabledImg from 'images/undo-disabled.svg';
+import redoImg from 'images/redo.svg';
+import redoDisabledImg from 'images/redo-disabled.svg';
 
 class DMCombat extends React.Component {
   static propTypes = {
@@ -23,7 +27,7 @@ class DMCombat extends React.Component {
     const {combat} = this.props;
     let lowestInit = 100000;
     _.each(combat.charactersInCombat, (c) => {
-      const currentInit = parseInt(c.init, 10);
+      const currentInit = c.init;
       if (!c.isRemoved && currentInit < lowestInit) {lowestInit = currentInit;}
     });
     return lowestInit;
@@ -38,18 +42,33 @@ class DMCombat extends React.Component {
     return count;
   }
 
+  getTarget = (array, char) => {
+    let result = false;
+
+    _.each(array, (c) => {
+      if (c.id === char.id && c.copy === char.copy) {
+        result = c;
+      }
+    });
+
+    return result;
+  }
+
   handleAdvanceTurn = () => {
     const {combat} = this.props;
-    combat.turns++;
     const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
     const temp = combat.charactersInCombat.splice(0, 1);
     combat.charactersInCombat.splice(index, 0, temp[0]);
-    if (parseInt(temp[0].init, 10) === this.getLowestInit()) {
+    if (temp[0].init === this.getLowestInit()) {
+      combat.actions.splice(0, 0, {type: 3, round: true, lastTurns: combat.turns});
       combat.rounds++;
       combat.turns = 1;
       _.each(combat.charactersInCombat, (c) => {
         if (!c.isRemoved) {c.isHoldingAction = false;}
       });
+    } else {
+      combat.turns++;
+      combat.actions.splice(0, 0, {type: 3});
     }
     this.updateCombat();
   }
@@ -60,7 +79,7 @@ class DMCombat extends React.Component {
 
     if (combat.isStarted) {
       this.sortByInitiative();
-      _.times(combat.currentTurn, () => {
+      _.times(combat.turns, () => {
         const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
         const temp = combat.charactersInCombat.splice(0, 1);
         combat.charactersInCombat.splice(index, 0, temp[0]);
@@ -70,6 +89,62 @@ class DMCombat extends React.Component {
     }
 
     this.updateCombat();
+  }
+
+  handleUndo = () => {
+    const {combat} = this.props;
+
+    if (combat.undoIndex < combat.actions.length - 1) {
+      const action = combat.actions[combat.undoIndex];
+      if (action.type === 0 || action.type === 1) {
+        _.each(action.targets, (t) => {
+          const target = this.getTarget(combat.charactersInCombat, t);
+          target.hp += action.damage;
+        });
+      } else if (action.type === 2) {
+        this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = false;
+      } else if (action.type === 3) {
+        const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
+        const temp = combat.charactersInCombat.splice(index, 1);
+        combat.charactersInCombat.splice(0, 0, temp[0]);
+        if (action.round) {
+          combat.rounds--;
+          combat.turns = action.lastTurns;
+        } else {
+          combat.turns--;
+        }
+      }
+      combat.undoIndex++;
+      this.updateCombat();
+    }
+  }
+
+  handleRedo = () => {
+    const {combat} = this.props;
+
+    if (combat.undoIndex !== 0) {
+      const action = combat.actions[combat.undoIndex - 1];
+      if (action.type === 0 || action.type === 1) {
+        _.each(action.targets, (t) => {
+          const target = this.getTarget(combat.charactersInCombat, t);
+          target.hp -= action.damage;
+        });
+      } else if (action.type === 2) {
+        this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = true;
+      } else if (action.type === 3) {
+        const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
+        const temp = combat.charactersInCombat.splice(0, 1);
+        combat.charactersInCombat.splice(index, 0, temp[0]);
+        if (action.round) {
+          combat.rounds++;
+          combat.turns = 1;
+        } else {
+          combat.turns++;
+        }
+      }
+      combat.undoIndex--;
+      this.updateCombat();
+    }
   }
 
   readyToStart = () => {
@@ -84,8 +159,8 @@ class DMCombat extends React.Component {
   sortByInitiative = () => {
     const {combat} = this.props;
     combat.charactersInCombat.sort((a, b) => {
-      const x = parseInt(a.init, 10);
-      const y = parseInt(b.init, 10);
+      const x = a.init;
+      const y = b.init;
       if (a.isRemoved && !b.isRemoved) {return 1;}
       if (!a.isRemoved && b.isRemoved) {return -1;}
       return ((x > y) ? -1 : ((x < y) ? 1 : 0));
@@ -145,7 +220,7 @@ class DMCombat extends React.Component {
                       isUpNext={i === 1}
                       isSelected={false}
                       character={c} />
-                    {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
+                    {combat.isStarted && c.init === lowestInit &&
                       <div className="end-of-round end-of-round--name">
                         <div className="end-of-round--line"></div>
                         <div className="end-of-round--text">End of Round</div>
@@ -177,8 +252,12 @@ class DMCombat extends React.Component {
                   {combat.isStarted ? 'End combat' : 'Start combat'}
                 </button>
               }
+              <div className="undo-redo">
+                <img src={combat.undoIndex < combat.actions.length - 1 ? undoImg : undoDisabledImg} onClick={this.handleUndo} />
+                <img src={combat.undoIndex === 0 ? redoDisabledImg : redoImg} onClick={this.handleRedo} />
+              </div>
             </div>
-            {combat.charactersInCombat.length > 0
+            {combat.charactersInCombat
               ? combat.charactersInCombat.filter((c) => {
                 return !c.isRemoved;
               }).map((c, i) => {
@@ -189,7 +268,7 @@ class DMCombat extends React.Component {
                       combat={combat}
                       isDM={true}
                       updateCombat={this.updateCombat} />
-                    {combat.isStarted && parseInt(c.init, 10) === lowestInit &&
+                    {combat.isStarted && c.init === lowestInit &&
                       <div className="end-of-round end-of-round--card">
                         <div className="end-of-round--line"></div>
                         <div className="end-of-round--text">End of Round</div>

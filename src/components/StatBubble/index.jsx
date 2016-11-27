@@ -18,7 +18,7 @@ export default class StatBubble extends React.Component {
     const {character, updateCombat} = this.props;
     const hp = this.refs.hp.value;
     if (this.validate(hp)) {
-      character.hp = hp;
+      character.hp = parseInt(hp, 10);
     }
     updateCombat();
   }
@@ -27,7 +27,7 @@ export default class StatBubble extends React.Component {
     const {character, updateCombat} = this.props;
     const ac = this.refs.ac.value;
     if (this.validate(ac)) {
-      character.ac = ac;
+      character.ac = parseInt(ac, 10);
     }
     updateCombat();
   }
@@ -36,7 +36,7 @@ export default class StatBubble extends React.Component {
     const {character, updateCombat} = this.props;
     const init = this.refs.init.value;
     if (this.validate(init)) {
-      character.init = init;
+      character.init = parseInt(init, 10);
     }
     updateCombat();
   }
@@ -86,10 +86,7 @@ export default class StatBubble extends React.Component {
             {'stat-bubble--small': size === 'small'})}>
             <span className="stat-bubble--label">IN</span>
             <span className="stat-bubble--text">
-              {isEditable
-                ? <input className="stats-input" value={character.init} ref="init" onChange={this.handleInitChange} />
-                : (character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init
-              }
+              {(character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init}
             </span>
           </div>
         }

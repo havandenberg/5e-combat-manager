@@ -210,8 +210,9 @@
   display: flex
   flex-direction: row
   justify-content: center
+  align-items: center
   margin: 0 auto $spacing-small auto
-  width: 80%
+  width: 100%
   position: relative
 
   +breakpoint(mobile)
@@ -220,6 +221,18 @@
 
     button
       margin-bottom: $spacing-small
+
+  .undo-redo
+    position: absolute
+    right: 0
+    display: flex
+    justify-content: space-between
+
+    img
+      height: 30px
+      width: 30px
+      margin-right: $spacing-small
+      cursor: pointer
 
 .player-character-tag
   margin-right: $spacing-micro

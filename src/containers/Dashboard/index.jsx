@@ -17,6 +17,15 @@ class Dashboard extends React.Component {
     updateCombat: React.PropTypes.func.isRequired
   }
 
+  constructor() {
+    super();
+
+    this.state = {
+      isAdding: false,
+      combat: null
+    };
+  }
+
   getCombatIndex = (combat) => {
     const {combats} = this.props;
     let index = 0;
@@ -45,8 +54,41 @@ class Dashboard extends React.Component {
     return result;
   }
 
+  handleChooseCharacter = (c) => {
+    return (e) => {
+      if (e) {e.preventDefault();}
+      const {updateCombat, uid} = this.props;
+      const {isAdding, combat} = this.state;
+      if (isAdding) {
+        let result = false;
+        _.each(combat.charactersInCombat, (char) => {
+          if (c.id === char.id) {
+            char.isRemoved = false;
+            result = true;
+          }
+        });
+        if (!result) {
+          c.isRemoved = false;
+          c.user = uid;
+          combat.charactersInCombat.push(c);
+          combat.isStarted = false;
+        }
+        updateCombat(combat.id, combat);
+        this.setState({isAdding: false, combat: null});
+      }
+    };
+  }
+
+  handleToggleAdd = (combat) => {
+    return (e) => {
+      if (e) {e.preventDefault();}
+      this.setState({isAdding: !this.state.isAdding, combat});
+    };
+  }
+
   render() {
     const {characters, isDM, updateCombat} = this.props;
+    const {isAdding} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -66,7 +108,9 @@ class Dashboard extends React.Component {
                       combat={c}
                       index={isDM ? i : this.getCombatIndex(c)}
                       isDM={isDM}
-                      updateCombat={updateCombat} />
+                      isAdding={isAdding}
+                      updateCombat={updateCombat}
+                      onToggleAdd={this.handleToggleAdd(c)} />
                   </div>
                 );
               })
@@ -83,9 +127,12 @@ class Dashboard extends React.Component {
               ? characters.map((c, i) => {
                 return (
                     <div key={i} className="card-wrapper">
-                      <Link className="no-decoration" to={`/edit-character/${characters.indexOf(c)}`}>
-                        <CharacterCard character={c} isDM={isDM} />
-                      </Link>
+                      {isAdding
+                        ? <div onClick={this.handleChooseCharacter(c)}><CharacterCard character={c} isDM={isDM} /></div>
+                        : <Link className="no-decoration" to={`/edit-character/${characters.indexOf(c)}`}>
+                          <CharacterCard character={c} isDM={isDM} />
+                        </Link>
+                      }
                     </div>
                 );
               })

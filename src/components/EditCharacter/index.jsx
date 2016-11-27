@@ -76,22 +76,22 @@ class EditCharacter extends React.Component {
 
   handleSaveCharacter = (e) => {
     e.preventDefault();
-    const {character, isDM, isNew} = this.props;
-    const {files} = this.state;
-    const image = files.length > 0 ? files[0] : null;
-    const name = this.refs.name.value;
-    const race = this.refs.race.value;
-    const klass = this.refs.klass.value;
-    const hp = this.refs.hp.value;
-    const ac = this.refs.ac.value;
-
-    const charObj = {name, race, klass, hp, ac};
-
-    if (isNew && isDM) {
-      charObj.isLocked = true;
-    }
-
     if (this.validate()) {
+      const {character, isDM, isNew} = this.props;
+      const {files} = this.state;
+      const image = files.length > 0 ? files[0] : null;
+      const name = this.refs.name.value;
+      const race = this.refs.race.value;
+      const klass = this.refs.klass.value;
+      const hp = parseInt(this.refs.hp.value, 10);
+      const ac = parseInt(this.refs.ac.value, 10);
+
+      const charObj = {name, race, klass, hp, ac};
+
+      if (isNew && isDM) {
+        charObj.isLocked = true;
+      }
+
       if (isNew) {
         this.props.createCharacter(charObj, image);
       } else {
