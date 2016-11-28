@@ -1,14 +1,16 @@
 .name-card
   border: $border
   border-radius: $border-radius
-  cursor: pointer
   padding: $spacing-micro
   position: relative
   margin-bottom: $spacing-small
 
-  &:hover
-    background-color: $black
-    color: $white
+  &--hover
+    cursor: pointer
+
+    &:hover
+      background-color: $black
+      color: $white
 
   &--container
     display: flex

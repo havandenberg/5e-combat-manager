@@ -81,7 +81,8 @@ export default class NameCard extends React.Component {
           {'name-card--upnext': isUpNext && started},
           {'name-card--selected': isSelected},
           {'name-card--not-ready': !started && !character.init},
-          {'name-card--ready': !started && character.init}
+          {'name-card--ready': !started && character.init},
+          {'name-card--hover': !view}
         )}
         onClick={this.handleSelectCharacter}
         onMouseEnter={this.handleMouseEnter}

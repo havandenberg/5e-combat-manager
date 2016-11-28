@@ -2,9 +2,10 @@ import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
-import {browserHistory} from 'react-router';
+import {Link} from 'react-router';
 import StatBubble from 'components/StatBubble';
 import CombatActions from 'components/CombatActions';
+import CharacterSwitcher from 'components/CharacterSwitcher';
 import Tag from 'components/Tag';
 import {hasError} from 'utils/errors';
 
@@ -51,10 +52,6 @@ class PlayerCombat extends React.Component {
     }
   }
 
-  handleGoBack = () => {
-    browserHistory.goBack();
-  }
-
   validate = () => {
     const errors = [];
     const hp = this.refs.hp.value;
@@ -99,7 +96,7 @@ class PlayerCombat extends React.Component {
   }
 
   render() {
-    const {character, combat} = this.props;
+    const {character, combat, combatIndex} = this.props;
     const {errors} = this.state;
     const nextTurns = this.getNextTurns();
     const isUpNow = nextTurns === 0;
@@ -107,7 +104,7 @@ class PlayerCombat extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <button className="btn-back pull-left" onClick={this.handleGoBack}><img src={backImg} /></button>
+          <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
           {character.isLocked &&
             <div className="pull-right">
               <img className="image-large" src={lockedImg} />
@@ -115,6 +112,7 @@ class PlayerCombat extends React.Component {
           }
         </div>
         <div className="page-content page-content--combat">
+          <CharacterSwitcher combat={combat} combatIndex={combatIndex} />
           <div className="page-title center">
             <img src={character.imageURL} className="character-avatar--combat" />
           </div>
