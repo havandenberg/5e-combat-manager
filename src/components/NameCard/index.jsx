@@ -6,6 +6,8 @@ import {hasError} from 'utils/errors';
 
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
+import lockedWhiteImg from 'images/locked-white.svg';
+import unlockedWhiteImg from 'images/unlocked-white.svg';
 
 export default class NameCard extends React.Component {
   static propTypes = {
@@ -15,19 +17,21 @@ export default class NameCard extends React.Component {
     isUpNow: React.PropTypes.bool,
     started: React.PropTypes.bool,
     updateCombat: React.PropTypes.func,
-    view: React.PropTypes.bool
+    view: React.PropTypes.bool,
+    onSelectCharacter: React.PropTypes.func
   }
 
   constructor() {
     super();
 
     this.state = {
-      errors: []
+      errors: [],
+      isHover: false
     };
   }
 
   handleSelectCharacter = () => {
-
+    this.props.onSelectCharacter();
   }
 
   handleEnterInitiative = () => {
@@ -35,6 +39,14 @@ export default class NameCard extends React.Component {
       this.props.character.init = parseInt(this.refs.init.value, 10);
       this.props.updateCombat();
     }
+  }
+
+  handleMouseEnter = () => {
+    this.setState({isHover: true});
+  }
+
+  handleMouseLeave = () => {
+    this.setState({isHover: false});
   }
 
   handleToggleLockCharacter = () => {
@@ -59,7 +71,7 @@ export default class NameCard extends React.Component {
 
   render() {
     const {character, isUpNext, isUpNow, isSelected, started, view} = this.props;
-    const {errors} = this.state;
+    const {errors, isHover} = this.state;
 
     return (
       <div
@@ -71,15 +83,17 @@ export default class NameCard extends React.Component {
           {'name-card--not-ready': !started && !character.init},
           {'name-card--ready': !started && character.init}
         )}
-        onClick={this.handleSelectCharacter}>
+        onClick={this.handleSelectCharacter}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}>
         {character.isNPC
           ? <div className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}><Tag type="npc" /></div>
           : !view && <div
             className={classNames('name-card--tag', {'name-card--tag-init': !character.init})}
             onClick={this.handleToggleLockCharacter}>
             <img src={character.isLocked
-              ? lockedImg
-              : unlockedImg} />
+              ? isHover ? lockedWhiteImg : lockedImg
+              : isHover ? unlockedWhiteImg : unlockedImg} />
           </div>
         }
         <div className="name-card--title">{character.name}</div>

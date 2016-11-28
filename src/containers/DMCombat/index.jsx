@@ -147,6 +147,22 @@ class DMCombat extends React.Component {
     }
   }
 
+  handleSelectCharacter = (c) => {
+    return (e) => {
+      if (e) {e.preventDefault();}
+      const {charactersInCombat} = this.props.combat;
+      let height = 0;
+      let count = 0;
+      _.times(charactersInCombat.indexOf(c), () => {
+        const char = charactersInCombat[count];
+        height += char.isNPC ? 354 : 306;
+        if (char.init === this.getLowestInit()) {height += 44;}
+        count++;
+      });
+      this.refs.characterScroll.scrollTop = height;
+    };
+  }
+
   readyToStart = () => {
     const {combat} = this.props;
     let result = true;
@@ -207,31 +223,34 @@ class DMCombat extends React.Component {
         <div className="page-content page-content--dm-combat">
           <div className="name-card--container">
             <div className="page-subtitle center">Up next</div>
-            {combat.charactersInCombat.length > 0
-              ? combat.charactersInCombat.filter((c) => {
-                return !c.isRemoved;
-              }).map((c, i) => {
-                return (
-                  <div key={i}>
-                    <NameCard
-                      started={combat.isStarted}
-                      updateCombat={this.updateCombat}
-                      isUpNow={i === 0}
-                      isUpNext={i === 1}
-                      isSelected={false}
-                      character={c} />
-                    {combat.isStarted && c.init === lowestInit &&
-                      <div className="end-of-round end-of-round--name">
-                        <div className="end-of-round--line"></div>
-                        <div className="end-of-round--text">End of Round</div>
-                        <div className="end-of-round--line"></div>
-                      </div>
-                    }
-                  </div>
-                );
-              })
-              : <div className="combats-empty center">No characters</div>
-            }
+            <div className="scroll scroll-dm-combat">
+              {combat.charactersInCombat.length > 0
+                ? combat.charactersInCombat.filter((c) => {
+                  return !c.isRemoved;
+                }).map((c, i) => {
+                  return (
+                    <div key={i}>
+                      <NameCard
+                        started={combat.isStarted}
+                        updateCombat={this.updateCombat}
+                        isUpNow={i === 0}
+                        isUpNext={i === 1}
+                        isSelected={false}
+                        character={c}
+                        onSelectCharacter={this.handleSelectCharacter(c)} />
+                      {combat.isStarted && c.init === lowestInit &&
+                        <div className="end-of-round end-of-round--name">
+                          <div className="end-of-round--line"></div>
+                          <div className="end-of-round--text">End of Round</div>
+                          <div className="end-of-round--line"></div>
+                        </div>
+                      }
+                    </div>
+                  );
+                })
+                : <div className="combats-empty center">No characters</div>
+              }
+            </div>
           </div>
           <div className="combat-character--container">
             <div className="dm-actions">
@@ -257,29 +276,31 @@ class DMCombat extends React.Component {
                 <img src={combat.undoIndex === 0 ? redoDisabledImg : redoImg} onClick={this.handleRedo} />
               </div>
             </div>
-            {combat.charactersInCombat
-              ? combat.charactersInCombat.filter((c) => {
-                return !c.isRemoved;
-              }).map((c, i) => {
-                return (
-                  <div key={i}>
-                    <CombatCharacter
-                      character={c}
-                      combat={combat}
-                      isDM={true}
-                      updateCombat={this.updateCombat} />
-                    {combat.isStarted && c.init === lowestInit &&
-                      <div className="end-of-round end-of-round--card">
-                        <div className="end-of-round--line"></div>
-                        <div className="end-of-round--text">End of Round</div>
-                        <div className="end-of-round--line"></div>
-                      </div>
-                    }
-                  </div>
-                );
-              })
-              : <div className="combats-empty center">No characters</div>
-            }
+            <div className="scroll scroll-dm-combat" ref="characterScroll">
+              {combat.charactersInCombat
+                ? combat.charactersInCombat.filter((c) => {
+                  return !c.isRemoved;
+                }).map((c, i) => {
+                  return (
+                    <div key={i}>
+                      <CombatCharacter
+                        character={c}
+                        combat={combat}
+                        isDM={true}
+                        updateCombat={this.updateCombat} />
+                      {combat.isStarted && c.init === lowestInit &&
+                        <div className="end-of-round end-of-round--card">
+                          <div className="end-of-round--line"></div>
+                          <div className="end-of-round--text">End of Round</div>
+                          <div className="end-of-round--line"></div>
+                        </div>
+                      }
+                    </div>
+                  );
+                })
+                : <div className="combats-empty center">No characters</div>
+              }
+            </div>
           </div>
         </div>
       </div>

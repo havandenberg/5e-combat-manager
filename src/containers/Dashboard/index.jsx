@@ -88,7 +88,7 @@ class Dashboard extends React.Component {
 
   render() {
     const {characters, isDM, updateCombat} = this.props;
-    const {isAdding} = this.state;
+    const {combat, isAdding} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -96,7 +96,7 @@ class Dashboard extends React.Component {
         <div className="page-header">
           <div className="page-title vcenter center">{`${isDM ? 'DM ' : ''}Dashboard`}</div>
         </div>
-        <div className="page-content">
+        <div className="page-content scroll">
           <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
           <div className="card-container">
             {!parsedCombats.isEmpty()
@@ -108,7 +108,7 @@ class Dashboard extends React.Component {
                       combat={c}
                       index={isDM ? i : this.getCombatIndex(c)}
                       isDM={isDM}
-                      isAdding={isAdding}
+                      isAdding={isAdding && combat.id === c.id}
                       updateCombat={updateCombat}
                       onToggleAdd={this.handleToggleAdd(c)} />
                   </div>
