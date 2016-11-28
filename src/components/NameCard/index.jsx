@@ -31,7 +31,8 @@ export default class NameCard extends React.Component {
   }
 
   handleSelectCharacter = () => {
-    this.props.onSelectCharacter();
+    const {onSelectCharacter, view} = this.props;
+    if (!view) {onSelectCharacter();}
   }
 
   handleEnterInitiative = () => {
@@ -79,6 +80,7 @@ export default class NameCard extends React.Component {
           'name-card',
           {'name-card--upnow': isUpNow && started},
           {'name-card--upnext': isUpNext && started},
+          {'name-card--unc': character.hp <= 0},
           {'name-card--selected': isSelected},
           {'name-card--not-ready': !started && !character.init},
           {'name-card--ready': !started && character.init},
@@ -97,7 +99,7 @@ export default class NameCard extends React.Component {
               : isHover ? unlockedWhiteImg : unlockedImg} />
           </div>
         }
-        <div className="name-card--title">{character.name}</div>
+        <div className={classNames('name-card--title', {'name-card--unc-text': character.hp <= 0})}>{character.name}</div>
         {character.isNPC && <div>
           {!view && !character.init &&
             <div className="enter-initial-stats--name-card center">

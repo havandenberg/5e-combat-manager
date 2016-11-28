@@ -24,11 +24,17 @@
 
   &--upnow
     background-color: lighten($success-green, 20%)
-    font-weight: bold
 
   &--upnext
-    background-color: lighten($error-red, 40%)
-    font-weight: bold
+    background-color: lighten($warning-yellow, 40%)
+
+  &--unc
+    background-color: lighten($error-red, 50%)
+    border-color: darken($error-red, 30%)
+
+    &-text
+      color: darken($error-red, 30%)
+      text-decoration: line-through
 
   &--title
     font-size: 1rem

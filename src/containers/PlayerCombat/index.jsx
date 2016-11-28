@@ -42,6 +42,7 @@ class PlayerCombat extends React.Component {
   }
 
   getNextTurnsMessage = (nextTurns) => {
+    if (this.props.character.hp <= 0) {return 'You\'re unconscious!';}
     switch (nextTurns) {
     case 0:
       return 'It\'s your turn!';
@@ -160,7 +161,8 @@ class PlayerCombat extends React.Component {
               'center',
               'player-up',
               {'player-up-now': nextTurns === 0},
-              {'player-up-next': nextTurns === 1})}>
+              {'player-up-next': nextTurns === 1},
+              {'player-up-not': character.hp <= 0})}>
               {this.getNextTurnsMessage(nextTurns)}
             </div>
             {character.tags &&

@@ -5,16 +5,17 @@ import * as authActions from 'reducers/auth';
 
 class Navigation extends React.Component {
   static propTypes = {
+    isDM: React.PropTypes.bool,
     logout: React.PropTypes.func.isRequired
   }
 
   render() {
-    const {logout} = this.props;
+    const {isDM, logout} = this.props;
     const email = firebase.auth().currentUser ? firebase.auth().currentUser.email : '';
 
     return (
       <div className="nav">
-        <div className="nav-username vcenter pull-left">{email}</div>
+        <div className="nav-username vcenter pull-left">{isDM ? 'DM' : email}</div>
         {email.length > 0 &&
           <button className="btn btn-nav vcenter pull-right" onClick={logout}>logout</button>
         }
@@ -23,6 +24,10 @@ class Navigation extends React.Component {
   }
 }
 
-export default connect(() => ({}), {
+export default connect((state) => {
+  return {
+    isDM: state.auth.get('isDM')
+  };
+}, {
   logout: authActions.startLogout
 })(Navigation);

@@ -6,6 +6,7 @@ export default class StatBubble extends React.Component {
     character: React.PropTypes.object.isRequired,
     isDM: React.PropTypes.bool,
     isEditable: React.PropTypes.bool,
+    isView: React.PropTypes.bool,
     size: React.PropTypes.string,
     updateCombat: React.PropTypes.func
   }
@@ -42,7 +43,7 @@ export default class StatBubble extends React.Component {
   }
 
   render() {
-    const {character, isDM, isEditable, size} = this.props;
+    const {character, isDM, isEditable, isView, size} = this.props;
 
     return (
       <div className="stat-bubble-container">
@@ -53,7 +54,7 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--large': size === 'large'},
           {'stat-bubble--med': size === 'med'},
           {'stat-bubble--small': size === 'small'})}>
-          <span className="stat-bubble--label">HP</span>
+          {!isView && <span className="stat-bubble--label">HP</span>}
           <span className="stat-bubble--text">
             {isEditable
               ? <input className="stats-input" value={character.hp} ref="hp" onChange={this.handleHPChange} />
@@ -68,7 +69,7 @@ export default class StatBubble extends React.Component {
           {'stat-bubble--large': size === 'large'},
           {'stat-bubble--med': size === 'med'},
           {'stat-bubble--small': size === 'small'})}>
-          <span className="stat-bubble--label">AC</span>
+          {!isView && <span className="stat-bubble--label">AC</span>}
           <span className="stat-bubble--text">
             {isEditable
               ? <input className="stats-input" value={character.ac} ref="ac" onChange={this.handleACChange} />
@@ -76,7 +77,7 @@ export default class StatBubble extends React.Component {
             }
           </span>
         </div>
-        {character.init &&
+        {!isView && character.init &&
           <div className={classNames(
             'stat-bubble',
             'stat-bubble--init',

@@ -283,28 +283,43 @@
     display: flex
     flex-direction: row
 
+.combat-name
+  text-align: center
+  font-size: 1.7rem
+  font-weight: bold
+  padding-bottom: $spacing-micro
+
+.combat-description
+  text-align: center
+  font-size: 1.2rem
+  padding-bottom: $spacing-micro
+
+.combat-info
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+
 .turn-view
-  width: 100%
   text-align: right
   font-size: 1.2rem
   font-weight: bold
   padding-bottom: $spacing-micro
 
 .player-up
+  font-weight: bold
+  width: 210px
+  border-radius: $border-radius
+  margin-top: $spacing-small
 
   &-now
     background-color: lighten($success-green, 20%)
-    font-weight: bold
-    width: 180px
-    border-radius: $border-radius
-    margin-top: $spacing-small
 
   &-next
-    background-color: lighten($error-red, 40%)
-    font-weight: bold
-    border-radius: $border-radius
-    width: 180px
-    margin-top: $spacing-small
+    background-color: lighten($warning-yellow, 40%)
+
+  &-not
+    background-color: lighten($error-red, 50%)
+    border-color: darken($error-red, 30%)
 
 .character-switcher
   position: fixed
@@ -317,3 +332,21 @@
     width: 80px
     border-radius: 50%
     border: 4px solid $white
+
+.view-character
+  margin-right: $spacing-micro
+  margin-bottom: $spacing-micro
+
+  &--name
+    font-size: 1rem
+
+  &--text
+    font-size: 0.7rem
+
+  &--container
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+
+    &:last-child
+      margin: 0

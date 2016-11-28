@@ -150,12 +150,13 @@ class DMCombat extends React.Component {
   handleSelectCharacter = (c) => {
     return (e) => {
       if (e) {e.preventDefault();}
-      const {charactersInCombat} = this.props.combat;
+      const {combat} = this.props;
+      const {charactersInCombat} = combat;
       let height = 0;
       let count = 0;
       _.times(charactersInCombat.indexOf(c), () => {
         const char = charactersInCombat[count];
-        height += char.isNPC ? 354 : 306;
+        height += char.isNPC && combat.isStarted ? 354 : 306;
         if (char.init === this.getLowestInit()) {height += 44;}
         count++;
       });
@@ -210,8 +211,7 @@ class DMCombat extends React.Component {
           <div className="page-title vcenter center">{combat.name}</div>
           <div className="page-subtitle vcenter center">{combat.description}</div>
           <div className="dm-combat--tag-container">
-            <div className="dm-combat--tag">Round <strong>{combat.rounds}</strong></div>
-            <div className="dm-combat--tag">Turn <strong>{combat.turns}</strong></div>
+            <div className="dm-combat--tag">{`Round ${combat.rounds}\u00A0\u00A0|\u00A0\u00A0Turn ${combat.turns}`}</div>
             <Link className="no-decoration circle dm-combat--tag-view" to={`/view-combat/${combatIndex}`}>
               <img src={eyeImg} />
             </Link>

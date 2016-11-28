@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import CombatCharacter from 'components/CombatCharacter';
+import ViewCharacter from 'components/ViewCharacter';
 import NameCard from 'components/NameCard';
 
 class ViewCombat extends React.Component {
@@ -56,31 +56,51 @@ class ViewCombat extends React.Component {
             }
           </div>
           <div className="combat-character--container">
-            <div className="turn-view">{`Round ${combat.rounds}`}</div>
-            {combat.charactersInCombat
-              ? combat.charactersInCombat.filter((c) => {
-                return !c.isRemoved;
-              }).map((c, i) => {
-                return (
-                  <div key={i}>
-                    <CombatCharacter
-                      character={c}
-                      combat={combat}
-                      isDM={false}
-                      isChoose={true}
-                      view={true} />
-                      {combat.isStarted && c.init === lowestInit &&
-                        <div className="end-of-round end-of-round--card">
-                          <div className="end-of-round--line"></div>
-                          <div className="end-of-round--text">End of Round</div>
-                          <div className="end-of-round--line"></div>
-                        </div>
-                      }
-                  </div>
-                );
-              })
-              : <div className="combats-empty center">No characters</div>
-            }
+            <div className="combat-name">{combat.name}</div>
+            <div className="combat-description">{combat.description}</div>
+            <div className="combat-info">
+              <div className="page-subtitle">NPCs</div>
+              <div className="page-subtitle">{`Round ${combat.rounds}\u00A0\u00A0|\u00A0\u00A0Turn ${combat.turns}`}</div>
+            </div>
+            <div className="view-character--container">
+              {combat.charactersInCombat &&
+                combat.charactersInCombat.filter((c) => {
+                  return !c.isRemoved && c.isNPC;
+                }).sort((a, b) => {
+                  const nameA = a.name.toUpperCase();
+                  const nameB = b.name.toUpperCase();
+                  if (nameA < nameB) {return -1;}
+                  if (nameA > nameB) {return 1;}
+                  return 0;
+                }).map((c, i) => {
+                  return (
+                    <div key={i} className="view-character">
+                      <ViewCharacter character={c} />
+                    </div>
+                  );
+                })
+              }
+            </div>
+            <div className="page-subtitle">Players</div>
+            <div className="view-character--container">
+              {combat.charactersInCombat &&
+                combat.charactersInCombat.filter((c) => {
+                  return !c.isRemoved && !c.isNPC;
+                }).sort((a, b) => {
+                  const nameA = a.name.toUpperCase();
+                  const nameB = b.name.toUpperCase();
+                  if (nameA < nameB) {return -1;}
+                  if (nameA > nameB) {return 1;}
+                  return 0;
+                }).map((c, i) => {
+                  return (
+                    <div key={i} className="view-character">
+                      <ViewCharacter character={c} />
+                    </div>
+                  );
+                })
+              }
+            </div>
           </div>
           <div className="turn-history--container">
             <div className="page-subtitle center">Turn history</div>
