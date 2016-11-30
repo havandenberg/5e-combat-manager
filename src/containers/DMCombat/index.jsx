@@ -156,8 +156,10 @@ class DMCombat extends React.Component {
       let count = 0;
       _.times(charactersInCombat.indexOf(c), () => {
         const char = charactersInCombat[count];
-        height += char.isNPC && combat.isStarted ? 354 : 306;
-        if (char.init === this.getLowestInit()) {height += 44;}
+        if (!char.isRemoved) {
+          height += (combat.isStarted && char.isNPC) ? 354 : 306;
+          if (combat.isStarted && char.init === this.getLowestInit()) {height += 44;}
+        }
         count++;
       });
       this.refs.characterScroll.scrollTop = height;

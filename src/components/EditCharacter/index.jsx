@@ -83,10 +83,11 @@ class EditCharacter extends React.Component {
       const name = this.refs.name.value;
       const race = this.refs.race.value;
       const klass = this.refs.klass.value;
+      const notes = this.refs.notes.value;
       const hp = parseInt(this.refs.hp.value, 10);
       const ac = parseInt(this.refs.ac.value, 10);
 
-      const charObj = {name, race, klass, hp, ac};
+      const charObj = {name, race, klass, hp, ac, notes};
 
       if (isNew && isDM) {
         charObj.isLocked = true;
@@ -160,6 +161,13 @@ class EditCharacter extends React.Component {
                 placeholder="ac"
                 type="text"
                 ref="ac" />
+            </div>
+            <div className="form-field">
+              <textarea
+                defaultValue={character ? character.notes : ''}
+                placeholder="notes"
+                type="text"
+                ref="notes" />
             </div>
             <div className="form-field center">
               <button className="btn btn-action full-width" type="submit" onClick={this.handleSaveCharacter}>

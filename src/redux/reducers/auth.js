@@ -20,7 +20,7 @@ export default function reducer(auth = initialState, action = {}) {
   case LOGOUT:
     return auth
       .set('isDM', false)
-      .delete('uid')
+      .set('uid', '')
       .set('errors', []);
   case LOGIN_ERROR:
     return auth

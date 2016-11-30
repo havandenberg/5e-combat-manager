@@ -99,17 +99,14 @@ export function startUpdateCharacter(id, character, image) {
     const combatsRef = firebaseRef.child('combats');
 
     const updates = {
-      name: character.name,
-      race: character.race,
-      klass: character.klass,
-      hp: character.hp,
-      ac: character.ac
+      ...character
     };
 
     const combatUpdates = {
       name: character.name,
       race: character.race,
-      klass: character.klass
+      klass: character.klass,
+      notes: character.notes
     };
 
     combatsRef.once('value', (snap) => {

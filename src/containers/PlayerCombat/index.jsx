@@ -27,7 +27,8 @@ class PlayerCombat extends React.Component {
     super();
 
     this.state = {
-      errors: []
+      errors: [],
+      notesOpen: false
     };
   }
 
@@ -91,6 +92,16 @@ class PlayerCombat extends React.Component {
     }
   }
 
+  handleOpenNotes = () => {
+    this.setState({notesOpen: true});
+  }
+
+  handleCloseNotes = (e) => {
+    if (e.target.type !== 'textarea') {
+      this.setState({notesOpen: false});
+    }
+  }
+
   updateCombat = () => {
     const {combat, updateCombat} = this.props;
     updateCombat(combat.id, combat, '#');
@@ -98,7 +109,7 @@ class PlayerCombat extends React.Component {
 
   render() {
     const {character, combat, combatIndex} = this.props;
-    const {errors} = this.state;
+    const {errors, notesOpen} = this.state;
     const nextTurns = this.getNextTurns();
     const isUpNow = nextTurns === 0;
 
@@ -181,6 +192,16 @@ class PlayerCombat extends React.Component {
               <CombatActions character={character} combat={combat} isUpNow={isUpNow} updateCombat={this.updateCombat} />
             </div>
           </div>}
+          {notesOpen &&
+            <div className="notes-container" onClick={this.handleCloseNotes}>
+              <textarea
+                defaultValue={character.notes || ''}
+                placeholder="Enter character notes (saves automatically)."
+                type="text"
+                ref="notes"
+                onChange={this.handleEditNotes} />
+            </div>
+          }
         </div>
       </div>
     );
