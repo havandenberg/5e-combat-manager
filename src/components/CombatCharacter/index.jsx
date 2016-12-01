@@ -10,20 +10,22 @@ import notesImg from 'images/notes.svg';
 import notesEmptyImg from 'images/notes-empty.svg';
 
 const tags = [
-  {type: 'blinded', text: 'bli'},
-  {type: 'charmed', text: 'chr'},
-  {type: 'deafened', text: 'def'},
-  {type: 'frightened', text: 'fri'},
-  {type: 'grappled', text: 'grp'},
-  {type: 'incapacitated', text: 'inc'},
-  {type: 'invisible', text: 'inv'},
-  {type: 'paralyzed', text: 'par'},
-  {type: 'petrified', text: 'pet'},
-  {type: 'poisoned', text: 'poi'},
-  {type: 'prone', text: 'prn'},
-  {type: 'restrained', text: 'rst'},
-  {type: 'stunned', text: 'stn'},
-  {type: 'unconscious', text: 'unc'}
+  {type: 'blinded', text: 'bli', description: 'Blinded: Cannot see.'},
+  {type: 'burned', text: 'brn', description: 'Burned: Must make CON saving throw.'},
+  {type: 'charmed', text: 'chr', description: 'Charmed: Cannot attack the charmer.'},
+  {type: 'deafened', text: 'def', description: 'Deafened: Cannot hear, fails checks that require hearing.'},
+  {type: 'frightened', text: 'fri', description: 'Frightened: Cannot move closer to source of fear, has disadvantage on ability checks and attack rolls if source of fear is within line of sight.'}, // eslint-disable-line max-len
+  {type: 'frozen', text: 'frz', description: 'Frozen: Half speed, CON saving throw or cannot move.'}, // eslint-disable-line max-len
+  {type: 'grappled', text: 'grp', description: 'Grappled: Cannot move without breaking grapple.'},
+  {type: 'incapacitated', text: 'inc', description: 'Incapacitated: Cannot take actions.'},
+  {type: 'invisible', text: 'inv', description: 'Invisible: Cannot be seen. Attack rolls have advantage.'},
+  {type: 'paralyzed', text: 'par', description: 'Paralyzed: Cannot move, enemy attacks have advantage, auto fail STR and DEX saving throws. Any attack within 5 feet is a crit.'}, // eslint-disable-line max-len
+  {type: 'petrified', text: 'pet', description: 'Petrified: Weight increases by factor of 10, cannot move, speak, or take actions, resistance to all damage, immune to poison and disase, auto fail DEX and STR saving throws.'}, // eslint-disable-line max-len
+  {type: 'poisoned', text: 'poi', description: 'Poisoned: Roll saving throw, apply damage if failed.'},
+  {type: 'prone', text: 'prn', description: 'Prone: Can only crawl, disadvantage on attack rolls.'},
+  {type: 'restrained', text: 'rst', description: 'Restrained: Cannot move, has disadvantage on attack rolls and DEX saving throws.'},
+  {type: 'stunned', text: 'stn', description: 'Stunned: Cannot take actions, fails STR and DEX saving throws, enemy attacks have advantage.'}, // eslint-disable-line max-len
+  {type: 'unconscious', text: 'unc', description: 'Unconscious: Drops whatever is holding, cannot move, take actions, unaware of surroundings, enemy attacks have advantage, attacks within 5ft are crits.'} // eslint-disable-line max-len
 ];
 
 export default class CombatCharacter extends React.Component {
@@ -143,7 +145,7 @@ export default class CombatCharacter extends React.Component {
                   character.tags.map((t, i) => {
                     return (
                       <div className="character-tag" key={i} onClick={this.handleRemoveTag(t)}>
-                        <Tag type={t.type} text={t.text} />
+                        <Tag type={t.type} text={t.text} description={t.description} />
                       </div>
                     );
                   })
