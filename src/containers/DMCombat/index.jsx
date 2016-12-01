@@ -99,7 +99,7 @@ class DMCombat extends React.Component {
       if (action.type === 0 || action.type === 1) {
         _.each(action.targets, (t) => {
           const target = this.getTarget(combat.charactersInCombat, t);
-          target.hp += action.damage;
+          target.hp += t.damage;
         });
       } else if (action.type === 2) {
         this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = false;
@@ -127,7 +127,7 @@ class DMCombat extends React.Component {
       if (action.type === 0 || action.type === 1) {
         _.each(action.targets, (t) => {
           const target = this.getTarget(combat.charactersInCombat, t);
-          target.hp -= action.damage;
+          target.hp -= t.damage;
         });
       } else if (action.type === 2) {
         this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = true;

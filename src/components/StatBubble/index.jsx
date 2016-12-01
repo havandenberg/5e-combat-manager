@@ -12,7 +12,7 @@ export default class StatBubble extends React.Component {
   }
 
   validate = (string) => {
-    return /^[0-9]\d*$/.test(string) || string === '';
+    return /^-?[0-9]\d*$/.test(string) || string === '';
   }
 
   handleHPChange = () => {

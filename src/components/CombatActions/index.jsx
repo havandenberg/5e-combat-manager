@@ -3,6 +3,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import {hasError} from 'utils/errors';
 import Tag from 'components/Tag';
+import DamageModifier from 'components/DamageModifier';
 
 import backImg from 'images/back.svg';
 
@@ -18,7 +19,7 @@ export default class CombatActions extends React.Component {
     super();
 
     this.state = {
-      action: {targets: []},
+      action: {targets: [], damageTotal: 0},
       errors: [],
       step: 0
     };
@@ -26,7 +27,7 @@ export default class CombatActions extends React.Component {
 
   getActionMessage = (action, missed) => {
     const {character} = this.props;
-    const isHeal = action.damage < 0;
+    const isHeal = action.damageTotal < 0;
     let targetsString = '';
     let count = 0;
     _.each(action.targets, (target) => {
@@ -41,8 +42,8 @@ export default class CombatActions extends React.Component {
     });
     return `${character.name} ${action.type === 0
       ? 'attacked' : isHeal ? 'healed' : 'cast a spell on'} ${targetsString} ${missed
-      ? action.type === 0 ? 'but missed!' : 'but they resisted!' : `for ${action.damage >= 0
-      ? action.damage : action.damage * -1} ${isHeal ? 'points' : 'damage'}!`}`;
+      ? action.type === 0 ? 'but missed!' : 'but they resisted!' : `for ${action.damageTotal >= 0
+      ? action.damageTotal : action.damageTotal * -1} ${isHeal ? 'points' : 'damage'}!`}`;
   }
 
   handleAttack = () => {
@@ -61,15 +62,14 @@ export default class CombatActions extends React.Component {
     return (e) => {
       e.preventDefault();
       const {action} = this.state;
-      const updatedAction = action;
-      if (!this.getTarget(updatedAction.targets, target)) {
-        updatedAction.targets.push(target);
+      if (!this.getTarget(action.targets, target)) {
+        action.targets.push({...target});
       } else {
-        _.remove(updatedAction.targets, (t) => {
+        _.remove(action.targets, (t) => {
           return t.id === target.id;
         });
       }
-      this.setState({action: updatedAction, errors: []});
+      this.setState({action, errors: []});
     };
   }
 
@@ -83,6 +83,24 @@ export default class CombatActions extends React.Component {
     });
 
     return result;
+  }
+
+  handleDamage = (target) => {
+    const {action} = this.state;
+    _.each(action.targets, (t) => {
+      if (t.name === target.name) {
+        t.damage = target.damage;
+      }
+    });
+    this.setState({action});
+  }
+
+  handleDamageTotal = () => {
+    const {action} = this.state;
+    if (this.validateAction()) {
+      const damageTotal = parseInt(this.refs.damageTotal.value, 10);
+      this.setState({action: {...action, damageTotal}});
+    }
   }
 
   handleToggleHoldAction = () => {
@@ -110,23 +128,20 @@ export default class CombatActions extends React.Component {
 
   handleMiss = () => {
     const {action} = this.state;
-    const updatedAction = action;
-    updatedAction.damage = 0;
-    updatedAction.message = this.getActionMessage(updatedAction, true);
-    this.executeAction(updatedAction);
+    action.damage = 0;
+    action.message = this.getActionMessage(action, true);
+    this.executeAction(action);
     this.setState({action: {targets: []}, step: 0});
   }
 
   handleMakeAction = () => {
     const {action} = this.state;
-    const updatedAction = action;
     if (this.validateAction()) {
-      updatedAction.damage = parseInt(this.refs.damage.value, 10);
-      if (updatedAction.type === 1) {
-        if (this.refs.heal.checked) {updatedAction.damage *= -1;}
+      if (action.type === 1) {
+        if (this.refs.heal.checked) {action.damageTotal *= -1;}
       }
-      updatedAction.message = this.getActionMessage(updatedAction);
-      this.executeAction(updatedAction);
+      action.message = this.getActionMessage(action);
+      this.executeAction(action);
       this.setState({action: {targets: []}, step: 0});
     }
   }
@@ -135,7 +150,7 @@ export default class CombatActions extends React.Component {
     const {combat, updateCombat} = this.props;
     _.each(action.targets, (t) => {
       const target = this.getTarget(combat.charactersInCombat, t);
-      target.hp -= action.damage;
+      target.hp -= t.damage * (action.damageTotal > 0 ? 1 : -1);
     });
     combat.actions.splice(0, 0, action);
     updateCombat();
@@ -143,12 +158,12 @@ export default class CombatActions extends React.Component {
 
   validateAction = () => {
     const errors = [];
-    const damage = this.refs.damage.value;
+    const damageTotal = this.refs.damageTotal.value;
 
-    if (_.isEmpty(damage)) {
-      errors.push('damageEmpty');
-    } else if (!/^[0-9]\d*$/.test(damage)) {
-      errors.push('damageNaN');
+    if (_.isEmpty(damageTotal)) {
+      errors.push('damageTotalEmpty');
+    } else if (!/^[0-9]\d*$/.test(damageTotal)) {
+      errors.push('damageTotalNaN');
     }
 
     this.setState({errors});
@@ -245,14 +260,16 @@ export default class CombatActions extends React.Component {
               <button className="btn-back pull-left" onClick={this.handleBackStep}><img src={backImg} /></button>
               Enter damage:
             </div>
-            {hasError(errors, ['damageEmpty']) && <div className="alert alert-error">Enter damage</div>}
-            {hasError(errors, ['damageNaN']) && <div className="alert alert-error">Damage must be a number</div>}
+            {hasError(errors, ['damageTotalEmpty']) && <div className="alert alert-error">Enter damage</div>}
+            {hasError(errors, ['damageTotalNaN']) && <div className="alert alert-error">Damage must be a number</div>}
             <div className="attack-container form-field">
               <input
-                className={classNames({'input-error': hasError(errors, ['damageEmpty', 'damageNaN'])})}
+                className={classNames('total-damage', {'input-error': hasError(errors, ['damageTotalEmpty', 'damageTotalNaN'])})}
+                defaultValue={action.damageTotal}
                 placeholder="integer"
                 type="text"
-                ref="damage" />
+                ref="damageTotal"
+                onChange={this.handleDamageTotal} />
             </div>
             {action.type === 1 &&
               <div className="attack-container form-field">
@@ -261,6 +278,13 @@ export default class CombatActions extends React.Component {
                     type="checkbox" ref="heal" />
                 Heal</label>
               </div>
+            }
+            {action.targets &&
+              action.targets.map((t, i) => {
+                return (
+                  <DamageModifier key={i} target={t} damageTotal={action.damageTotal || 0} onDamageChange={this.handleDamage} />
+                );
+              })
             }
             <button className="btn btn-action" onClick={this.handleMakeAction}>Finish</button>
           </div>

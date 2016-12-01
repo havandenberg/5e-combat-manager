@@ -103,7 +103,7 @@ class EditCharacter extends React.Component {
 
   render() {
     const {confirmDelete, errors, files, updated} = this.state;
-    const {character, isNew} = this.props;
+    const {character, isDM, isNew} = this.props;
 
     return (
       <div className="page">
@@ -162,13 +162,13 @@ class EditCharacter extends React.Component {
                 type="text"
                 ref="ac" />
             </div>
-            <div className="form-field">
+            {isDM && <div className="form-field">
               <textarea
                 defaultValue={character ? character.notes : ''}
                 placeholder="notes"
                 type="text"
                 ref="notes" />
-            </div>
+            </div>}
             <div className="form-field center">
               <button className="btn btn-action full-width" type="submit" onClick={this.handleSaveCharacter}>
                 {isNew ? 'Create character' : 'Save character'}
