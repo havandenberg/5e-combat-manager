@@ -33,18 +33,36 @@
 
   &-container
     display: flex
-    flex-wrap: wrap
+    flex-direction: row
     justify-content: space-between
+    flex-wrap: wrap
     margin: 0 auto
     width: 100%
 
+    &--combat
+      justify-content: flex-start
+      flex-wrap: nowrap
+
+      +breakpoint(mobile)
+        flex-wrap: wrap
+        justify-content: space-between
+
   &-wrapper
     margin-bottom: $spacing-small
-    width: 48%
+    width: 49%
 
     +breakpoint(mobile)
       margin: 0 auto $spacing-small auto
       width: 90%
+
+    &--combat
+      margin-right: $spacing-small
+      margin-bottom: $spacing-small
+      min-width: 300px
+
+      +breakpoint(mobile)
+        margin: 0 auto $spacing-small auto
+        width: 90%
 
     .copies-container
       display: flex

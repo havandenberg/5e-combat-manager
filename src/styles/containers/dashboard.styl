@@ -2,3 +2,21 @@
   font-size: 1.25rem
   padding: $spacing-small
   color: $error-red
+
+.character-header
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+
+  .options
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+
+    input
+      width: 200px
+      margin-left: $spacing-small
+
+      +breakpoint(mobile)
+        width: 140px

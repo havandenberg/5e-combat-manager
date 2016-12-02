@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
+import moment from 'moment';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {hasError} from 'utils/errors';
@@ -89,8 +90,9 @@ class EditCharacter extends React.Component {
 
       const charObj = {name, race, klass, hp, ac, notes};
 
-      if (isNew && isDM) {
-        charObj.isLocked = true;
+      if (isNew) {
+        if (isDM) {charObj.isLocked = true;}
+        charObj.createdAt = moment().unix();
       }
 
       if (isNew) {

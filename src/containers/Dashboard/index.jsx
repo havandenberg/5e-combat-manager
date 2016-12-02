@@ -22,7 +22,9 @@ class Dashboard extends React.Component {
 
     this.state = {
       isAdding: false,
-      combat: null
+      combat: null,
+      characterOrder: 'Name',
+      search: ''
     };
   }
 
@@ -52,6 +54,10 @@ class Dashboard extends React.Component {
       }
     });
     return result;
+  }
+
+  handleCharacterOrder = (e) => {
+    this.setState({characterOrder: e.target.value});
   }
 
   handleChooseCharacter = (c) => {
@@ -86,9 +92,19 @@ class Dashboard extends React.Component {
     };
   }
 
+  handleSearch = (e) => {
+    this.setState({search: e.target.value});
+  }
+
+  search = (c) => {
+    const {search} = this.state;
+    const text = c.name + c.race + c.klass + c.notes;
+    return text.toLowerCase().includes(search.toLowerCase());
+  }
+
   render() {
     const {characters, isDM, updateCombat} = this.props;
-    const {combat, isAdding} = this.state;
+    const {characterOrder, combat, isAdding} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -96,13 +112,13 @@ class Dashboard extends React.Component {
         <div className="page-header">
           <div className="page-title vcenter center">{`${isDM ? 'DM ' : ''}Dashboard`}</div>
         </div>
-        <div className="page-content scroll">
+        <div className="page-content">
           <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
-          <div className="card-container">
+          <div className="card-container card-container--combat scroll scroll-combat card-field">
             {!parsedCombats.isEmpty()
               ? parsedCombats.map((c, i) => {
                 return (
-                  <div key={i} className="card-wrapper">
+                  <div key={i} className="card-wrapper--combat">
                     <CombatCard
                       characterNames={isDM ? [] : this.hasCharactersInCombat(c)}
                       combat={c}
@@ -118,13 +134,44 @@ class Dashboard extends React.Component {
             }
           </div>
           {isDM && <div className="form-field center">
-            <Link to="/create-combat"><button className="btn btn-action full-width">Create new combat</button></Link>
+            <Link to="/create-combat"><button className="btn btn-action">Create new combat</button></Link>
           </div>}
           <hr className="hr" />
-          <div className="page-subtitle">{`${isDM ? 'NPCs' : 'My characters'}`}</div>
-          <div className="card-container">
+          <div className="page-subtitle character-header">
+            <div>{`${isDM ? 'NPCs' : 'My characters'}`}</div>
+            <div className="options">
+              <select
+                onChange={this.handleCharacterOrder}
+                ref="characterOrder" >
+                <option>Name</option>
+                <option>Created</option>
+                <option>Class</option>
+              </select>
+              <input type="text" placeholder="Search" onChange={this.handleSearch} />
+            </div>
+          </div>
+          <div className="card-container scroll scroll-characters card-field">
             {!characters.isEmpty()
-              ? characters.map((c, i) => {
+              ? characters.filter((c) => {
+                return this.search(c);
+              }).sort((a, b) => {
+                let x = 0;
+                let y = 0;
+                switch (characterOrder) {
+                case 'Name':
+                  x = a.name;
+                  y = b.name;
+                  break;
+                case 'Created':
+                  x = a.createdAt || 0;
+                  y = b.createdAt || 0;
+                  break;
+                default:
+                  x = a.klass;
+                  y = b.klass;
+                }
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              }).map((c, i) => {
                 return (
                     <div key={i} className="card-wrapper">
                       {isAdding
@@ -140,7 +187,7 @@ class Dashboard extends React.Component {
             }
           </div>
           <div className="form-field center">
-            <Link to="/create-character"><button className="btn btn-action full-width">Create new character</button></Link>
+            <Link to="/create-character"><button className="btn btn-action">Create new character</button></Link>
           </div>
         </div>
       </div>

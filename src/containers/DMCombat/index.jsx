@@ -211,7 +211,6 @@ class DMCombat extends React.Component {
         <div className="page-header">
           <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
           <div className="page-title vcenter center">{combat.name}</div>
-          <div className="page-subtitle vcenter center">{combat.description}</div>
           <div className="dm-combat--tag-container">
             <div className="dm-combat--tag">{`Round ${combat.rounds}\u00A0\u00A0|\u00A0\u00A0Turn ${combat.turns}`}</div>
             <Link className="no-decoration circle dm-combat--tag-view" to={`/view-combat/${combatIndex}`}>
