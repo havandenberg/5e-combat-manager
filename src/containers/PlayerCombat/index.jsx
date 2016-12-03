@@ -7,6 +7,7 @@ import StatBubble from 'components/StatBubble';
 import CombatActions from 'components/CombatActions';
 import CharacterSwitcher from 'components/CharacterSwitcher';
 import Tag from 'components/Tag';
+import DeathSaves from 'components/DeathSaves';
 import {hasError} from 'utils/errors';
 
 import * as combatActions from 'reducers/combat';
@@ -176,7 +177,7 @@ class PlayerCombat extends React.Component {
               {'player-up-not': character.hp <= 0})}>
               {this.getNextTurnsMessage(nextTurns)}
             </div>
-            {character.tags &&
+            {character.tags && character.hp > 0 &&
               <div className="card-field player-character-tag--container">
                 {character.tags.map((t, i) => {
                   return (
@@ -186,6 +187,9 @@ class PlayerCombat extends React.Component {
                   );
                 })}
               </div>
+            }
+            {character.hp <= 0 &&
+              <DeathSaves character={character} updateCombat={this.updateCombat} />
             }
             <div className="combat-content">
               <StatBubble character={character} size="large" />

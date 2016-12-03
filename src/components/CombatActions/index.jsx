@@ -193,17 +193,17 @@ export default class CombatActions extends React.Component {
             {!character.isNPC && <div className="page-subtitle">Combat actions:</div>}
             {!character.isHoldingAction &&
               <button
-                className="btn btn-action"
+                className="btn btn-action btn-standard-width"
                 onClick={this.handleAttack}>Attack</button>
             }
             {!character.isHoldingAction &&
               <button
-                className="btn btn-action"
+                className="btn btn-action btn-standard-width"
                 onClick={this.handleCastSpell}>Cast spell</button>
             }
             {(character.isHoldingAction || isUpNow) &&
               <button
-                className="btn btn-action"
+                className="btn btn-action btn-standard-width"
                 onClick={this.handleToggleHoldAction}>{character.isHoldingAction ? 'Use action' : 'Hold action'}</button>
             }
           </div>
@@ -212,7 +212,7 @@ export default class CombatActions extends React.Component {
           <div className="actions actions-dm-column">
             <div className="page-subtitle">
               <button className="btn-back pull-left" onClick={this.handleBackStep}><img src={backImg} /></button>
-              Choose target(s):
+              <div>Choose target(s):</div>
             </div>
             {hasError(errors, ['targetsEmpty']) && <div className="alert alert-error">Choose at least one target</div>}
             {combat.charactersInCombat.filter((c) => {

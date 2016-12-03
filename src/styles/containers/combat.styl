@@ -36,7 +36,17 @@
     button
       margin-bottom: $spacing-small
 
-    input
+    .page-subtitle
+      display: flex
+      flex-direction: row
+      align-items: center
+      padding: 0
+      margin-bottom: $spacing-small
+
+      button
+        height: 50px
+
+    .total-damage
       text-align: center
       margin: 0 auto
       width: 50%
@@ -66,6 +76,7 @@
 
     .btn-back
       margin-right: $spacing-small
+      margin-bottom: 0
 
     .target
       border: $border
@@ -75,10 +86,6 @@
       position: relative
       margin: 0 auto $spacing-small auto
       width: 80%
-
-      &:hover
-        background-color: $purple
-        color: $white
 
       &-selected
         background-color: $purple
@@ -117,10 +124,14 @@
       width: 90%
 
     .page-subtitle
+      display: flex
+      flex-direction: row
+      align-items: center
       padding: 0
+      margin-bottom: $spacing-small
 
-    button
-      margin-bottom: $spacing-micro
+      button
+        height: 50px
 
     .total-damage
       text-align: center
@@ -138,10 +149,6 @@
       position: relative
       margin: 0 auto $spacing-micro auto
       width: 50%
-
-      &:hover
-        background-color: $purple
-        color: $white
 
       &-selected
         background-color: $purple
@@ -352,3 +359,30 @@
 
     &:last-child
       margin: 0
+
+.death-saves-title
+  margin-bottom: $spacing-micro
+  text-align: center
+  width: 100%
+
+.death-saves-container
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  width: 150px
+  margin: 0 auto $spacing-small auto
+
+  .save
+    border: $border
+    border-radius: 50%
+    background-color: $black
+    cursor: pointer
+    width: 30px
+    height: 30px
+
+    &-success
+      background-color: $success-green
+
+    &-fail
+      background-color: $error-red

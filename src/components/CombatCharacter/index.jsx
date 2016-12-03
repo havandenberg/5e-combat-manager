@@ -3,6 +3,7 @@ import _ from 'lodash';
 import StatBubble from 'components/StatBubble';
 import Tag from 'components/Tag';
 import CombatActions from 'components/CombatActions';
+import DeathSaves from 'components/DeathSaves';
 
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
@@ -141,7 +142,7 @@ export default class CombatCharacter extends React.Component {
                 <div>Race: {character.race}</div>
                 <div>Class: {character.klass}</div>
               </div>
-              <div className="card-field character-tag--container">
+              {character.hp > 0 && <div className="card-field character-tag--container">
                 {character.tags &&
                   character.tags.map((t, i) => {
                     return (
@@ -164,7 +165,10 @@ export default class CombatCharacter extends React.Component {
                     }
                   </select>
                 }
-              </div>
+              </div>}
+              {character.hp <= 0 &&
+                <DeathSaves character={character} updateCombat={updateCombat} />
+              }
               <div className="card-field bubbles">
                 <StatBubble
                   character={character}

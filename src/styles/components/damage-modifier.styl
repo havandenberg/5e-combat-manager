@@ -8,10 +8,6 @@
     text-align: center
     width: 30px
 
-    &:hover
-      background-color: $purple
-      color: $white
-
     &-selected
       background-color: $purple
       color: $white
@@ -21,8 +17,11 @@
     flex-direction: row
     justify-content: space-around
     align-items: center
-    width: 50%
+    width: 350px
     margin: 0 auto $spacing-small auto
+
+    +breakpoint(mobile)
+      width: 250px
 
     .damage-modifier--custom
       text-align: center
