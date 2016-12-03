@@ -6,10 +6,15 @@
   font-size: 1.125rem
   height: 3rem
   padding: 0 $spacing-small
+  margin: 0 auto
   transition: all 0.3s ease
 
   +breakpoint(mobile)
     width: 60%
+
+  &-home
+    +breakpoint(mobile)
+      width: 100%
 
   &-nav
     background-color: $black

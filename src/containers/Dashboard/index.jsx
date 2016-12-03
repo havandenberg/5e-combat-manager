@@ -138,7 +138,7 @@ class Dashboard extends React.Component {
           </div>}
           <hr className="hr" />
           <div className="page-subtitle character-header">
-            <div>{`${isDM ? 'NPCs' : 'My characters'}`}</div>
+            <div>{`${isDM ? 'NPCs' : 'Characters'}`}</div>
             <div className="options">
               <select
                 onChange={this.handleCharacterOrder}

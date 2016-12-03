@@ -25,6 +25,7 @@ const tags = [
   {type: 'prone', text: 'prn', description: 'Prone: Can only crawl, disadvantage on attack rolls.'},
   {type: 'restrained', text: 'rst', description: 'Restrained: Cannot move, has disadvantage on attack rolls and DEX saving throws.'},
   {type: 'stunned', text: 'stn', description: 'Stunned: Cannot take actions, fails STR and DEX saving throws, enemy attacks have advantage.'}, // eslint-disable-line max-len
+  {type: 'transformed', text: 'tsf', description: 'Transformed: Character is transformed into another creature.'}, // eslint-disable-line max-len
   {type: 'unconscious', text: 'unc', description: 'Unconscious: Drops whatever is holding, cannot move, take actions, unaware of surroundings, enemy attacks have advantage, attacks within 5ft are crits.'} // eslint-disable-line max-len
 ];
 
@@ -152,6 +153,7 @@ export default class CombatCharacter extends React.Component {
                 }
                 {!view &&
                   <select
+                    className="status"
                     onChange={this.handleSelectTag}
                     ref="selectTag" >
                     <option key="">Status</option>

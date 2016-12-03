@@ -11,12 +11,12 @@ export default class Home extends React.Component {
         <div className="page-content">
           <div className="form-field">
             <Link to="/dm-login">
-              <button className="btn btn-action full-width">Click here if you are the DM</button>
+              <button className="btn btn-home btn-action full-width center">Click here if you are the DM</button>
             </Link>
           </div>
           <div className="form-field">
             <Link to="/player-login">
-              <button className="btn btn-action full-width">Click here if you are NOT the DM</button>
+              <button className="btn btn-home btn-action full-width center">Click here if you are NOT the DM</button>
             </Link>
           </div>
         </div>

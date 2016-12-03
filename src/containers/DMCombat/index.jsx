@@ -150,19 +150,7 @@ class DMCombat extends React.Component {
   handleSelectCharacter = (c) => {
     return (e) => {
       if (e) {e.preventDefault();}
-      const {combat} = this.props;
-      const {charactersInCombat} = combat;
-      let height = 0;
-      let count = 0;
-      _.times(charactersInCombat.indexOf(c), () => {
-        const char = charactersInCombat[count];
-        if (!char.isRemoved) {
-          height += (combat.isStarted && char.isNPC) ? 354 : 306;
-          if (combat.isStarted && char.init === this.getLowestInit()) {height += 44;}
-        }
-        count++;
-      });
-      this.refs.characterScroll.scrollTop = height;
+      this.refs.characterScroll.scrollTop = this.refs[c].offsetTop - 130;
     };
   }
 
@@ -238,7 +226,7 @@ class DMCombat extends React.Component {
                         isUpNext={i === 1}
                         isSelected={false}
                         character={c}
-                        onSelectCharacter={this.handleSelectCharacter(c)} />
+                        onSelectCharacter={this.handleSelectCharacter(`char${i}`)} />
                       {combat.isStarted && c.init === lowestInit &&
                         <div className="end-of-round end-of-round--name">
                           <div className="end-of-round--line"></div>
@@ -283,7 +271,7 @@ class DMCombat extends React.Component {
                   return !c.isRemoved;
                 }).map((c, i) => {
                   return (
-                    <div key={i}>
+                    <div ref={`char${i}`} key={i}>
                       <CombatCharacter
                         character={c}
                         combat={combat}
