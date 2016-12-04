@@ -84,7 +84,7 @@ class EditCharacter extends React.Component {
       const name = this.refs.name.value;
       const race = this.refs.race.value;
       const klass = this.refs.klass.value;
-      const notes = this.refs.notes.value;
+      const notes = this.refs.notes ? this.refs.notes.value : '';
       const hp = parseInt(this.refs.hp.value, 10);
       const ac = parseInt(this.refs.ac.value, 10);
 
