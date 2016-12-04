@@ -30,8 +30,10 @@ class EditCombat extends React.Component {
 
     this.state = {
       charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
+      characterOrder: 'Name',
       confirmDelete: false,
       errors: [],
+      search: '',
       updated: false
     };
   }
@@ -178,8 +180,22 @@ class EditCombat extends React.Component {
     };
   }
 
+  handleCharacterOrder = (e) => {
+    this.setState({characterOrder: e.target.value});
+  }
+
+  handleSearch = (e) => {
+    this.setState({search: e.target.value});
+  }
+
+  search = (c) => {
+    const {search} = this.state;
+    const text = c.name + c.race + c.klass + c.notes;
+    return text.toLowerCase().includes(search.toLowerCase());
+  }
+
   render() {
-    const {charactersInCombat, confirmDelete, errors} = this.state;
+    const {charactersInCombat, characterOrder, confirmDelete, errors} = this.state;
     const {characters, combat, isNew} = this.props;
 
     return (
@@ -208,10 +224,41 @@ class EditCombat extends React.Component {
                 type="text"
                 ref="description" />
             </div>
-            <div className="page-subtitle">NPCs</div>
-            <div className="card-container">
+            <div className="page-subtitle character-header">
+              <div>NPCs</div>
+              <div className="options">
+                <select
+                  onChange={this.handleCharacterOrder}
+                  ref="characterOrder" >
+                  <option>Name</option>
+                  <option>Created</option>
+                  <option>Class</option>
+                </select>
+                <input type="text" placeholder="Search" onChange={this.handleSearch} />
+              </div>
+            </div>
+            <div className="card-container scroll scroll-characters card-field">
               {!characters.isEmpty()
-                ? characters.map((c, i) => {
+                ? characters.filter((c) => {
+                  return this.search(c);
+                }).sort((a, b) => {
+                  let x = 0;
+                  let y = 0;
+                  switch (characterOrder) {
+                  case 'Name':
+                    x = a.name;
+                    y = b.name;
+                    break;
+                  case 'Created':
+                    x = a.createdAt || 0;
+                    y = b.createdAt || 0;
+                    break;
+                  default:
+                    x = a.klass;
+                    y = b.klass;
+                  }
+                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                }).map((c, i) => {
                   const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
                   return (
                       <div
