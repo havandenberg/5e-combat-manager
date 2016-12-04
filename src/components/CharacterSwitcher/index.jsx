@@ -20,12 +20,19 @@ class CharacterSwitcher extends Component {
     return result;
   }
 
+  isVisible = () => {
+    const {characters} = this.props;
+    return characters.filter((c) => {
+      return this.isInCombat(c);
+    }).size > 1;
+  }
+
   render() {
     const {characters, combatIndex} = this.props;
 
     return (
       <div className="character-switcher">
-        {!characters.isEmpty() &&
+        {!characters.isEmpty() && this.isVisible() &&
           characters.filter((c) => {
             return this.isInCombat(c);
           }).map((c, i) => {

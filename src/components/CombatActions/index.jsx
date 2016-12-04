@@ -247,7 +247,7 @@ export default class CombatActions extends React.Component {
             <div className="attack-container">
               <button
                 className="btn btn-choose"
-                onClick={this.handleNextStep}>{action.type === 0 ? 'Hit' : 'Succeeded'}</button>
+                onClick={this.handleNextStep}>{action.type === 0 ? 'Hit' : 'Success'}</button>
               <button
                 className="btn btn-delete"
                 onClick={this.handleMiss}>{action.type === 0 ? 'Miss' : 'Resisted'}</button>

@@ -135,6 +135,19 @@ export function startDeleteCharacter(id) {
     const uid = getState().auth.get('uid');
     const characterRef = firebaseRef.child(`users/${uid}/characters/${id}`);
     const imageRef = firebase.storage().ref().child(`users/${uid}/characters/${id}/avatar.png`);
+    const combatsRef = firebaseRef.child('combats');
+
+    combatsRef.once('value', (snap) => {
+      snap.forEach((combatSnap) => {
+        const combat = combatSnap.val();
+        _.each(combat.charactersInCombat, (char, i) => {
+          if (char.id === id) {
+            const charRef = combatsRef.child(`${combat.id}/charactersInCombat/${i}`);
+            charRef.update({isRemoved: true});
+          }
+        });
+      });
+    });
 
     return characterRef.remove().then(() => {
       imageRef.delete();

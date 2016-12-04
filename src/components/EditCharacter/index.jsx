@@ -177,8 +177,8 @@ class EditCharacter extends React.Component {
               </button>
             </div>
           </form>
-          {confirmDelete && <div className="form-field confirm-delete">Are you sure you want to delete this character?</div>}
-          <div className="form-field">
+          {confirmDelete && <div className="form-field center confirm-delete">Are you sure you want to delete this character?</div>}
+          <div className="form-field center">
             {!isNew && (confirmDelete
               ? <button className="btn btn-delete full-width" onClick={this.handleConfirmDeleteCharacter}>
                 Confirm delete

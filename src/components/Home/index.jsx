@@ -6,7 +6,7 @@ export default class Home extends React.Component {
     return (
       <div className="page">
         <div className="page-header">
-          <div className="page-title vcenter center">5e Combat Manager</div>
+          <div className="page-title vcenter center full-width">5e Combat Manager</div>
         </div>
         <div className="page-content">
           <div className="form-field">
