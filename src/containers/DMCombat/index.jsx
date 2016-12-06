@@ -59,6 +59,10 @@ class DMCombat extends React.Component {
     const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
     const temp = combat.charactersInCombat.splice(0, 1);
     combat.charactersInCombat.splice(index, 0, temp[0]);
+    if (combat.undoIndex > 0) {
+      combat.actions.splice(0, combat.undoIndex);
+      combat.undoIndex = 0;
+    }
     if (temp[0].init === this.getLowestInit()) {
       combat.actions.splice(0, 0, {type: 3, round: true, lastTurns: combat.turns});
       combat.rounds++;
@@ -79,7 +83,7 @@ class DMCombat extends React.Component {
 
     if (combat.isStarted) {
       this.sortByInitiative();
-      _.times(combat.turns, () => {
+      _.times(combat.turns - 1, () => {
         const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
         const temp = combat.charactersInCombat.splice(0, 1);
         combat.charactersInCombat.splice(index, 0, temp[0]);
@@ -102,7 +106,8 @@ class DMCombat extends React.Component {
           target.hp += t.damage;
         });
       } else if (action.type === 2) {
-        this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = false;
+        const target = this.getTarget(combat.charactersInCombat, action.target);
+        target.isRemoved = !action.isRemoved;
       } else if (action.type === 3) {
         const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
         const temp = combat.charactersInCombat.splice(index, 1);
@@ -130,7 +135,8 @@ class DMCombat extends React.Component {
           target.hp -= t.damage;
         });
       } else if (action.type === 2) {
-        this.getTarget(combat.charactersInCombat, action.target).isHoldingAction = true;
+        const target = this.getTarget(combat.charactersInCombat, action.target);
+        target.isRemoved = action.isRemoved;
       } else if (action.type === 3) {
         const index = combat.charactersInCombat.length - 1 - this.getRemovedCharacters();
         const temp = combat.charactersInCombat.splice(0, 1);

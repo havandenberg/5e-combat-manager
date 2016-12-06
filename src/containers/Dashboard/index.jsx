@@ -73,6 +73,11 @@ class Dashboard extends React.Component {
             result = true;
           }
         });
+        if (combat.undoIndex > 0) {
+          combat.actions.splice(0, combat.undoIndex);
+          combat.undoIndex = 0;
+        }
+        combat.actions.splice(0, 0, {type: 2, target: c, isRemoved: false});
         if (!result) {
           c.isRemoved = false;
           c.user = uid;

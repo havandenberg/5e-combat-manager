@@ -29,6 +29,7 @@ class EditCombat extends React.Component {
     const {combat} = props;
 
     this.state = {
+      actions: [],
       charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
       characterOrder: 'Name',
       confirmDelete: false,
@@ -62,7 +63,7 @@ class EditCombat extends React.Component {
   handleSaveCombat = (e) => {
     e.preventDefault();
     const {combat, isNew} = this.props;
-    const {charactersInCombat} = this.state;
+    const {actions, charactersInCombat} = this.state;
     const name = this.refs.name.value;
     const description = this.refs.description.value;
 
@@ -83,6 +84,13 @@ class EditCombat extends React.Component {
       combObj.rounds = 1;
       combObj.actions = [{type: -1}];
       combObj.undoIndex = 0;
+    } else {
+      combObj.actions = [...combat.actions];
+      if (combat.undoIndex > 0) {
+        combObj.actions.splice(0, combat.undoIndex);
+        combObj.undoIndex = 0;
+      }
+      combObj.actions = [...actions, ...combat.actions];
     }
 
     if (this.validate()) {
@@ -170,13 +178,15 @@ class EditCombat extends React.Component {
   handleToggleRemoveCopy = (c) => {
     return (e) => {
       e.preventDefault();
-      const {charactersInCombat} = this.state;
+      const {actions, charactersInCombat} = this.state;
+      const {isNew} = this.props;
       _.each(charactersInCombat, (char) => {
         if (c.id === char.id && c.copy === char.copy) {
           char.isRemoved = !char.isRemoved;
+          if (!isNew) {actions.splice(0, 0, {type: 2, target: char, isRemoved: char.isRemoved});}
         }
       });
-      this.setState({charactersInCombat});
+      this.setState({actions, charactersInCombat});
     };
   }
 
@@ -258,6 +268,14 @@ class EditCombat extends React.Component {
                     y = b.klass;
                   }
                   return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                }).sort((a, b) => {
+                  const combatCharactersA = this.getCombatCharacters(charactersInCombat, a);
+                  const combatCharactersB = this.getCombatCharacters(charactersInCombat, b);
+                  const aInCombat = this.hasActiveCopies(combatCharactersA, a);
+                  const bInCombat = this.hasActiveCopies(combatCharactersB, b);
+                  if (aInCombat || bInCombat) {
+                    return ((aInCombat && !bInCombat) ? -1 : ((!aInCombat && bInCombat) ? 1 : 0));
+                  }
                 }).map((c, i) => {
                   const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
                   return (

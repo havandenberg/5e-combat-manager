@@ -26,7 +26,7 @@ class ChooseCharacter extends React.Component {
       _.each(combat.charactersInCombat, (char) => {
         if (c.id === char.id) {
           char.isRemoved = false;
-          result = true;
+          result = char;
         }
       });
       if (!result) {
@@ -51,6 +51,11 @@ class ChooseCharacter extends React.Component {
         _.each(combat.charactersInCombat, (char) => {
           if (c.id === char.id) {char.isRemoved = true;}
         });
+        if (combat.undoIndex > 0) {
+          combat.actions.splice(0, combat.undoIndex);
+          combat.undoIndex = 0;
+        }
+        combat.actions.splice(0, 0, {type: 2, target: c, isRemoved: true});
         updateCombat(combat.id, combat, '#');
       }
     };

@@ -108,7 +108,7 @@ class EditCharacter extends React.Component {
     const {character, isDM, isNew} = this.props;
 
     return (
-      <div className="page">
+      <div className="page edit-character">
         <div className="page-header">
           <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
           <div className="page-title vcenter center">{isNew ? 'Create character' : 'Edit character'}</div>
@@ -164,7 +164,7 @@ class EditCharacter extends React.Component {
                 type="text"
                 ref="ac" />
             </div>
-            {isDM && <div className="form-field">
+            {isDM && <div className="form-field notes">
               <textarea
                 defaultValue={character ? character.notes : ''}
                 placeholder="notes"

@@ -143,6 +143,12 @@ export function startDeleteCharacter(id) {
         _.each(combat.charactersInCombat, (char, i) => {
           if (char.id === id) {
             const charRef = combatsRef.child(`${combat.id}/charactersInCombat/${i}`);
+            if (combat.undoIndex > 0) {
+              combat.actions.splice(0, combat.undoIndex);
+              combat.undoIndex = 0;
+            }
+            combat.actions.splice(0, 0, {type: 2, target: char, isRemoved: true});
+            combatSnap.update({...combat});
             charRef.update({isRemoved: true});
           }
         });

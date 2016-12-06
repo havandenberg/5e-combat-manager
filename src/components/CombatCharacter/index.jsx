@@ -142,6 +142,14 @@ export default class CombatCharacter extends React.Component {
                 <div>Race: {character.race}</div>
                 <div>Class: {character.klass}</div>
               </div>
+              <div className="card-field bubbles">
+                <StatBubble
+                  character={character}
+                  size="med"
+                  isDM={isDM}
+                  isEditable={!view}
+                  updateCombat={updateCombat} />
+              </div>
               {character.hp > 0 && <div className="card-field character-tag--container">
                 {character.tags &&
                   character.tags.map((t, i) => {
@@ -166,17 +174,9 @@ export default class CombatCharacter extends React.Component {
                   </select>
                 }
               </div>}
-              {character.hp <= 0 &&
+              {character.hp <= 0 && !character.isNPC &&
                 <DeathSaves character={character} updateCombat={updateCombat} />
               }
-              <div className="card-field bubbles">
-                <StatBubble
-                  character={character}
-                  size="med"
-                  isDM={isDM}
-                  isEditable={!view}
-                  updateCombat={updateCombat} />
-              </div>
             </div>
           </div>
           {character.isNPC && !view && combat.isStarted &&

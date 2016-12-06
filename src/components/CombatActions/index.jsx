@@ -104,11 +104,8 @@ export default class CombatActions extends React.Component {
   }
 
   handleToggleHoldAction = () => {
-    const {character, combat, updateCombat} = this.props;
+    const {character, updateCombat} = this.props;
     character.isHoldingAction = !character.isHoldingAction;
-    if (character.isHoldingAction) {
-      combat.actions.splice(0, 0, {type: 2, target: character, message: `${character.name} is holding action!`});
-    }
     updateCombat();
   }
 
@@ -152,6 +149,10 @@ export default class CombatActions extends React.Component {
       const target = this.getTarget(combat.charactersInCombat, t);
       target.hp -= t.damage * (action.damageTotal > 0 ? 1 : -1);
     });
+    if (combat.undoIndex > 0) {
+      combat.actions.splice(0, combat.undoIndex);
+      combat.undoIndex = 0;
+    }
     combat.actions.splice(0, 0, action);
     updateCombat();
   }
