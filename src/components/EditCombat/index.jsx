@@ -29,7 +29,7 @@ class EditCombat extends React.Component {
     const {combat} = props;
 
     this.state = {
-      actions: [],
+      actions: combat && combat.actions ? combat.actions : [],
       charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
       characterOrder: 'Name',
       confirmDelete: false,
@@ -74,7 +74,7 @@ class EditCombat extends React.Component {
       }
     });
 
-    const combObj = {name, description, charactersInCombat};
+    const combObj = {name, description, charactersInCombat, actions};
 
     if (isNew) {
       combObj.createdAt = moment().unix();
@@ -85,7 +85,6 @@ class EditCombat extends React.Component {
       combObj.actions = [{type: -1}];
       combObj.undoIndex = 0;
     } else {
-      combObj.actions = [...combat.actions];
       if (combat.undoIndex > 0) {
         combObj.actions.splice(0, combat.undoIndex);
         combObj.undoIndex = 0;

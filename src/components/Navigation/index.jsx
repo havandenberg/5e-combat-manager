@@ -14,7 +14,7 @@ class Navigation extends React.Component {
 
     return (
       <div className="nav">
-        <div className="nav-username vcenter pull-left">{email === 'dm@5ecombatmanager.com' ? 'DM' : email}</div>
+        <div className="nav-username vcenter pull-left">{email === 'dm@5ecombatmanager.com' ? 'dm' : email}</div>
         {email.length > 0 &&
           <button className="btn btn-nav vcenter pull-right" onClick={logout}>logout</button>
         }

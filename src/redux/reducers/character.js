@@ -106,7 +106,13 @@ export function startUpdateCharacter(id, character, image) {
       name: character.name,
       race: character.race,
       klass: character.klass,
-      notes: character.notes
+      notes: character.notes,
+      str: character.str,
+      dex: character.dex,
+      con: character.con,
+      int: character.int,
+      wis: character.wis,
+      cha: character.cha
     };
 
     combatsRef.once('value', (snap) => {

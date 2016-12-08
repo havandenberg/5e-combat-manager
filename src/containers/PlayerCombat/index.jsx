@@ -132,8 +132,8 @@ class PlayerCombat extends React.Component {
           <div className="page-title center">{character.name}</div>
           {!combat.isStarted && <div>
             <div className="page-subtitle center">Waiting for combat to start...</div>
-            {!character.init &&
-              <div className="enter-initial-stats center">
+            {!character.init
+              ? <div className="enter-initial-stats center">
                 {hasError(errors, ['hpEmpty']) && <div className="alert alert-error">Enter hp</div>}
                 {hasError(errors, ['acEmpty']) && <div className="alert alert-error">Enter ac</div>}
                 {hasError(errors, ['initEmpty']) && <div className="alert alert-error">Enter init</div>}
@@ -165,6 +165,9 @@ class PlayerCombat extends React.Component {
                     ref="init" />
                 </div>
                 <button className="btn btn-action" onClick={this.handleEnterStats}>Set</button>
+              </div>
+              : <div>
+
               </div>
             }
           </div>}

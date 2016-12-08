@@ -4,6 +4,7 @@ import classNames from 'classnames';
 export default class DeathSaves extends Component {
   static propTypes = {
     character: PropTypes.object.isRequired,
+    isDM: PropTypes.bool,
     updateCombat: PropTypes.func.isRequired
   }
 
@@ -69,10 +70,11 @@ export default class DeathSaves extends Component {
   }
 
   render() {
-    const {character} = this.props;
+    const {character, isDM} = this.props;
 
     return (
-      <div>
+      <div className={classNames({'death-saves--combat': isDM})}>
+        <div className={classNames({'death-saves--combat-first': isDM})}>
         <div className="death-saves-title">Death successes:</div>
         <div className="death-saves-container">
           <div
@@ -85,8 +87,10 @@ export default class DeathSaves extends Component {
             className={classNames('save', {'save-success': character.deathSuccs > 2})}
             onClick={this.handleDeathSuccess(3)}></div>
         </div>
+        </div>
+        <div>
         <div className="death-saves-title">Death failures:</div>
-        <div className="death-saves-container">
+        <div className={classNames('death-saves-container', {'death-saves-container--dm': isDM})}>
           <div
             className={classNames('save', {'save-fail': character.deathFails > 0})}
             onClick={this.handleDeathFail(1)}></div>
@@ -96,6 +100,7 @@ export default class DeathSaves extends Component {
           <div
             className={classNames('save', {'save-fail': character.deathFails > 2})}
             onClick={this.handleDeathFail(3)}></div>
+        </div>
         </div>
       </div>
     );

@@ -4,11 +4,14 @@ import StatBubble from 'components/StatBubble';
 import Tag from 'components/Tag';
 import CombatActions from 'components/CombatActions';
 import DeathSaves from 'components/DeathSaves';
+import {getModifier} from 'utils/resources';
 
 import lockedImg from 'images/locked.svg';
 import unlockedImg from 'images/unlocked.svg';
 import notesImg from 'images/notes.svg';
 import notesEmptyImg from 'images/notes-empty.svg';
+import detailsImg from 'images/details.svg';
+import detailsSelectedImg from 'images/details-selected.svg';
 
 const tags = [
   {type: 'blinded', text: 'bli', description: 'Blinded: Cannot see.'},
@@ -43,6 +46,7 @@ export default class CombatCharacter extends React.Component {
     super();
 
     this.state = {
+      isExpanded: false,
       notesOpen: false
     };
   }
@@ -110,9 +114,15 @@ export default class CombatCharacter extends React.Component {
     updateCombat();
   }
 
+  handleToggleDetails = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({isExpanded: !this.state.isExpanded});
+  }
+
   render() {
     const {character, combat, isDM, updateCombat, view} = this.props;
-    const {notesOpen} = this.state;
+    const {isExpanded, notesOpen} = this.state;
 
     return (
       <div>
@@ -150,7 +160,7 @@ export default class CombatCharacter extends React.Component {
                   isEditable={!view}
                   updateCombat={updateCombat} />
               </div>
-              {character.hp > 0 && <div className="card-field character-tag--container">
+              {character.hp > 0 && <div className="character-tag--container">
                 {character.tags &&
                   character.tags.map((t, i) => {
                     return (
@@ -175,13 +185,64 @@ export default class CombatCharacter extends React.Component {
                 }
               </div>}
               {character.hp <= 0 && !character.isNPC &&
-                <DeathSaves character={character} updateCombat={updateCombat} />
+                <DeathSaves character={character} isDM={true} updateCombat={updateCombat} />
               }
             </div>
           </div>
           {character.isNPC && !view && combat.isStarted &&
-            <div className="dm-combat-content">
+            <div className="dm-combat-content form-field">
               <CombatActions character={character} combat={combat} isUpNow={true} updateCombat={updateCombat} />
+            </div>
+          }
+          <div className="character-details character-details--dm" onClick={this.handleToggleDetails}>
+            <img src={isExpanded ? detailsSelectedImg : detailsImg} />
+          </div>
+          {isExpanded &&
+            <div>
+              <div className="form-field character-stats character-stats--container">
+                <div>
+                  <div className="character-stats--card center">STR</div>
+                  <div className="character-stats--value center">{character.str || '-'}</div>
+                  {getModifier(character.str) &&
+                    <div className="character-stats--modifier center">{getModifier(character.str)}</div>
+                  }
+                </div>
+                <div>
+                  <div className="character-stats--card center">DEX</div>
+                  <div className="character-stats--value character-stat--card center">{character.dex || '-'}</div>
+                  {getModifier(character.dex) &&
+                    <div className="character-stats--modifier center">{getModifier(character.dex)}</div>
+                  }
+                </div>
+                <div>
+                  <div className="character-stats--card center">CON</div>
+                  <div className="character-stats--value character-stat--card center">{character.con || '-'}</div>
+                  {getModifier(character.con) &&
+                    <div className="character-stats--modifier center">{getModifier(character.con)}</div>
+                  }
+                </div>
+                <div>
+                  <div className="character-stats--card center">INT</div>
+                  <div className="character-stats--value character-stat--card center">{character.int || '-'}</div>
+                  {getModifier(character.int) &&
+                    <div className="character-stats--modifier center">{getModifier(character.int)}</div>
+                  }
+                </div>
+                <div>
+                  <div className="character-stats--card center">WIS</div>
+                  <div className="character-stats--value character-stat--card center">{character.wis || '-'}</div>
+                  {getModifier(character.wis) &&
+                    <div className="character-stats--modifier center">{getModifier(character.wis)}</div>
+                  }
+                </div>
+                <div>
+                  <div className="character-stats--card center">CHA</div>
+                  <div className="character-stats--value character-stat--card center">{character.cha || '-'}</div>
+                  {getModifier(character.cha) &&
+                    <div className="character-stats--modifier center">{getModifier(character.cha)}</div>
+                  }
+                </div>
+              </div>
             </div>
           }
           {notesOpen &&

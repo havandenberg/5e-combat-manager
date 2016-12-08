@@ -50,7 +50,9 @@ export default class NameCard extends React.Component {
     this.setState({isHover: false});
   }
 
-  handleToggleLockCharacter = () => {
+  handleToggleLockCharacter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const {character, updateCombat} = this.props;
     character.isLocked = !character.isLocked;
     updateCombat();

@@ -2,28 +2,29 @@
   border: $border
   border-radius: $border-radius
   position: relative
-  transition: all 0.1s ease
+  padding: $spacing-micro $spacing-small
+
+  &-inner
+    display: flex
+    flex-direction: row
+    justify-content: space-between
 
   &-unselectable
+    border: 1px solid lighten($black, 40%)
     cursor: pointer
-    display: flex
-    flex-direction: row
-    padding: $spacing-small $spacing-small $spacing-small $spacing-small
 
     &:hover
-      border: 2px solid $black
+      border: 1px solid $black
 
   &-selectable
+    border: 1px solid lighten($black, 40%)
     cursor: pointer
-    display: flex
-    flex-direction: row
-    padding: $spacing-small
 
     &:hover
-      border: 5px solid $purple
+      border: 2px solid $purple
 
   &-selected
-    border: 5px solid $purple
+    border: 2px solid $purple
 
   &-space
     padding: $spacing-small
@@ -93,7 +94,7 @@
         width: 1rem
 
   &-avatar
-    margin: auto $spacing-micro
+    margin-right: $spacing-micro
 
     img
       height: 160px
@@ -122,6 +123,7 @@
     flex-direction: column
     flex-grow: 1
     flex-basis: 70%
+    min-width: 50%
 
     +breakpoint(mobile)
       flex-basis: 60%
@@ -139,6 +141,7 @@
 
     img
       width: 20px
+      min-width: 20px
 
   &--tag
     img
