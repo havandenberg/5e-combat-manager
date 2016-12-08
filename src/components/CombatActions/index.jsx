@@ -195,22 +195,25 @@ export default class CombatActions extends React.Component {
             {!character.isHoldingAction &&
               <button
                 className={
-                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked}, {'btn-disabled': character.isLocked})}
-                disabled={character.isLocked}
+                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked || character.isNPC},
+                  {'btn-disabled': character.isLocked && !character.isNPC})}
+                disabled={character.isLocked && !character.isNPC}
                 onClick={this.handleAttack}>Attack</button>
             }
             {!character.isHoldingAction &&
               <button
                 className={
-                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked}, {'btn-disabled': character.isLocked})}
-                disabled={character.isLocked}
+                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked || character.isNPC},
+                  {'btn-disabled': character.isLocked && !character.isNPC})}
+                disabled={character.isLocked && !character.isNPC}
                 onClick={this.handleCastSpell}>Cast spell</button>
             }
             {(character.isHoldingAction || isUpNow) &&
               <button
                 className={
-                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked}, {'btn-disabled': character.isLocked})}
-                disabled={character.isLocked}
+                  classNames('btn', 'btn-standard-width', {'btn-action': !character.isLocked || character.isNPC},
+                  {'btn-disabled': character.isLocked && !character.isNPC})}
+                disabled={character.isLocked && !character.isNPC}
                 onClick={this.handleToggleHoldAction}>{character.isHoldingAction ? 'Use action' : 'Hold action'}</button>
             }
           </div>

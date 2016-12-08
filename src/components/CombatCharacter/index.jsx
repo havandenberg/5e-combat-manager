@@ -129,9 +129,9 @@ export default class CombatCharacter extends React.Component {
         <div className="combat-character">
           {!view &&
             <div className="combat-character--tag-container">
-              <div className="combat-character--tag" onClick={this.handleOpenNotes}>
+              {character.isNPC && <div className="combat-character--tag" onClick={this.handleOpenNotes}>
                 <img src={(character.notes && character.notes.length > 0) ? notesImg : notesEmptyImg} />
-              </div>
+              </div>}
               <div className="combat-character--tag" onClick={this.handleToggleLockCharacter}>
                 <img src={character.isLocked ? lockedImg : unlockedImg} />
               </div>
@@ -160,7 +160,7 @@ export default class CombatCharacter extends React.Component {
                   isEditable={!view}
                   updateCombat={updateCombat} />
               </div>
-              {character.hp > 0 && <div className="character-tag--container">
+              {(character.hp > 0 || character.isNPC) && <div className="character-tag--container">
                 {character.tags &&
                   character.tags.map((t, i) => {
                     return (

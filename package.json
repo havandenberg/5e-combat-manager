@@ -1,6 +1,6 @@
 {
   "name": "5e-combat-manager",
-  "version": "0.0.1",
+  "version": "0.17.10",
   "description": "D&D 5th Edition Combat Manager",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,9 @@
     "react-tooltip": "^3.2.2",
     "react-tooltip-component": "^0.3.0",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "webpack": "^1.14.0",
+    "yarn": "^0.17.10"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -55,7 +57,6 @@
     "eslint-plugin-react": "^6.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
-    "fsevents": "^1.0.15",
     "html-webpack-plugin": "^2.22.0",
     "jsdom": "^9.5.0",
     "mocha": "^3.0.2",
@@ -71,7 +72,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^2.3.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.2",
+    "webpack": "^1.14.0",
     "webpack-dev-server": "^1.15.1",
     "yarn": "^0.17.10"
   }
