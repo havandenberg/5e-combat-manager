@@ -74,7 +74,7 @@ class EditCombat extends React.Component {
       }
     });
 
-    const combObj = {name, description, charactersInCombat, actions: combat.actions};
+    const combObj = {name, description, charactersInCombat};
 
     if (isNew) {
       combObj.createdAt = moment().unix();
@@ -89,6 +89,7 @@ class EditCombat extends React.Component {
         combObj.actions.splice(0, combat.undoIndex);
         combObj.undoIndex = 0;
       }
+      combObj.actions = combat.actions;
       _.each(actions, (a) => {
         combObj.actions.splice(0, 0, a);
       });
