@@ -29,7 +29,7 @@ class EditCombat extends React.Component {
     const {combat} = props;
 
     this.state = {
-      actions: combat && combat.actions ? combat.actions : [],
+      actions: [],
       charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
       characterOrder: 'Name',
       confirmDelete: false,
@@ -74,7 +74,7 @@ class EditCombat extends React.Component {
       }
     });
 
-    const combObj = {name, description, charactersInCombat, actions};
+    const combObj = {name, description, charactersInCombat, actions: combat.actions};
 
     if (isNew) {
       combObj.createdAt = moment().unix();
@@ -89,7 +89,9 @@ class EditCombat extends React.Component {
         combObj.actions.splice(0, combat.undoIndex);
         combObj.undoIndex = 0;
       }
-      combObj.actions = [...actions, ...combat.actions];
+      _.each(actions, (a) => {
+        combObj.actions.splice(0, 0, a);
+      });
     }
 
     if (this.validate()) {
@@ -105,18 +107,22 @@ class EditCombat extends React.Component {
   handleSelectCharacter = (c) => {
     return (e) => {
       e.preventDefault();
-      const {charactersInCombat} = this.state;
+      const {actions, charactersInCombat} = this.state;
+      const {isNew} = this.props;
       const combatCharacters = this.getCombatCharacters(charactersInCombat, c);
 
       if (!combatCharacters) {
         this.addCharacterCopy(c);
+        if (!isNew) {actions.splice(0, 0, {type: 2, target: c, isRemoved: false});}
       } else if (this.hasActiveCopies(combatCharacters, c)) {
         _.each(combatCharacters, (char) => {
           char.isRemoved = true;
+          if (!isNew) {actions.splice(0, 0, {type: 2, target: char, isRemoved: true});}
         });
       } else {
         _.each(combatCharacters, (char) => {
           char.isRemoved = false;
+          if (!isNew) {actions.splice(0, 0, {type: 2, target: char, isRemoved: false});}
         });
       }
 
