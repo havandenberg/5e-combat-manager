@@ -1,4 +1,5 @@
 export function getModifier(stat) {
   if (!stat) {return false;}
-  return `${stat > -1 ? '+' : '-'}${Math.ceil(stat / 2 - 5)}`;
+  const score = Math.floor(stat / 2) - 5;
+  return `${score > -1 ? '+' : ''}${score}`;
 }
