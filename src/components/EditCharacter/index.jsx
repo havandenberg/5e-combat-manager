@@ -228,7 +228,7 @@ class EditCharacter extends React.Component {
                   placeholder="STR"
                   type="text"
                   ref="str" />
-                {getModifier(character.str) &&
+                {character && getModifier(character.str) &&
                   <div className="character-stats--modifier center">{getModifier(character.str)}</div>
                 }
               </div>
@@ -241,7 +241,7 @@ class EditCharacter extends React.Component {
                   placeholder="DEX"
                   type="text"
                   ref="dex" />
-                {getModifier(character.dex) &&
+                {character && getModifier(character.dex) &&
                   <div className="character-stats--modifier center">{getModifier(character.dex)}</div>
                 }
               </div>
@@ -254,7 +254,7 @@ class EditCharacter extends React.Component {
                   placeholder="CON"
                   type="text"
                   ref="con" />
-                {getModifier(character.con) &&
+                {character && getModifier(character.con) &&
                   <div className="character-stats--modifier center">{getModifier(character.con)}</div>
                 }
               </div>
@@ -267,7 +267,7 @@ class EditCharacter extends React.Component {
                   placeholder="INT"
                   type="text"
                   ref="int" />
-                {getModifier(character.int) &&
+                {character && getModifier(character.int) &&
                   <div className="character-stats--modifier center">{getModifier(character.int)}</div>
                 }
               </div>
@@ -280,7 +280,7 @@ class EditCharacter extends React.Component {
                   placeholder="WIS"
                   type="text"
                   ref="wis" />
-                {getModifier(character.wis) &&
+                {character && getModifier(character.wis) &&
                   <div className="character-stats--modifier center">{getModifier(character.wis)}</div>
                 }
               </div>
@@ -293,7 +293,7 @@ class EditCharacter extends React.Component {
                   placeholder="CHA"
                   type="text"
                   ref="cha" />
-                {getModifier(character.cha) &&
+                {character && getModifier(character.cha) &&
                   <div className="character-stats--modifier center">{getModifier(character.cha)}</div>
                 }
               </div>
