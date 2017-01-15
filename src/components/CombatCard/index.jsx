@@ -71,7 +71,7 @@ export default class CombatCard extends React.Component {
     return (
       <div className="card card-space">
         <div className="card-text">
-          <div className="card-name center">{combat.name}</div>
+          <div className="card-name card-name--combat center">{combat.name}</div>
           <div className="card-field">{combat.description}</div>
           <div className="card-field">
             <div>Created on: {moment.unix(combat.createdAt).format('MM/DD/YYYY')}</div>

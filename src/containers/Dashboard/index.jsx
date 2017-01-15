@@ -121,13 +121,13 @@ class Dashboard extends React.Component {
           <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
           <div className="card-container card-container--combat scroll scroll-combat card-field">
             {!parsedCombats.isEmpty()
-              ? parsedCombats.map((c, i) => {
+              ? parsedCombats.reverse().map((c, i) => {
                 return (
                   <div key={i} className="card-wrapper--combat">
                     <CombatCard
                       characterNames={isDM ? [] : this.hasCharactersInCombat(c)}
                       combat={c}
-                      index={isDM ? i : this.getCombatIndex(c)}
+                      index={this.getCombatIndex(c)}
                       isDM={isDM}
                       isAdding={isAdding && combat.id === c.id}
                       updateCombat={updateCombat}

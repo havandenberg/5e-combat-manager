@@ -87,7 +87,10 @@ export default class StatBubble extends React.Component {
             {'stat-bubble--small': size === 'small'})}>
             <span className="stat-bubble--label">IN</span>
             <span className="stat-bubble--text">
-              {(character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init}
+              {isEditable
+                ? <input className="stats-input" value={character.init} ref="init" onChange={this.handleInitChange} />
+                : (character.isNPC && !isDM) ? !character.isLocked ? character.init : '??' : character.init
+              }
             </span>
           </div>
         }

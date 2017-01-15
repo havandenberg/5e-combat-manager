@@ -114,7 +114,6 @@ class EditCombat extends React.Component {
 
       if (!combatCharacters) {
         this.addCharacterCopy(c);
-        if (!isNew) {actions.splice(0, 0, {type: 2, target: c, isRemoved: false});}
       } else if (this.hasActiveCopies(combatCharacters, c)) {
         _.each(combatCharacters, (char) => {
           char.isRemoved = true;
@@ -158,7 +157,8 @@ class EditCombat extends React.Component {
   }
 
   addCharacterCopy = (character) => {
-    const {charactersInCombat} = this.state;
+    const {actions, charactersInCombat} = this.state;
+    const {isNew} = this.props;
     const newChar = {...character};
     const combatCharacters = this.getCombatCharacters(charactersInCombat, character);
     const nameIndex = combatCharacters.length || 0;
@@ -170,6 +170,7 @@ class EditCombat extends React.Component {
     }
     newChar.copy = nameIndex;
     newChar.isRemoved = false;
+    if (!isNew) {actions.splice(0, 0, {type: 2, target: newChar, isRemoved: false});}
     charactersInCombat.push(newChar);
     this.setState({charactersInCombat});
   }
@@ -325,8 +326,8 @@ class EditCombat extends React.Component {
               </button>
             </div>
           </form>
-          {confirmDelete && <div className="form-field confirm-delete">Are you sure you want to delete this combat?</div>}
-          <div className="form-field">
+          {confirmDelete && <div className="form-field center confirm-delete">Are you sure you want to delete this combat?</div>}
+          <div className="form-field center">
             {!isNew && (confirmDelete
               ? <button className="btn btn-delete full-width" onClick={this.handleConfirmDeleteCombat}>
                 Confirm delete

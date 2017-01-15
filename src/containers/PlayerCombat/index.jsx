@@ -118,18 +118,18 @@ class PlayerCombat extends React.Component {
       <div className="page">
         <div className="page-header">
           <Link to="/dashboard"><button className="btn-back pull-left"><img src={backImg} /></button></Link>
+          <div className="page-title vcenter center">{character.name}</div>
           {character.isLocked &&
             <div className="pull-right">
               <img className="image-large" src={lockedImg} />
             </div>
           }
         </div>
-        <div className="page-content page-content--combat">
+        <div className="page-content">
           <CharacterSwitcher combat={combat} combatIndex={combatIndex} />
           <div className="page-title center">
             <img src={character.imageURL} className="character-avatar--combat" />
           </div>
-          <div className="page-title center">{character.name}</div>
           {!combat.isStarted && <div>
             <div className="page-subtitle center">Waiting for combat to start...</div>
             {!character.init

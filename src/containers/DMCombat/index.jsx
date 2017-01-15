@@ -46,7 +46,7 @@ class DMCombat extends React.Component {
     let result = false;
 
     _.each(array, (c) => {
-      if (c.id === char.id && c.copy === char.copy) {
+      if (c.id === char.id && (!c.copy || !char.copy || c.copy === char.copy)) {
         result = c;
       }
     });
@@ -219,7 +219,7 @@ class DMCombat extends React.Component {
           <div className="name-card--container">
             <div className="page-subtitle center">Up next</div>
             <div className="scroll scroll-dm-combat">
-              {combat.charactersInCombat.length > 0
+              {combat.charactersInCombat && combat.charactersInCombat.length > 0
                 ? combat.charactersInCombat.filter((c) => {
                   return !c.isRemoved;
                 }).map((c, i) => {
@@ -272,7 +272,7 @@ class DMCombat extends React.Component {
               </div>
             </div>
             <div className="scroll scroll-dm-combat" ref="characterScroll">
-              {combat.charactersInCombat
+              {combat.charactersInCombat && combat.charactersInCombat.length > 0
                 ? combat.charactersInCombat.filter((c) => {
                   return !c.isRemoved;
                 }).map((c, i) => {

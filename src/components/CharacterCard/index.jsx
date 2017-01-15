@@ -106,12 +106,6 @@ export default class CharacterCard extends React.Component {
                 }
               </div>
             </div>
-            {character.notes &&
-              <div>
-                <div className="character-stats--notes-label">Notes</div>
-                <div className="character-stats--notes">{character.notes}</div>
-              </div>
-            }
           </div>
         }
       </div>

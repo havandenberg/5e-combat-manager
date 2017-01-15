@@ -125,7 +125,9 @@ export default class CombatActions extends React.Component {
 
   handleMiss = () => {
     const {action} = this.state;
-    action.damage = 0;
+    _.each(action.targets, (t) => {
+      t.damage = 0;
+    });
     action.message = this.getActionMessage(action, true);
     this.executeAction(action);
     this.setState({action: {targets: []}, step: 0});
