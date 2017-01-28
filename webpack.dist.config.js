@@ -8,7 +8,9 @@ const AUTOPREFIXER_BROWSERS = ['last 2 version'];
 module.exports = {
   // Entry point(s) for the bundle
   entry: {
-    main: ['./src/index.jsx']
+    main: [
+      'babel-polyfill',
+      './src/index.jsx']
   },
 
   output: {

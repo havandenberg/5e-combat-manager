@@ -12,6 +12,7 @@ module.exports = {
     main: [
       `webpack-dev-server/client?http://localhost:${port}`,
       'webpack/hot/dev-server',
+      'babel-polyfill',
       './src/index.jsx'
     ]
   },
