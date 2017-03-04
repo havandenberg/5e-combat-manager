@@ -84,10 +84,9 @@ class ChooseCharacter extends React.Component {
                 {this.isInCombat(c) && !c.isRemoved &&
                   <img className="choose-character--remove" src={removeImg} onClick={this.handleRemoveCharacter(c)} />
                 }
-                {c.imageURL &&
-                  <div className="card-avatar circle card-avatar--choose" onClick={this.handleChooseCharacter(c)}>
-                    <img src={c.imageURL} />
-                  </div>}
+                {<div className="card-avatar circle card-avatar--choose" onClick={this.handleChooseCharacter(c)}>
+                  {c.imageURL ? <img src={c.imageURL} /> : <div className="no-image">{c.name}</div>}
+                </div>}
               </div>
             );
           })
