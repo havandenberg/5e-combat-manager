@@ -9,15 +9,36 @@
   justify-content: space-between
   align-items: center
 
+  +breakpoint(mobile)
+    flex-direction: column
+    align-items: center
+
   .options
     display: flex
     flex-direction: row
     justify-content: space-between
+    align-items: center
+
+    +breakpoint(mobile)
+      margin-top: $spacing-micro
+      align-items: center
+
+    .add-character
+      margin-left: $spacing-small
+
+      +breakpoint(mobile)
+        margin-left: $spacing-micro
+
+    select
+      width: 100px
+
+      +breakpoint(mobile)
+        width: 80px
 
     input
       width: 200px
       margin-left: $spacing-small
 
       +breakpoint(mobile)
-        width: 140px
+        width: 200px
         margin-left: $spacing-micro

@@ -12,6 +12,7 @@ import reducers from 'reducers/reducer';
 import * as authActions from 'reducers/auth';
 import * as characterActions from 'reducers/character';
 import * as combatActions from 'reducers/combat';
+import * as folderActions from 'reducers/folder';
 
 import 'styles/main.styl';
 
@@ -29,11 +30,13 @@ firebase.auth().onAuthStateChanged((user) => {
     store.dispatch(authActions.login(user.uid));
     store.dispatch(characterActions.listenForCharacterChanges());
     store.dispatch(combatActions.listenForCombatChanges());
+    store.dispatch(folderActions.listenForFolderChanges());
     history.push('/dashboard');
   } else {
     store.dispatch(authActions.logout());
     store.dispatch(characterActions.clearCharacters());
     store.dispatch(combatActions.clearCombats());
+    store.dispatch(folderActions.clearFolders());
     history.push('/');
   }
 });

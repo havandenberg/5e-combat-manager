@@ -154,7 +154,7 @@ export function startDeleteCharacter(id) {
               combat.undoIndex = 0;
             }
             combat.actions.splice(0, 0, {type: 2, target: char, isRemoved: true});
-            combatSnap.update({...combat});
+            combatSnap.ref().update({...combat});
             charRef.update({isRemoved: true});
           }
         });

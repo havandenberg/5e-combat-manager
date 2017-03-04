@@ -41,6 +41,9 @@ textarea
 .form-field
   padding-bottom: $spacing-small
 
+  &--small
+    padding-bottom: $spacing-micro
+
 .form-label
   font-size: 1.125rem
   margin-bottom: 4px
@@ -55,3 +58,11 @@ textarea
 
   +breakpoint(mobile)
     display: block
+
+  &--row
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+
+    +breakpoint(mobile)
+      display: flex

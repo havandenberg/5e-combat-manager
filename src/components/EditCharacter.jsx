@@ -5,7 +5,7 @@ import moment from 'moment';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {hasError} from 'utils/errors';
-import {getModifier} from 'utils/resources';
+import {getModifier, scrollTo} from 'utils/resources';
 import Dropzone from 'react-dropzone';
 
 import * as characterActions from 'reducers/character';
@@ -31,6 +31,10 @@ class EditCharacter extends React.Component {
       files: [],
       updated: false
     };
+  }
+
+  componentWillMount() {
+    scrollTo();
   }
 
   validate = () => {

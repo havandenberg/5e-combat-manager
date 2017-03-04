@@ -56,9 +56,9 @@ export default class CharacterCard extends React.Component {
             </div>
             <StatBubble character={character} size="med" isDM={isDM} />
           </div>
-          <div className="character-details" onClick={this.handleToggleDetails}>
-            <img src={isExpanded ? detailsSelectedImg : detailsImg} />
-          </div>
+        </div>
+        <div className="character-details" onClick={this.handleToggleDetails}>
+          <img src={isExpanded ? detailsSelectedImg : detailsImg} />
         </div>
         {isExpanded &&
           <div>

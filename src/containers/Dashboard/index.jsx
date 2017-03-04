@@ -2,30 +2,48 @@ import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
+import {smoothScrollTo} from 'utils/resources';
 
 import * as combatActions from 'reducers/combat';
+import * as folderActions from 'reducers/folder';
 
 import CharacterCard from 'components/CharacterCard';
 import CombatCard from 'components/CombatCard';
+import FolderToolbar from 'components/FolderToolbar';
+import addWhiteImg from 'images/add-white.svg';
 
 class Dashboard extends React.Component {
   static propTypes = {
     characters: React.PropTypes.object.isRequired,
     combats: React.PropTypes.object.isRequired,
+    createFolder: React.PropTypes.func.isRequired,
+    deleteFolder: React.PropTypes.func.isRequired,
+    folders: React.PropTypes.object,
     isDM: React.PropTypes.bool,
     uid: React.PropTypes.string,
-    updateCombat: React.PropTypes.func.isRequired
+    updateCombat: React.PropTypes.func.isRequired,
+    updateFolder: React.PropTypes.func.isRequired
   }
 
   constructor() {
     super();
 
     this.state = {
+      activeFolder: [],
       isAdding: false,
       combat: null,
       characterOrder: 'Name',
       search: ''
     };
+  }
+
+  getActiveFolderLocation = () => {
+    const {activeFolder} = this.state;
+    let breadcrumbs = '';
+    _.each(activeFolder, (f) => {
+      breadcrumbs += `${f.id}/`;
+    });
+    return breadcrumbs;
   }
 
   getCombatIndex = (combat) => {
@@ -54,6 +72,20 @@ class Dashboard extends React.Component {
       }
     });
     return result;
+  }
+
+  handleAddFolder = () => {
+    this.props.createFolder({name: 'New Folder', selected: false}, this.getActiveFolderLocation());
+  }
+
+  handleUpdateFolder = (folder, isSelecting) => {
+    const {activeFolder} = this.state;
+    if (isSelecting) {this.setState({activeFolder: [...activeFolder, folder]});}
+    this.props.updateFolder(folder, isSelecting ? `${this.getActiveFolderLocation()}/${folder.id}` : this.getActiveFolderLocation());
+  }
+
+  handleDeleteFolder = () => {
+
   }
 
   handleCharacterOrder = (e) => {
@@ -107,9 +139,13 @@ class Dashboard extends React.Component {
     return text.toLowerCase().includes(search.toLowerCase());
   }
 
+  scrollToCharacters = () => {
+    smoothScrollTo('bottom');
+  }
+
   render() {
-    const {characters, isDM, updateCombat} = this.props;
-    const {characterOrder, combat, isAdding} = this.state;
+    const {characters, isDM, folders, updateCombat} = this.props;
+    const {activeFolder, characterOrder, combat, isAdding} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -118,7 +154,12 @@ class Dashboard extends React.Component {
           <div className="page-title vcenter center">{`${isDM ? 'DM ' : ''}Dashboard`}</div>
         </div>
         <div className="page-content">
-          <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
+          <div className="field-container field-container--row">
+            <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
+            {isDM &&
+              <Link to="/create-combat"><div className="folder-add"><img src={addWhiteImg} /></div></Link>
+            }
+          </div>
           <div className="card-container card-container--combat scroll scroll-combat card-field">
             {!parsedCombats.isEmpty()
               ? parsedCombats.reverse().map((c, i) => {
@@ -138,12 +179,9 @@ class Dashboard extends React.Component {
               : <div className="combats-empty center">{`No ${isDM ? 'saved' : 'active'} combats`}</div>
             }
           </div>
-          {isDM && <div className="form-field center">
-            <Link to="/create-combat"><button className="btn btn-action">Create new combat</button></Link>
-          </div>}
           <hr className="hr" />
           <div className="page-subtitle character-header">
-            <div>{`${isDM ? 'NPCs' : 'Characters'}`}</div>
+            <div ref="line">{`${isDM ? 'NPCs' : 'Characters'}`}</div>
             <div className="options">
               <select
                 onChange={this.handleCharacterOrder}
@@ -153,9 +191,16 @@ class Dashboard extends React.Component {
                 <option>Class</option>
               </select>
               <input type="text" placeholder="Search" onChange={this.handleSearch} />
+              <Link to="/create-character"><div className="folder-add add-character"><img src={addWhiteImg} /></div></Link>
             </div>
           </div>
-          <div className="card-container scroll scroll-characters card-field">
+          {false && <FolderToolbar
+            activeFolder={activeFolder}
+            folders={folders}
+            onAddFolder={this.handleAddFolder}
+            onDeleteFolder={this.handleDeleteFolder}
+            onUpdateFolder={this.handleUpdateFolder} />}
+          <div className="card-container scroll scroll-characters card-field" onMouseEnter={this.scrollToCharacters}>
             {!characters.isEmpty()
               ? characters.filter((c) => {
                 return this.search(c);
@@ -191,9 +236,6 @@ class Dashboard extends React.Component {
               : <div className="combats-empty center">No characters</div>
             }
           </div>
-          <div className="form-field center">
-            <Link to="/create-character"><button className="btn btn-action">Create new character</button></Link>
-          </div>
         </div>
       </div>
     );
@@ -204,9 +246,13 @@ export default connect((state) => {
   return {
     characters: state.characters,
     combats: state.combats,
+    folders: state.folders,
     isDM: state.auth.get('isDM'),
     uid: state.auth.get('uid')
   };
 }, {
-  updateCombat: combatActions.startUpdateCombat
+  updateCombat: combatActions.startUpdateCombat,
+  createFolder: folderActions.startAddFolder,
+  updateFolder: folderActions.startUpdateFolder,
+  deleteFolder: folderActions.startDeleteFolder
 })(Dashboard);
