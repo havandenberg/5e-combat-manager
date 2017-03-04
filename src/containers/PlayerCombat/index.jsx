@@ -127,9 +127,9 @@ class PlayerCombat extends React.Component {
         </div>
         <div className="page-content">
           <CharacterSwitcher combat={combat} combatIndex={combatIndex} />
-          <div className="page-title center">
+          {character.imageURL && <div className="page-title center">
             <img src={character.imageURL} className="character-avatar--combat" />
-          </div>
+          </div>}
           {!combat.isStarted && <div>
             <div className="page-subtitle center">Waiting for combat to start...</div>
             {!character.init

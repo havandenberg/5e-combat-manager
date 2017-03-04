@@ -1,0 +1,66 @@
+.folder
+  border: $border
+  border-radius: $border-radius
+  cursor: pointer
+  display: flex
+  align-items: center
+  padding: $spacing-micro
+  position: relative
+  margin-right: $spacing-small
+  margin-bottom: $spacing-micro
+  min-width: 90px
+
+  &-selected
+    background-color: $black
+
+    .name
+      color: $white
+
+  img
+    height: 15px
+    width: 15px
+    position: absolute
+    right: 0
+
+  .name
+    border: none
+    padding: 0
+    height: auto
+    text-align: center
+    margin: 0
+    background-color: transparent
+
+  &-container
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    flex-wrap: nowrap
+    margin: 0 auto
+    margin-bottom: $spacing-small
+
+    &:last-child
+      margin-right: 0
+
+  &-inner
+    display: flex
+    flex-direction: row
+    margin-right: $spacing-small
+
+  &-add
+    background-color: $black
+    border: $border
+    border-radius: $border-radius
+    cursor: pointer
+    display: flex
+    justify-content: center
+    align-items: center
+    padding: $spacing-micro
+    height: $spacing-small
+    width: $spacing-small
+
+    img
+      min-width: 16px
+      min-height: 16px
+
+.breadcrumbs
+  margin-bottom: $spacing-micro

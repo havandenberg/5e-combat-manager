@@ -5,6 +5,7 @@ import moment from 'moment';
 import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import {hasError} from 'utils/errors';
+import {scrollTo} from 'utils/resources';
 import CharacterCard from 'components/CharacterCard';
 
 import * as combatActions from 'reducers/combat';
@@ -37,6 +38,10 @@ class EditCombat extends React.Component {
       search: '',
       updated: false
     };
+  }
+
+  componentWillMount() {
+    scrollTo();
   }
 
   validate = () => {

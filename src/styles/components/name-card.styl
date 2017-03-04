@@ -4,12 +4,17 @@
   padding: $spacing-micro
   position: relative
   margin-bottom: $spacing-small
+  min-width: 150px
+
+  +breakpoint(mobile)
+    margin-right: $spacing-micro
+    margin-bottom: $spacing-micro
 
   &--hover
     cursor: pointer
 
     &:hover
-      background-color: $black
+      background-color: rgba($black, 0.8)
       color: $white
 
   &--container
@@ -20,16 +25,16 @@
 
     +breakpoint(mobile)
       margin: 0 auto $spacing-small auto
-      width: 50%
+      width: 100%
 
   &--upnow
-    background-color: lighten($success-green, 20%)
+    background-color: rgba(lighten($success-green, 20%), 0.5)
 
   &--upnext
-    background-color: lighten($warning-yellow, 40%)
+    background-color: rgba(lighten($warning-yellow, 40%), 0.5)
 
   &--unc
-    background-color: lighten($error-red, 50%)
+    background-color: rgba(lighten($error-red, 50%), 0.5)
     border-color: darken($error-red, 30%)
 
     &-text
@@ -54,7 +59,7 @@
       top: 25px
 
   &--not-ready
-    background-color: lighten($error-red, 30%)
+    background-color: rgba(lighten($error-red, 30%), 0.5)
 
   &--ready
-    background-color: lighten($success-green, 30%)
+    background-color: rgba(lighten($success-green, 30%), 0.5)

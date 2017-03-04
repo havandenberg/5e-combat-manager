@@ -23,6 +23,9 @@ class ViewCombat extends React.Component {
   render() {
     const {combat} = this.props;
     const lowestInit = this.getLowestInit();
+    const charactersNotRemoved = combat.charactersInCombat.filter((c) => {
+      return !c.isRemoved;
+    });
 
     return (
       <div className="page page-view">
@@ -31,9 +34,7 @@ class ViewCombat extends React.Component {
             <div className="page-subtitle center">Up next</div>
             <div className="scroll scroll-view">
               {combat.charactersInCombat.length > 0
-                ? combat.charactersInCombat.filter((c) => {
-                  return !c.isRemoved;
-                }).map((c, i) => {
+                ? charactersNotRemoved.map((c, i) => {
                   return (
                     <div key={i}>
                       <NameCard
@@ -59,7 +60,7 @@ class ViewCombat extends React.Component {
           </div>
           <div className="combat-character--container">
             <div className="combat-name">{combat.name}</div>
-            <div className="right-align">{`Round ${combat.rounds}\u00A0\u00A0|\u00A0\u00A0Turn ${combat.turns}`}</div>
+            <div className="combat-round right-align">{`Round ${combat.rounds}\u00A0\u00A0|\u00A0\u00A0Turn ${combat.turns}`}</div>
             <div className="scroll scroll-view">
               <div className="combat-info">
                 <div>NPCs</div>
@@ -77,7 +78,11 @@ class ViewCombat extends React.Component {
                   }).map((c, i) => {
                     return (
                       <div key={i} className="view-character">
-                        <ViewCharacter character={c} />
+                        <ViewCharacter
+                          character={c}
+                          started={combat.isStarted}
+                          isUpNow={charactersNotRemoved.indexOf(c) === 0}
+                          isUpNext={charactersNotRemoved.indexOf(c) === 1} />
                       </div>
                     );
                   })
@@ -97,7 +102,11 @@ class ViewCombat extends React.Component {
                   }).map((c, i) => {
                     return (
                       <div key={i} className="view-character">
-                        <ViewCharacter character={c} />
+                        <ViewCharacter
+                          character={c}
+                          started={combat.isStarted}
+                          isUpNow={charactersNotRemoved.indexOf(c) === 0}
+                          isUpNext={charactersNotRemoved.indexOf(c) === 1} />
                       </div>
                     );
                   })
@@ -108,7 +117,7 @@ class ViewCombat extends React.Component {
           <div className="turn-history--container">
             <div className="page-subtitle center">Turn history</div>
             {combat.actions.map((a, i) => {
-              if (i >= combat.undoIndex && a.type !== 3) {
+              if (i >= combat.undoIndex && a.type !== 3 && a.type !== 2) {
                 return (
                   <div key={i} className="turn-history--action">{a.message}</div>
                 );

@@ -32,6 +32,16 @@
     &--small
       padding: $spacing-micro
 
+    &--upnow
+      background-color: rgba(lighten($success-green, 20%), 0.5)
+
+    &--upnext
+      background-color: rgba(lighten($warning-yellow, 40%), 0.5)
+
+    &--unc
+      background-color: rgba(lighten($error-red, 50%), 0.5)
+      border-color: darken($error-red, 30%)
+
   &-container
     display: flex
     flex-direction: row
@@ -104,18 +114,29 @@
 
     &--view
       text-align: center
+      margin-right: 0
 
       img
         border-radius: 50%
-        height: 100px
-        width: 100px
+        height: 50px
+        width: 50px
 
     &--choose
-      img
+      img, div
         cursor: pointer
         height: 80px
         width: 80px
         border-radius: 50%
+        white-space: nowrap
+        overflow: hidden
+
+      .no-image
+        align-items: center
+        border: $border
+        display: flex
+        justify-content: flex-start
+        padding-left: $spacing-micro
+        width: 72px
 
   &-text
     display: flex
@@ -132,8 +153,7 @@
     margin-bottom: $spacing-micro
 
     &--combat
-      margin-left: 65px
-      margin-right: 40px
+      margin: 0 65px
       overflow: hidden
       white-space: nowrap
       min-width: 175px
