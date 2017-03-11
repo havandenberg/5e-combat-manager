@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {smoothScrollTo} from 'utils/resources';
+import Tag from 'components/Tag';
 
 import * as combatActions from 'reducers/combat';
 import * as folderActions from 'reducers/folder';
@@ -33,7 +34,9 @@ class Dashboard extends React.Component {
       isAdding: false,
       combat: null,
       characterOrder: 'Name',
-      search: ''
+      searchCharacters: '',
+      searchCombats: '',
+      showArchived: false
     };
   }
 
@@ -129,14 +132,28 @@ class Dashboard extends React.Component {
     };
   }
 
-  handleSearch = (e) => {
-    this.setState({search: e.target.value});
+  handleToggleShowArchived = () => {
+    this.setState({showArchived: !this.state.showArchived});
   }
 
-  search = (c) => {
-    const {search} = this.state;
+  handleSearchCombats = (e) => {
+    this.setState({searchCombats: e.target.value});
+  }
+
+  handleSearchCharacters = (e) => {
+    this.setState({searchCharacters: e.target.value});
+  }
+
+  searchCombats = (c) => {
+    const {searchCombats} = this.state;
+    const text = c.name + c.description;
+    return text.toLowerCase().includes(searchCombats.toLowerCase());
+  }
+
+  searchCharacters = (c) => {
+    const {searchCharacters} = this.state;
     const text = c.name + c.race + c.klass + c.notes;
-    return text.toLowerCase().includes(search.toLowerCase());
+    return text.toLowerCase().includes(searchCharacters.toLowerCase());
   }
 
   scrollToCharacters = () => {
@@ -145,7 +162,7 @@ class Dashboard extends React.Component {
 
   render() {
     const {characters, isDM, folders, updateCombat} = this.props;
-    const {activeFolder, characterOrder, combat, isAdding} = this.state;
+    const {activeFolder, characterOrder, combat, isAdding, showArchived} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -154,15 +171,25 @@ class Dashboard extends React.Component {
           <div className="page-title vcenter center">{`${isDM ? 'DM ' : ''}Dashboard`}</div>
         </div>
         <div className="page-content">
-          <div className="field-container field-container--row">
+          <div className="field-container field-container--row character-header">
             <div className="page-subtitle">{`${isDM ? 'Saved' : 'Active'} combats`}</div>
             {isDM &&
-              <Link to="/create-combat"><div className="folder-add"><img src={addWhiteImg} /></div></Link>
+              <div className="options">
+                <div className="tag-combat-card--show" onClick={this.handleToggleShowArchived}>
+                  <Tag
+                    type={showArchived ? 'unarchived' : 'archived'}
+                    text={showArchived ? 'archived' : 'unarchived'} />
+                </div>
+                <input type="text" placeholder="Search" onChange={this.handleSearchCombats} />
+                <Link to="/create-combat"><div className="folder-add add-character"><img src={addWhiteImg} /></div></Link>
+              </div>
             }
           </div>
           <div className="card-container card-container--combat scroll scroll-combat card-field">
             {!parsedCombats.isEmpty()
-              ? parsedCombats.reverse().map((c, i) => {
+              ? parsedCombats.filter((c) => {
+                return this.searchCombats(c) && (showArchived ? c.isArchived : !c.isArchived);
+              }).reverse().map((c, i) => {
                 return (
                   <div key={i} className="card-wrapper--combat">
                     <CombatCard
@@ -190,7 +217,7 @@ class Dashboard extends React.Component {
                 <option>Created</option>
                 <option>Class</option>
               </select>
-              <input type="text" placeholder="Search" onChange={this.handleSearch} />
+              <input type="text" placeholder="Search" onChange={this.handleSearchCharacters} />
               <Link to="/create-character"><div className="folder-add add-character"><img src={addWhiteImg} /></div></Link>
             </div>
           </div>
@@ -203,7 +230,7 @@ class Dashboard extends React.Component {
           <div className="card-container scroll scroll-characters card-field" onMouseEnter={this.scrollToCharacters}>
             {!characters.isEmpty()
               ? characters.filter((c) => {
-                return this.search(c);
+                return this.searchCharacters(c);
               }).sort((a, b) => {
                 let x = 0;
                 let y = 0;

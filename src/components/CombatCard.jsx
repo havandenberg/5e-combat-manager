@@ -60,6 +60,13 @@ export default class CombatCard extends React.Component {
     updateCombat(combat.id, combat, '#');
   }
 
+  handleToggleArchived = () => {
+    const {combat, updateCombat} = this.props;
+    combat.isArchived = !combat.isArchived;
+    combat.isActive = false;
+    updateCombat(combat.id, combat, '#');
+  }
+
   handleToggleAdd = () => {
     this.props.onToggleAdd();
   }
@@ -91,6 +98,9 @@ export default class CombatCard extends React.Component {
             </Link>
             <div className="tag-combat-card" onClick={this.handleToggleActive}>
               <Tag type={combat.isActive ? 'active' : 'inactive'} />
+            </div>
+            <div className="tag-combat-card--archived" onClick={this.handleToggleArchived}>
+              <Tag type={combat.isArchived ? 'unarchived' : 'archived'} text={combat.isArchived ? 'restore' : 'archive'} />
             </div>
           </div>
         }
