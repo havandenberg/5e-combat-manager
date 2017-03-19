@@ -96,9 +96,9 @@ export default class CombatCard extends React.Component {
             <Link className="no-decoration btn-open-view circle" to={`/view-combat/${index}`}>
               <img src={eyeImg} />
             </Link>
-            <div className="tag-combat-card" onClick={this.handleToggleActive}>
+            {!combat.isArchived && <div className="tag-combat-card" onClick={this.handleToggleActive}>
               <Tag type={combat.isActive ? 'active' : 'inactive'} />
-            </div>
+            </div>}
             <div className="tag-combat-card--archived" onClick={this.handleToggleArchived}>
               <Tag type={combat.isArchived ? 'unarchived' : 'archived'} text={combat.isArchived ? 'restore' : 'archive'} />
             </div>
@@ -110,7 +110,7 @@ export default class CombatCard extends React.Component {
         <div className="full-width center">
           {isDM
             ? <Link to={`/combat/${index}`}>
-              <button className="btn btn-choose">Enter</button>
+              <button className="btn btn-choose btn-combat-enter">Enter</button>
             </Link>
             : <ChooseCharacter
               chooseCharacter={chooseCharacter}

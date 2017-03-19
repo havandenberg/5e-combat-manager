@@ -31,10 +31,10 @@ export function clearFolders() {
   };
 }
 
-export function startAddFolder(folder, location) {
+export function startAddFolder(folder) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
-    const folderRef = firebaseRef.child(`users/${uid}/folders/${location}`).push(folder);
+    const folderRef = firebaseRef.child(`users/${uid}/folders`).push(folder);
 
     return folderRef.then(() => {
       dispatch(routerActions.push('/dashboard'));
@@ -42,10 +42,10 @@ export function startAddFolder(folder, location) {
   };
 }
 
-export function startUpdateFolder(folder, location, next) {
+export function startUpdateFolder(folder, next) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
-    const folderRef = firebaseRef.child(`users/${uid}/folders/${location}`);
+    const folderRef = firebaseRef.child(`users/${uid}/folders/${folder.id}`);
 
     const updates = {
       ...folder,
@@ -58,13 +58,14 @@ export function startUpdateFolder(folder, location, next) {
   };
 }
 
-export function startDeleteFolder(id, location) {
+export function startDeleteFolder(foldersToDelete) {
   return (dispatch, getState) => {
     const uid = getState().auth.get('uid');
-    const folderRef = firebaseRef.child(`users/${uid}/folders/${location}/${id}`);
+    let folderRef;
 
-    return folderRef.remove().then(() => {
-      dispatch(routerActions.push('/dashboard'));
+    foldersToDelete.map((folder) => {
+      folderRef = firebaseRef.child(`users/${uid}/folders//${folder.id}`);
+      folderRef.remove();
     });
   };
 }

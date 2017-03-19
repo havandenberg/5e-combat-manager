@@ -2,7 +2,6 @@ import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import {smoothScrollTo} from 'utils/resources';
 import Tag from 'components/Tag';
 
 import * as combatActions from 'reducers/combat';
@@ -156,10 +155,6 @@ class Dashboard extends React.Component {
     return text.toLowerCase().includes(searchCharacters.toLowerCase());
   }
 
-  scrollToCharacters = () => {
-    smoothScrollTo('bottom');
-  }
-
   render() {
     const {characters, isDM, folders, updateCombat} = this.props;
     const {activeFolder, characterOrder, combat, isAdding, showArchived} = this.state;
@@ -227,7 +222,7 @@ class Dashboard extends React.Component {
             onAddFolder={this.handleAddFolder}
             onDeleteFolder={this.handleDeleteFolder}
             onUpdateFolder={this.handleUpdateFolder} />}
-          <div className="card-container scroll scroll-characters card-field" onMouseEnter={this.scrollToCharacters}>
+          <div className="card-container scroll scroll-characters card-field">
             {!characters.isEmpty()
               ? characters.filter((c) => {
                 return this.searchCharacters(c);
