@@ -6,6 +6,7 @@ import removeImg from 'images/remove.svg';
 export default class Folder extends Component {
   static propTypes = {
     folder: PropTypes.object.isRequired,
+    isEditCombat: PropTypes.bool.isRequired,
     isMovingCharacter: PropTypes.bool.isRequired,
     showConfirmDelete: PropTypes.bool.isRequired,
     onConfirmDelete: PropTypes.func.isRequired,
@@ -77,14 +78,14 @@ export default class Folder extends Component {
   }
 
   render() {
-    const {folder, isMovingCharacter} = this.props;
+    const {folder, isEditCombat, isMovingCharacter} = this.props;
     const {confirmDelete, isEditing, showButtons} = this.state;
 
     return (
       <div
         className={classNames(
           'folder',
-          {'folder-hovered': (showButtons || confirmDelete) && !isMovingCharacter},
+          {'folder-hovered': (showButtons || confirmDelete) && !isMovingCharacter && !isEditCombat},
           {'folder-moving': isMovingCharacter})}
         onClick={this.handleSelect}
         onBlur={this.resetDelete}
@@ -99,12 +100,12 @@ export default class Folder extends Component {
             defaultValue={folder.name} />
           : <div className="name">{folder.name}</div>
         }
-        {showButtons && !confirmDelete &&
+        {showButtons && !confirmDelete && !isEditCombat &&
           <img
             src={isEditing ? editFolderImg : editFolderImg}
             className="folder-edit"
             onClick={this.handleToggleEditing} />}
-        {(showButtons || confirmDelete) &&
+        {(showButtons || confirmDelete) && !isEditCombat &&
           <img
             src={removeImg}
             className="folder-remove"

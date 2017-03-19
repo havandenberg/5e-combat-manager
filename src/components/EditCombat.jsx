@@ -7,6 +7,7 @@ import {browserHistory} from 'react-router';
 import {hasError} from 'utils/errors';
 import {scrollTo} from 'utils/resources';
 import CharacterCard from 'components/CharacterCard';
+import FolderToolbar from 'components/FolderToolbar';
 
 import * as combatActions from 'reducers/combat';
 
@@ -20,6 +21,7 @@ class EditCombat extends React.Component {
     combat: React.PropTypes.object,
     createCombat: React.PropTypes.func.isRequired,
     deleteCombat: React.PropTypes.func.isRequired,
+    folders: React.PropTypes.array,
     isNew: React.PropTypes.bool,
     updateCombat: React.PropTypes.func.isRequired
   }
@@ -31,6 +33,7 @@ class EditCombat extends React.Component {
 
     this.state = {
       actions: [],
+      activeFolder: '',
       charactersInCombat: combat && combat.charactersInCombat ? combat.charactersInCombat : [],
       characterOrder: 'Name',
       confirmDelete: false,
@@ -135,6 +138,10 @@ class EditCombat extends React.Component {
     };
   }
 
+  handleSelectFolder = (folder) => {
+    this.setState({activeFolder: folder.id || ''});
+  }
+
   hasActiveCopies = (combatCharacters, char) => {
     let result = false;
     _.each(combatCharacters, (c) => {
@@ -217,8 +224,8 @@ class EditCombat extends React.Component {
   }
 
   render() {
-    const {charactersInCombat, characterOrder, confirmDelete, errors} = this.state;
-    const {characters, combat, isNew} = this.props;
+    const {activeFolder, charactersInCombat, characterOrder, confirmDelete, errors} = this.state;
+    const {characters, combat, folders, isNew} = this.props;
 
     return (
       <div className="page">
@@ -259,10 +266,15 @@ class EditCombat extends React.Component {
                 <input type="text" placeholder="Search" onChange={this.handleSearch} />
               </div>
             </div>
+            <FolderToolbar
+              activeFolder={activeFolder}
+              folders={folders}
+              isEditCombat={true}
+              onSelectFolder={this.handleSelectFolder} />
             <div className="card-container scroll scroll-characters card-field">
               {!characters.isEmpty()
                 ? characters.filter((c) => {
-                  return this.search(c);
+                  return (this.search(c) && activeFolder === '' ? true : c.folderId === activeFolder);
                 }).sort((a, b) => {
                   let x = 0;
                   let y = 0;
@@ -356,12 +368,14 @@ export default connect((state, props) => {
 
     return {
       characters: state.characters,
-      combat
+      combat,
+      folders: state.folders.toJS()
     };
   }
 
   return {
-    characters: state.characters
+    characters: state.characters,
+    folders: state.folders.toJS()
   };
 }, {
   createCombat: combatActions.startAddCombat,

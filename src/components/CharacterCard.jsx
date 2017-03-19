@@ -55,7 +55,7 @@ export default class CharacterCard extends React.Component {
   }
 
   render() {
-    const {character, isDM, isSelected, selectable} = this.props;
+    const {character, isDM, isEditCombat, isSelected, selectable} = this.props;
     const {isExpanded, isMoving} = this.state;
 
     return (
@@ -81,9 +81,13 @@ export default class CharacterCard extends React.Component {
         <div className="character-details" onClick={this.handleToggleDetails}>
           <img src={isExpanded ? detailsSelectedImg : detailsImg} />
         </div>
-        <div className={classNames('btn-folder', 'circle', {'btn-folder--moving': isMoving})} onClick={this.handleMoveCharacter}>
-          <img src={folderImg} />
-        </div>
+        {!isEditCombat &&
+          <div
+            className={classNames('btn-folder', 'circle', {'btn-folder--moving': isMoving})}
+            onClick={this.handleMoveCharacter}>
+            <img src={folderImg} />
+          </div>
+        }
         {isExpanded &&
           <div>
             <div className="form-field character-stats character-stats--container">

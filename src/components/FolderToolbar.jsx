@@ -7,6 +7,7 @@ export default class FolderToolbar extends Component {
   static propTypes = {
     activeFolder: PropTypes.string.isRequired,
     folders: PropTypes.array.isRequired,
+    isEditCombat: PropTypes.bool,
     isMovingCharacter: PropTypes.bool.isRequired,
     onAddFolder: PropTypes.func.isRequired,
     onDeleteFolder: PropTypes.func.isRequired,
@@ -54,14 +55,18 @@ export default class FolderToolbar extends Component {
   }
 
   render() {
-    const {activeFolder, folders, isMovingCharacter} = this.props;
+    const {activeFolder, folders, isEditCombat, isMovingCharacter} = this.props;
     const {showConfirmDelete} = this.state;
 
     return (
       <div className="form-field">
         <div className="folder-container">
             <Breadcrumbs className="folder-inner" folders={folders} activeFolder={activeFolder} onSelect={this.handleSelect} />
-          <div className="folder-add" onClick={this.handleAdd}><img src={addWhiteImg} /></div>
+          {!isEditCombat &&
+            <div className="folder-add" onClick={this.handleAdd}>
+              <img src={addWhiteImg} />
+            </div>
+          }
         </div>
         {showConfirmDelete &&
           <div className="folder-confirm-delete">
@@ -75,6 +80,7 @@ export default class FolderToolbar extends Component {
             return <Folder
               key={i}
               folder={f}
+              isEditCombat={isEditCombat}
               isMovingCharacter={isMovingCharacter}
               showConfirmDelete={showConfirmDelete}
               onUpdate={this.handleNameChange}
