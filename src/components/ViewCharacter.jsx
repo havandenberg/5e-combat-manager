@@ -30,10 +30,6 @@ export default class ViewCharacter extends React.Component {
             <img src={character.imageURL} />
           </div>}
         <div className={classNames('view-character--name', 'center', {'name-card--unc-text': character.hp <= 0})}>{character.name}</div>
-        <div className="form-field--small">
-          <div className="view-character--text">Race: {character.race}</div>
-          <div className="view-character--text">Class: {character.klass}</div>
-        </div>
         <div className="form-field--small character-tag--container">
           {character.tags &&
             character.tags.map((t, i) => {
