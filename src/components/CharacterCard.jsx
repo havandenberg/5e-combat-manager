@@ -5,22 +5,33 @@ import {getModifier} from 'utils/resources';
 
 import detailsImg from 'images/details.svg';
 import detailsSelectedImg from 'images/details-selected.svg';
+import folderImg from 'images/folder.svg';
 
 export default class CharacterCard extends React.Component {
   static propTypes = {
     character: React.PropTypes.object.isRequired,
+    isAdding: React.PropTypes.bool,
     isDM: React.PropTypes.bool,
     isEditCombat: React.PropTypes.bool,
+    isMovingCharacter: React.PropTypes.bool,
     isSelected: React.PropTypes.bool,
-    selectable: React.PropTypes.bool
+    selectable: React.PropTypes.bool,
+    onMoveCharacter: React.PropTypes.func
   }
 
   constructor() {
     super();
 
     this.state = {
-      isExpanded: false
+      isExpanded: false,
+      isMoving: false
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.isMovingCharacter) {
+      this.setState({isMoving: false});
+    }
   }
 
   handleToggleDetails = (e) => {
@@ -29,13 +40,23 @@ export default class CharacterCard extends React.Component {
     this.setState({isExpanded: !this.state.isExpanded});
   }
 
+  handleMoveCharacter = (e) => {
+    const {isAdding} = this.props;
+    if (!isAdding) {
+      e.stopPropagation();
+      e.preventDefault();
+      this.props.onMoveCharacter(this.props.character);
+      this.setState({isMoving: true});
+    }
+  }
+
   getQuantity = () => {
     return this.refs.quantity.value;
   }
 
   render() {
     const {character, isDM, isSelected, selectable} = this.props;
-    const {isExpanded} = this.state;
+    const {isExpanded, isMoving} = this.state;
 
     return (
       <div className={classNames('card',
@@ -43,7 +64,7 @@ export default class CharacterCard extends React.Component {
         {'card-selectable': selectable},
         {'card-unselectable': !selectable},
         {'card-selected': isSelected})}>
-        <div className="card-name center">{character.name}</div>
+        <div className="card-name center card-name--character">{character.name}</div>
         <div className="card-inner">
           {character.imageURL &&
             <div className={classNames('card-avatar', 'center')}>
@@ -59,6 +80,9 @@ export default class CharacterCard extends React.Component {
         </div>
         <div className="character-details" onClick={this.handleToggleDetails}>
           <img src={isExpanded ? detailsSelectedImg : detailsImg} />
+        </div>
+        <div className={classNames('btn-folder', 'circle', {'btn-folder--moving': isMoving})} onClick={this.handleMoveCharacter}>
+          <img src={folderImg} />
         </div>
         {isExpanded &&
           <div>

@@ -10,17 +10,29 @@
   margin-bottom: $spacing-micro
   min-width: 90px
 
-  &-selected
-    background-color: $black
+  &-hovered
+    padding-right: 45px
 
-    .name
-      color: $white
+  &-moving
+    background: lighten($success-green, 20%);
 
-  img
+  &-edit
     height: 15px
     width: 15px
+    padding: 4px
+    position: absolute
+    right: 20px
+
+  &-remove
+    height: 15px
+    width: 15px
+    padding: 4px
     position: absolute
     right: 0
+
+  &-confirm-delete
+    color: $error-red
+    margin-bottom: $spacing-micro
 
   .name
     border: none
@@ -29,6 +41,15 @@
     text-align: center
     margin: 0
     background-color: transparent
+
+    &-editing
+      background-color: rgba($white, 0.5)
+      height: 24px
+      width: 140px
+      text-align: left
+
+      +breakpoint(mobile)
+        width: 95px
 
   &-container
     display: flex
@@ -44,7 +65,10 @@
   &-inner
     display: flex
     flex-direction: row
-    margin-right: $spacing-small
+    width: 95%
+
+  &-left
+    width: 90%
 
   &-add
     background-color: $black
@@ -63,4 +87,27 @@
       min-height: 16px
 
 .breadcrumbs
+  display: flex
+  flex-wrap: wrap
   margin-bottom: $spacing-micro
+
+.breadcrumb
+  cursor: pointer
+  font-size: 1.2rem
+  margin-right: $spacing-small
+
+  &:hover
+    color: $purple
+    font-weight: bold
+
+  &-selected
+    color: $purple
+    font-weight: bold
+
+  &-container
+    display: flex
+    align-items: center
+
+  &-divider
+    height: 1rem
+    margin-right: $spacing-small

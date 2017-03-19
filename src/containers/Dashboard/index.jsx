@@ -6,6 +6,7 @@ import Tag from 'components/Tag';
 
 import * as combatActions from 'reducers/combat';
 import * as folderActions from 'reducers/folder';
+import * as characterActions from 'reducers/character';
 
 import CharacterCard from 'components/CharacterCard';
 import CombatCard from 'components/CombatCard';
@@ -18,9 +19,10 @@ class Dashboard extends React.Component {
     combats: React.PropTypes.object.isRequired,
     createFolder: React.PropTypes.func.isRequired,
     deleteFolder: React.PropTypes.func.isRequired,
-    folders: React.PropTypes.object,
+    folders: React.PropTypes.array,
     isDM: React.PropTypes.bool,
     uid: React.PropTypes.string,
+    updateCharacter: React.PropTypes.func.isRequired,
     updateCombat: React.PropTypes.func.isRequired,
     updateFolder: React.PropTypes.func.isRequired
   }
@@ -29,23 +31,16 @@ class Dashboard extends React.Component {
     super();
 
     this.state = {
-      activeFolder: [],
+      activeFolder: '',
+      isMovingCharacter: false,
       isAdding: false,
       combat: null,
       characterOrder: 'Name',
       searchCharacters: '',
       searchCombats: '',
-      showArchived: false
+      showArchived: false,
+      movingCharacter: {}
     };
-  }
-
-  getActiveFolderLocation = () => {
-    const {activeFolder} = this.state;
-    let breadcrumbs = '';
-    _.each(activeFolder, (f) => {
-      breadcrumbs += `${f.id}/`;
-    });
-    return breadcrumbs;
   }
 
   getCombatIndex = (combat) => {
@@ -77,17 +72,31 @@ class Dashboard extends React.Component {
   }
 
   handleAddFolder = () => {
-    this.props.createFolder({name: 'New Folder', selected: false}, this.getActiveFolderLocation());
-  }
-
-  handleUpdateFolder = (folder, isSelecting) => {
     const {activeFolder} = this.state;
-    if (isSelecting) {this.setState({activeFolder: [...activeFolder, folder]});}
-    this.props.updateFolder(folder, isSelecting ? `${this.getActiveFolderLocation()}/${folder.id}` : this.getActiveFolderLocation());
+    this.props.createFolder({
+      name: 'New Folder',
+      parent: `${activeFolder}`});
   }
 
-  handleDeleteFolder = () => {
+  handleUpdateFolder = (folder) => {
+    this.props.updateFolder(folder);
+  }
 
+  handleSelectFolder = (folder) => {
+    const {updateCharacter} = this.props;
+    const {isMovingCharacter} = this.state;
+    if (isMovingCharacter) {
+      const {movingCharacter} = this.state;
+      movingCharacter.folderId = folder.id;
+      updateCharacter(movingCharacter.id, movingCharacter);
+      this.setState({isMovingCharacter: false, movingCharacter: {}});
+    } else {
+      this.setState({activeFolder: folder.id || ''});
+    }
+  }
+
+  handleDeleteFolder = (folders) => {
+    this.props.deleteFolder(folders);
   }
 
   handleCharacterOrder = (e) => {
@@ -143,6 +152,13 @@ class Dashboard extends React.Component {
     this.setState({searchCharacters: e.target.value});
   }
 
+  handleMoveCharacter = (character) => {
+    this.setState({
+      isMovingCharacter: !this.state.isMovingCharacter,
+      movingCharacter: character
+    });
+  }
+
   searchCombats = (c) => {
     const {searchCombats} = this.state;
     const text = c.name + c.description;
@@ -157,7 +173,7 @@ class Dashboard extends React.Component {
 
   render() {
     const {characters, isDM, folders, updateCombat} = this.props;
-    const {activeFolder, characterOrder, combat, isAdding, showArchived} = this.state;
+    const {activeFolder, characterOrder, combat, isAdding, isMovingCharacter, showArchived} = this.state;
     const parsedCombats = this.getParsedCombats();
 
     return (
@@ -216,16 +232,18 @@ class Dashboard extends React.Component {
               <Link to="/create-character"><div className="folder-add add-character"><img src={addWhiteImg} /></div></Link>
             </div>
           </div>
-          {false && <FolderToolbar
+          <FolderToolbar
             activeFolder={activeFolder}
+            isMovingCharacter={isMovingCharacter}
             folders={folders}
             onAddFolder={this.handleAddFolder}
             onDeleteFolder={this.handleDeleteFolder}
-            onUpdateFolder={this.handleUpdateFolder} />}
+            onSelectFolder={this.handleSelectFolder}
+            onUpdateFolder={this.handleUpdateFolder} />
           <div className="card-container scroll scroll-characters card-field">
             {!characters.isEmpty()
               ? characters.filter((c) => {
-                return this.searchCharacters(c);
+                return (this.searchCharacters(c) && activeFolder === '' ? true : c.folderId === activeFolder);
               }).sort((a, b) => {
                 let x = 0;
                 let y = 0;
@@ -247,9 +265,13 @@ class Dashboard extends React.Component {
                 return (
                     <div key={i} className="card-wrapper">
                       {isAdding
-                        ? <div onClick={this.handleChooseCharacter(c)}><CharacterCard character={c} isDM={isDM} /></div>
+                        ? <div onClick={this.handleChooseCharacter(c)}><CharacterCard character={c} isAdding={isAdding} isDM={isDM} /></div>
                         : <Link className="no-decoration" to={`/edit-character/${characters.indexOf(c)}`}>
-                          <CharacterCard character={c} isDM={isDM} />
+                          <CharacterCard
+                            character={c}
+                            isDM={isDM}
+                            onMoveCharacter={this.handleMoveCharacter}
+                            isMovingCharacter={isMovingCharacter} />
                         </Link>
                       }
                     </div>
@@ -268,7 +290,7 @@ export default connect((state) => {
   return {
     characters: state.characters,
     combats: state.combats,
-    folders: state.folders,
+    folders: state.folders.toJS(),
     isDM: state.auth.get('isDM'),
     uid: state.auth.get('uid')
   };
@@ -276,5 +298,6 @@ export default connect((state) => {
   updateCombat: combatActions.startUpdateCombat,
   createFolder: folderActions.startAddFolder,
   updateFolder: folderActions.startUpdateFolder,
-  deleteFolder: folderActions.startDeleteFolder
+  deleteFolder: folderActions.startDeleteFolder,
+  updateCharacter: characterActions.startUpdateCharacter
 })(Dashboard);

@@ -132,9 +132,11 @@ export default class CombatCharacter extends React.Component {
               {character.isNPC && <div className="combat-character--tag" onClick={this.handleOpenNotes}>
                 <img src={(character.notes && character.notes.length > 0) ? notesImg : notesEmptyImg} />
               </div>}
-              <div className="combat-character--tag" onClick={this.handleToggleLockCharacter}>
-                <img src={character.isLocked ? lockedImg : unlockedImg} />
-              </div>
+              {!character.isNPC &&
+                <div className="combat-character--tag" onClick={this.handleToggleLockCharacter}>
+                  <img src={character.isLocked ? lockedImg : unlockedImg} />
+                </div>
+              }
               {character.isNPC &&
                 <div className="combat-character--tag no-cursor"><Tag type="npc" /></div>
               }
